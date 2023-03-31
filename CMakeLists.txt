@@ -29,3 +29,10 @@ target_include_directories(KumaRenderer PUBLIC include)
 # Install the library and header files.
 install(TARGETS KumaRenderer DESTINATION ${CMAKE_SOURCE_DIR}/install/lib)
 install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_SOURCE_DIR}/install/include)
+
+# Add an option to build the math unit tests.
+option(BUILD_TESTS "Build the math unit tests." ON)
+
+if(BUILD_TESTS)
+  add_subdirectory(tests)
+endif(BUILD_TESTS)
