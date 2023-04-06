@@ -3,8 +3,6 @@
 
 #include <math.h>
 
-#include "Camera.hpp"
-
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
@@ -175,17 +173,25 @@ inline Mat4 View(const Vec3& aDirectionVector,
 }
 
 /**
- * Creates and returns a perspective projection matrix for the given camera.
+ * Creates and returns a perspective projection matrix for a given frustum.
  *
- * @param aCamera The camera to create a matrix for.
+ * @param aFOV The field of view.
+ * @param aViewportWidth The width of the viewport.
+ * @param aViewportHeight The height of the viewport.
+ * @param aNearPlane The near plane of the frustum.
+ * @param aFarPlane The far plane of the frustum.
  */
-inline Mat4 Perspective(const Camera& aCamera)
+inline Mat4 Perspective(float aFOV,
+                        float aViewportWidth,
+                        float aViewportHeight,
+                        float aNearPlane,
+                        float aFarPlane)
 {
-  auto rad = aCamera.mFOV * (M_PI / 180.0);
+  auto rad = aFOV * (M_PI / 180.0);
   auto f = 1.0 / std::tan(rad * 0.5);
-  auto aspect = aCamera.mViewportX / aCamera.mViewportY;
-  auto far = aCamera.mFarPlane;
-  auto near = aCamera.mNearPlane;
+  auto aspect = aViewportWidth / aViewportHeight;
+  auto far = aFarPlane;
+  auto near = aNearPlane;
 
   return Mat4(f / aspect, 0.0, 0.0, 0.0,
               0.0, f, 0.0, 0.0,
@@ -194,17 +200,23 @@ inline Mat4 Perspective(const Camera& aCamera)
 }
 
 /**
- * Creates and returns an orthographic projection matrix for the given camera.
+ * Creates and returns an orthographic projection matrix for the given frustum.
  * It's assumed that the left and bottom values are 0.0.
  *
- * @param aCamera The camera to create a matrix for.
+ * @param aViewportWidth The width of the viewport.
+ * @param aViewportHeight The height of the viewport.
+ * @param aNearPlane The near plane of the frustum.
+ * @param aFarPlane The far plane of the frustum.
  */
-inline Mat4 Orthographic(const Camera& aCamera)
+inline Mat4 Orthographic(float aViewportWidth,
+                         float aViewportHeight,
+                         float aNearPlane,
+                         float aFarPlane)
 {
-  auto right = aCamera.mViewportX;
-  auto top = aCamera.mViewportY;
-  auto far = aCamera.mFarPlane;
-  auto near = aCamera.mNearPlane;
+  auto right = aViewportWidth;
+  auto top = aViewportHeight;
+  auto far = aFarPlane;
+  auto near = aNearPlane;
 
   return Mat4(2.0 / right, 0.0, 0.0, -1.0,
               0.0, 2.0 / top, 0.0, -1.0,
