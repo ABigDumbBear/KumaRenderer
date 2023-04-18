@@ -1,7 +1,5 @@
 #include "Mesh.hpp"
 
-#include <glad/glad.h>
-
 namespace Kuma3D {
 
 /******************************************************************************/
@@ -110,13 +108,13 @@ Mesh::~Mesh()
 }
 
 /******************************************************************************/
-void Mesh::Draw(const Shader& aShader)
+void Mesh::Draw(const Shader& aShader, GLenum aMode)
 {
   glBindVertexArray(mVertexArray);
 
   // Draw the mesh.
   aShader.Activate();
-  glDrawElements(static_cast<GLenum>(mRenderMode),
+  glDrawElements(aMode,
                  mIndices.size(),
                  GL_UNSIGNED_INT,
                  0);
@@ -127,17 +125,13 @@ void Mesh::Draw(const Shader& aShader)
 /******************************************************************************/
 void Mesh::DrawInstanced(const Shader& aShader,
                          int aNumInstances,
-                         const std::vector<Mat4>& aMatrices)
+                         GLenum aMode)
 {
   glBindVertexArray(mVertexArray);
 
-  // Copy data into the instance buffer.
-  glBindBuffer(GL_ARRAY_BUFFER, mInstanceBuffer);
-  glBufferData(GL_ARRAY_BUFFER, aMatrices.size() * sizeof(Mat4), &aMatrices[0], GL_DYNAMIC_DRAW);
-
   // Draw the mesh.
   aShader.Activate();
-  glDrawElementsInstanced(static_cast<GLenum>(mRenderMode),
+  glDrawElementsInstanced(aMode,
                           mIndices.size(),
                           GL_UNSIGNED_INT,
                           0,
@@ -147,10 +141,8 @@ void Mesh::DrawInstanced(const Shader& aShader,
 }
 
 /******************************************************************************/
-void Mesh::AddVertex(const MeshVertex& aVertex)
+void Mesh::UpdateVertices()
 {
-  mVertices.emplace_back(aVertex);
-
   glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
   glBufferData(GL_ARRAY_BUFFER,
                mVertices.size() * sizeof(MeshVertex),
@@ -159,10 +151,8 @@ void Mesh::AddVertex(const MeshVertex& aVertex)
 }
 
 /******************************************************************************/
-void Mesh::AddIndex(unsigned int aIndex)
+void Mesh::UpdateIndices()
 {
-  mIndices.emplace_back(aIndex);
-
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBuffer);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                mIndices.size() * sizeof(unsigned int),

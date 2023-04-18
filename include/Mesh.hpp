@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <glad/glad.h>
+
 #include "Vec3.hpp"
 
 #include "Shader.hpp"
@@ -12,27 +14,12 @@
 
 namespace Kuma3D {
 
-enum class RenderMode
-{
-  ePOINTS     = 0x0000,
-  eLINES      = 0x0001,
-  eLINE_LOOP  = 0x0002,
-  eLINE_STRIP = 0x0003,
-  eTRIANGLES  = 0x0004
-};
-
-enum class Projection
-{
-  ePERSPECTIVE,
-  eORTHOGRAPHIC
-};
-
 struct MeshVertex
 {
-  Vec3 mPosition; // location = 0
-  Vec3 mColor; // location = 1
-  Vec3 mNormal; // location = 2
-  float mTexCoords[2] { 0.0, 0.0 }; // location = 3
+  Vec3 mPosition;
+  Vec3 mColor;
+  Vec3 mNormal;
+  float mTexCoords[2] { 0.0, 0.0 };
 };
 
 class Mesh
@@ -41,25 +28,28 @@ class Mesh
     Mesh();
     ~Mesh();
 
-    void Draw(const Shader& aShader);
+    void Draw(const Shader& aShader,
+              GLenum aMode = GL_TRIANGLES);
     void DrawInstanced(const Shader& aShader,
                        int aNumInstances,
-                       const std::vector<Mat4>& aMatrices);
+                       GLenum aMode = GL_TRIANGLES);
 
-    void AddVertex(const MeshVertex& aVertex);
-    void AddIndex(unsigned int aIndex);
+    void UpdateVertices();
+    void UpdateIndices();
 
-    RenderMode mRenderMode { RenderMode::eTRIANGLES };
-    Projection mProjection { Projection::ePERSPECTIVE };
+    GLuint GetVertexArrayID() const { return mVertexArray; }
+    GLuint GetVertexBufferID() const { return mVertexBuffer; }
+    GLuint GetInstanceBufferID() const { return mInstanceBuffer; }
+    GLuint GetElementBufferID() const { return mElementBuffer; }
 
-  private:
     std::vector<MeshVertex> mVertices;
     std::vector<unsigned int> mIndices;
 
-    unsigned int mVertexArray { 0 };
-    unsigned int mVertexBuffer { 0 };
-    unsigned int mInstanceBuffer { 0 };
-    unsigned int mElementBuffer { 0 };
+  private:
+    GLuint mVertexArray { 0 };
+    GLuint mVertexBuffer { 0 };
+    GLuint mInstanceBuffer { 0 };
+    GLuint mElementBuffer { 0 };
 };
 
 } // namespace Kuma3D
