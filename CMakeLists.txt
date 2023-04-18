@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(KumaRenderer VERSION 0.0.1)
+project(KumaGL VERSION 0.0.1)
 
 # Exports compile commands as a .json file; some text editors use
 # this file for syntax highlighting.
@@ -23,11 +23,11 @@ set(HEADER_FILES include/glad/glad.h
                  include/Vec3.hpp)
 
 # Create the library.
-add_library(KumaRenderer SHARED ${SOURCE_FILES})
-target_include_directories(KumaRenderer PUBLIC include)
+add_library(KumaGL SHARED ${SOURCE_FILES})
+target_include_directories(KumaGL PUBLIC include)
 
 # Install the library and header files.
-install(TARGETS KumaRenderer DESTINATION ${CMAKE_SOURCE_DIR}/install/lib)
+install(TARGETS KumaGL DESTINATION ${CMAKE_SOURCE_DIR}/install/lib)
 install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_SOURCE_DIR}/install/include)
 
 # Add extra build options.
