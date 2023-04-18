@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(KumaRenderer VERSION 0.0.1)
+project(KumaGL VERSION 0.0.1)
 
 # Exports compile commands as a .json file; some text editors use
 # this file for syntax highlighting.
@@ -47,21 +47,21 @@ if(MODEL_SUPPORT)
 endif(MODEL_SUPPORT)
 
 # Create the library.
-add_library(KumaRenderer SHARED ${SOURCE_FILES})
-target_include_directories(KumaRenderer PUBLIC ${INCLUDE_DIRS})
+add_library(KumaGL SHARED ${SOURCE_FILES})
+target_include_directories(KumaGL PUBLIC ${INCLUDE_DIRS})
 
 if(TEXT_SUPPORT)
-  target_link_libraries(KumaRenderer PUBLIC ${FREETYPE_LIBRARIES})
-  target_include_directories(KumaRenderer PUBLIC ${FREETYPE_INCLUDE_DIRS})
+  target_link_libraries(KumaGL PUBLIC ${FREETYPE_LIBRARIES})
+  target_include_directories(KumaGL PUBLIC ${FREETYPE_INCLUDE_DIRS})
 endif(TEXT_SUPPORT)
 
 if(MODEL_SUPPORT)
-        target_link_libraries(KumaRenderer PUBLIC ${ASSIMP_LIBRARIES})
-        target_include_directories(KumaRenderer PUBLIC ${ASSIMP_INCLUDE_DIRS})
+        target_link_libraries(KumaGL PUBLIC ${ASSIMP_LIBRARIES})
+        target_include_directories(KumaGL PUBLIC ${ASSIMP_INCLUDE_DIRS})
 endif(MODEL_SUPPORT)
 
 # Install the library and header files.
-install(TARGETS KumaRenderer DESTINATION ${CMAKE_SOURCE_DIR}/install/lib)
+install(TARGETS KumaGL DESTINATION ${CMAKE_SOURCE_DIR}/install/lib)
 install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_SOURCE_DIR}/install/include)
 
 # Add extra build options.

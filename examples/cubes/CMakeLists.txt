@@ -6,7 +6,7 @@ add_executable(cubes main.cpp)
 
 # Link the executable with GLFW.
 target_link_libraries(cubes PUBLIC glfw
-                                   KumaRenderer)
+                                   KumaGL)
 
 # Include the header files.
 target_include_directories(cubes PUBLIC ${CMAKE_SOURCE_DIR}/include)
