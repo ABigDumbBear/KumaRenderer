@@ -6,25 +6,45 @@ project(KumaRenderer VERSION 0.0.1)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Gather up the source and header files.
-set(SOURCE_FILES src/glad.c
-                 src/Mesh.cpp
-                 src/Shader.cpp
-                 src/Texture.cpp)
-set(HEADER_FILES include/glad/glad.h
-                 include/KHR/khrplatform.h
-                 include/Camera.hpp
-                 include/Light.hpp
-                 include/Mesh.hpp
-                 include/Shader.hpp
-                 include/Texture.hpp
-                 include/Transform.hpp
-                 include/Mat4.hpp
-                 include/MathUtil.hpp
-                 include/Vec3.hpp)
+list(APPEND SOURCE_FILES
+            src/core/glad.c
+            src/core/Mesh.cpp
+            src/core/Shader.cpp
+            src/core/Texture.cpp)
+list(APPEND HEADER_FILES
+            include/3rd_party/KHR/khrplatform.h
+            include/3rd_party/glad/glad.h
+            include/3rd_party/stb_image/stb_image.h
+            include/core/Mat4.hpp
+            include/core/MathUtil.hpp
+            include/core/Mesh.hpp
+            include/core/Shader.hpp
+            include/core/Texture.hpp
+            include/core/Transform.hpp
+            include/core/Vec3.hpp)
+list(APPEND INCLUDE_DIRS
+            include/3rd_party/
+            include/core)
+
+# Add optional features.
+option(TEXT_SUPPORT "Adds support for loading font files." ON)
+option(MODEL_SUPPORT "Adds support for loading model files." ON)
+
+if(TEXT_SUPPORT)
+  list(APPEND SOURCE_FILES src/text/Font.cpp)
+  list(APPEND HEADER_FILES include/text/Font.hpp)
+  list(APPEND INCLUDE_DIRS include/text)
+endif(TEXT_SUPPORT)
+
+if(MODEL_SUPPORT)
+  list(APPEND SOURCE_FILES src/model/Model.cpp)
+  list(APPEND HEADER_FILES include/model/Model.hpp)
+  list(APPEND INCLUDE_DIRS include/model)
+endif(MODEL_SUPPORT)
 
 # Create the library.
 add_library(KumaRenderer SHARED ${SOURCE_FILES})
-target_include_directories(KumaRenderer PUBLIC include)
+target_include_directories(KumaRenderer PUBLIC ${INCLUDE_DIRS})
 
 # Install the library and header files.
 install(TARGETS KumaRenderer DESTINATION ${CMAKE_SOURCE_DIR}/install/lib)
@@ -32,7 +52,7 @@ install(FILES ${HEADER_FILES} DESTINATION ${CMAKE_SOURCE_DIR}/install/include)
 
 # Add extra build options.
 option(BUILD_TESTS "Build the unit tests." ON)
-option(BUILD_EXAMPLES "Build the examples." ON)
+option(BUILD_EXAMPLES "Build the example applications." ON)
 
 if(BUILD_TESTS)
   add_subdirectory(tests)
