@@ -141,7 +141,7 @@ void Model::ProcessMesh(aiMesh& aMesh,
       }
     }
 
-    mesh.AddVertex(vertex);
+    mesh.mVertices.emplace_back(vertex);
   }
 
   // Retrieve the index data.
@@ -150,10 +150,12 @@ void Model::ProcessMesh(aiMesh& aMesh,
     auto face = aMesh.mFaces[i];
     for(int j = 0; j < face.mNumIndices; ++j)
     {
-      mesh.AddIndex(face.mIndices[j]);
+      mesh.mIndices.emplace_back(face.mIndices[j]);
     }
   }
 
+  mesh.UpdateVertices();
+  mesh.UpdateIndices();
   mMeshes.emplace_back(mesh);
 }
 

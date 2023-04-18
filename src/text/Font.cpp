@@ -3,7 +3,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 namespace Kuma3D {
 
@@ -83,21 +83,21 @@ void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
       vertex.mPosition = Vec3(xPos, yPos + height, 0);
       vertex.mTexCoords[0] = textureX;
       vertex.mTexCoords[1] = textureY;
-      aMesh.AddVertex(vertex);
+      aMesh.mVertices.emplace_back(vertex);
 
       // Top Left
       textureY = glyph->second.mHeight / atlasHeight;
       vertex.mPosition = Vec3(xPos, yPos, 0);
       vertex.mTexCoords[0] = textureX;
       vertex.mTexCoords[1] = textureY;
-      aMesh.AddVertex(vertex);
+      aMesh.mVertices.emplace_back(vertex);
 
       // Top Right
       textureX = (glyph->second.mOffsetX + glyph->second.mWidth) / atlasWidth;
       vertex.mPosition = Vec3(xPos + width, yPos, 0);
       vertex.mTexCoords[0] = textureX;
       vertex.mTexCoords[1] = textureY;
-      aMesh.AddVertex(vertex);
+      aMesh.mVertices.emplace_back(vertex);
 
       // Bottom Left
       textureX = glyph->second.mOffsetX / atlasWidth;
@@ -105,7 +105,7 @@ void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
       vertex.mPosition = Vec3(xPos, yPos + height, 0);
       vertex.mTexCoords[0] = textureX;
       vertex.mTexCoords[1] = textureY;
-      aMesh.AddVertex(vertex);
+      aMesh.mVertices.emplace_back(vertex);
 
       // Top Right
       textureX = (glyph->second.mOffsetX + glyph->second.mWidth) / atlasWidth;
@@ -113,22 +113,22 @@ void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
       vertex.mPosition = Vec3(xPos + width, yPos, 0);
       vertex.mTexCoords[0] = textureX;
       vertex.mTexCoords[1] = textureY;
-      aMesh.AddVertex(vertex);
+      aMesh.mVertices.emplace_back(vertex);
 
       // Bottom Right
       textureY = 0.0;
       vertex.mPosition = Vec3(xPos + width, yPos + height, 0);
       vertex.mTexCoords[0] = textureX;
       vertex.mTexCoords[1] = textureY;
-      aMesh.AddVertex(vertex);
+      aMesh.mVertices.emplace_back(vertex);
 
       // Add indices to draw this quad.
-      aMesh.AddIndex(indexCount);
-      aMesh.AddIndex(indexCount + 1);
-      aMesh.AddIndex(indexCount + 2);
-      aMesh.AddIndex(indexCount + 3);
-      aMesh.AddIndex(indexCount + 4);
-      aMesh.AddIndex(indexCount + 5);
+      aMesh.mIndices.emplace_back(indexCount);
+      aMesh.mIndices.emplace_back(indexCount + 1);
+      aMesh.mIndices.emplace_back(indexCount + 2);
+      aMesh.mIndices.emplace_back(indexCount + 3);
+      aMesh.mIndices.emplace_back(indexCount + 4);
+      aMesh.mIndices.emplace_back(indexCount + 5);
       indexCount += 6;
 
       // Update the x position for the next character.
@@ -140,6 +140,9 @@ void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
       ++numLines;
     }
   }
+
+  aMesh.UpdateVertices();
+  aMesh.UpdateIndices();
 }
 
 /******************************************************************************/

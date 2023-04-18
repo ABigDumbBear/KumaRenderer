@@ -5,7 +5,7 @@ project(KumaRenderer VERSION 0.0.1)
 # this file for syntax highlighting.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Gather up the source and header files.
+# Gather up the source and header files for core features.
 list(APPEND SOURCE_FILES
             src/core/glad.c
             src/core/Mesh.cpp
@@ -34,17 +34,31 @@ if(TEXT_SUPPORT)
   list(APPEND SOURCE_FILES src/text/Font.cpp)
   list(APPEND HEADER_FILES include/text/Font.hpp)
   list(APPEND INCLUDE_DIRS include/text)
+
+  find_package(Freetype REQUIRED)
 endif(TEXT_SUPPORT)
 
 if(MODEL_SUPPORT)
   list(APPEND SOURCE_FILES src/model/Model.cpp)
   list(APPEND HEADER_FILES include/model/Model.hpp)
   list(APPEND INCLUDE_DIRS include/model)
+
+  find_package(assimp REQUIRED)
 endif(MODEL_SUPPORT)
 
 # Create the library.
 add_library(KumaRenderer SHARED ${SOURCE_FILES})
 target_include_directories(KumaRenderer PUBLIC ${INCLUDE_DIRS})
+
+if(TEXT_SUPPORT)
+  target_link_libraries(KumaRenderer PUBLIC ${FREETYPE_LIBRARIES})
+  target_include_directories(KumaRenderer PUBLIC ${FREETYPE_INCLUDE_DIRS})
+endif(TEXT_SUPPORT)
+
+if(MODEL_SUPPORT)
+        target_link_libraries(KumaRenderer PUBLIC ${ASSIMP_LIBRARIES})
+        target_include_directories(KumaRenderer PUBLIC ${ASSIMP_INCLUDE_DIRS})
+endif(MODEL_SUPPORT)
 
 # Install the library and header files.
 install(TARGETS KumaRenderer DESTINATION ${CMAKE_SOURCE_DIR}/install/lib)
