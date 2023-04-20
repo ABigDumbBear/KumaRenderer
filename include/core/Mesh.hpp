@@ -29,10 +29,10 @@ class Mesh
     ~Mesh();
 
     void Draw(const Shader& aShader,
-              GLenum aMode = GL_TRIANGLES);
+              GLenum aMode = GL_TRIANGLES) const;
     void DrawInstanced(const Shader& aShader,
                        int aNumInstances,
-                       GLenum aMode = GL_TRIANGLES);
+                       GLenum aMode = GL_TRIANGLES) const;
 
     void UpdateVertices();
     void UpdateIndices();

@@ -170,14 +170,21 @@ void Font::CreateTexture(int aSize)
   }
 
   // Use the height and width to create an empty texture.
-  // The load format is specified as TextureLoadFormat::eR because Freetype stores
+  // The load format is specified as GL_RED because Freetype stores
   // image data as an 8-bit image, where each color is a single byte.
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
-  mTexture.LoadFromData(nullptr,
-                        atlasWidth,
-                        atlasHeight,
-                        TextureStorageFormat::eR);
+
+  glBindTexture(GL_TEXTURE_2D, mTexture.GetID());
+  glTexImage2D(GL_TEXTURE_2D,
+               0,
+               GL_RED,
+               atlasWidth,
+               atlasHeight,
+               0,
+               GL_RED,
+               GL_UNSIGNED_BYTE,
+               nullptr);
 
   // Now that we have an empty texture, fill it with the image data
   // for each of the first 128 ASCII characters.
@@ -192,15 +199,21 @@ void Font::CreateTexture(int aSize)
     }
 
     // Add the glyph data to the font atlas.
-    mTexture.AddSubImageData(mFace->glyph->bitmap.buffer,
-                             xOffset,
-                             0,
-                             mFace->glyph->bitmap.width,
-                             mFace->glyph->bitmap.rows,
-                             TextureStorageFormat::eR);
+    glTexSubImage2D(GL_TEXTURE_2D,
+                    0,
+                    xOffset,
+                    0,
+                    mFace->glyph->bitmap.width,
+                    mFace->glyph->bitmap.rows,
+                    GL_RED,
+                    GL_UNSIGNED_BYTE,
+                    mFace->glyph->bitmap.buffer);
 
     xOffset += mFace->glyph->bitmap.width;
   }
+
+  // Generate a mipmap for the texture.
+  glGenerateMipmap(GL_TEXTURE_2D);
 
   // After loading the texture data into memory, reset OpenGL's
   // unpack alignment to the default (4).

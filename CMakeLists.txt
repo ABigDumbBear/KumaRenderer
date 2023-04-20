@@ -56,8 +56,8 @@ if(TEXT_SUPPORT)
 endif(TEXT_SUPPORT)
 
 if(MODEL_SUPPORT)
-        target_link_libraries(KumaGL PUBLIC ${ASSIMP_LIBRARIES})
-        target_include_directories(KumaGL PUBLIC ${ASSIMP_INCLUDE_DIRS})
+  target_link_libraries(KumaGL PUBLIC ${ASSIMP_LIBRARIES})
+  target_include_directories(KumaGL PUBLIC ${ASSIMP_INCLUDE_DIRS})
 endif(MODEL_SUPPORT)
 
 # Install the library and header files.

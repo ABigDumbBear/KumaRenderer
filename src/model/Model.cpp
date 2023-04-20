@@ -19,6 +19,24 @@ void Model::LoadFromFile(const std::string& aFile)
 }
 
 /******************************************************************************/
+void Model::Draw(const Shader& aShader, GLenum aMode) const
+{
+  for(const auto& mesh : mMeshes)
+  {
+    mesh.Draw(aShader, aMode);
+  }
+}
+
+/******************************************************************************/
+void Model::DrawInstanced(const Shader& aShader, int aNumInstances, GLenum aMode) const
+{
+  for(const auto& mesh : mMeshes)
+  {
+    mesh.DrawInstanced(aShader, aNumInstances, aMode);
+  }
+}
+
+/******************************************************************************/
 void Model::ProcessNode(aiNode& aNode,
                         const aiScene& aScene,
                         const std::string& aWorkingDirectory)

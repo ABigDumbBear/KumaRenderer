@@ -4,8 +4,6 @@
 #include <fstream>
 #include <sstream>
 
-#include <glad/glad.h>
-
 namespace Kuma3D {
 
 /******************************************************************************/
