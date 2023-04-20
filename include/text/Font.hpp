@@ -21,6 +21,8 @@ class Font
     void LoadFromFile(const std::string& aFile);
     void UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText);
 
+    const Texture& GetTexture() const { return mTexture; }
+
   private:
     struct GlyphInfo
     {

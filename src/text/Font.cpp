@@ -43,10 +43,9 @@ void Font::LoadFromFile(const std::string& aFile)
 /******************************************************************************/
 void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
 {
-  // First, remove any vertices, indices, and/or textures on the given Mesh.
-  //aMesh.mVertices.clear();
-  //aMesh.mIndices.clear();
-  //aMesh.mTextures.clear();
+  // First, remove the mesh's geometry.
+  aMesh.mVertices.clear();
+  aMesh.mIndices.clear();
 
   // Next, retrieve the total height and width of the font atlas.
   float atlasWidth = mTexture.GetWidth();
@@ -141,6 +140,7 @@ void Font::UpdateMeshToDisplayText(Mesh& aMesh, const std::string& aText)
     }
   }
 
+  // Finally, push the new geometry to the GPU.
   aMesh.UpdateVertices();
   aMesh.UpdateIndices();
 }
