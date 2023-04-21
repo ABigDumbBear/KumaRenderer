@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <random>
 
 #include <Mesh.hpp>
 #include <Shader.hpp>
@@ -177,6 +178,19 @@ void CreateCubeMesh(Kuma3D::Mesh& aMesh)
 }
 
 /******************************************************************************/
+Kuma3D::Transform CreateRandomTransform(std::random_device& aDevice)
+{
+  Kuma3D::Transform transform;
+
+  std::mt19937 generator(aDevice());
+  std::uniform_real_distribution<> dist(-25, 25);
+
+  transform.Translate(Kuma3D::Vec3(dist(generator), dist(generator), dist(generator) - 50));
+
+  return transform;
+}
+
+/******************************************************************************/
 int main()
 {
   // Initialize GLFW.
@@ -229,13 +243,22 @@ int main()
 
   // Load the texture.
   Kuma3D::Texture texture;
+  glBindTexture(GL_TEXTURE_2D, texture.GetID());
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   texture.LoadFromFile("resources/texture.png");
 
-  // Create a cube.
+  // Create a cube mesh.
   Kuma3D::Mesh mesh;
   CreateCubeMesh(mesh);
-  Kuma3D::Transform cubeTransform;
-  cubeTransform.SetPosition(Kuma3D::Vec3(0, 0, -10));
+
+  // Generate a number of random transforms.
+  std::random_device rd;
+  std::vector<Kuma3D::Transform> transforms;
+  for(int i = 0; i < 500; ++i)
+  {
+    transforms.emplace_back(CreateRandomTransform(rd));
+  }
 
   // Set the shader uniforms.
   shader.Activate();
@@ -244,30 +267,38 @@ int main()
                                             Kuma3D::Vec3(0, 0, 0)));
   shader.SetMat4("projectionMatrix", Kuma3D::Perspective(45, 1000, 1000, 0.1, 100));
 
-  std::vector<Kuma3D::Mat4> matrices;
-
   // Run until instructed to close.
   while(!glfwWindowShouldClose(window))
   {
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    cubeTransform.Rotate(Kuma3D::Vec3(0, 1, 0), 1);
-    matrices.clear();
-    matrices.emplace_back(cubeTransform.GetMatrix());
+    // Rotate each transform.
+    for(auto& transform : transforms)
+    {
+      transform.SetRotation(0, sin(glfwGetTime()) * 180, 0);
+    }
 
-    // Copy data into the cube instance buffer.
+    // Add each transformation matrix to a vector.
+    std::vector<Kuma3D::Mat4> matrices;
+    for(const auto& transform : transforms)
+    {
+      matrices.emplace_back(transform.GetMatrix());
+    }
+
+    // Copy the matrices into the cube instance buffer.
     glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
     glBufferData(GL_ARRAY_BUFFER,
                  matrices.size() * sizeof(Kuma3D::Mat4),
-                 &matrices[0],
+                 matrices.data(),
                  GL_DYNAMIC_DRAW);
-    mesh.DrawInstanced(shader, 1);
+
+    // Draw the cube a number of times.
+    mesh.DrawInstanced(shader, 500);
 
     glfwPollEvents();
   }
 
   glfwTerminate();
-
   return 0;
 }
