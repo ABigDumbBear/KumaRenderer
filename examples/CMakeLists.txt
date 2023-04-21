@@ -5,4 +5,4 @@ set(EXAMPLES_INSTALL_DIR ${CMAKE_SOURCE_DIR}/install/examples)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath -Wl,${CMAKE_SOURCE_DIR}/install/lib")
 
 # Add each example.
-add_subdirectory(cube)
+add_subdirectory(cubes)
