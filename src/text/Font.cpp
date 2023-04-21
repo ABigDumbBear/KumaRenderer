@@ -38,6 +38,7 @@ void Font::LoadFromFile(const std::string& aFile)
 {
   FT_New_Face(mLibrary, aFile.c_str(), 0, &mFace);
   CreateTexture(48);
+  CreateGlyphMap(48);
 }
 
 /******************************************************************************/
@@ -175,16 +176,7 @@ void Font::CreateTexture(int aSize)
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glPixelStorei(GL_PACK_ALIGNMENT, 1);
 
-  glBindTexture(GL_TEXTURE_2D, mTexture.GetID());
-  glTexImage2D(GL_TEXTURE_2D,
-               0,
-               GL_RED,
-               atlasWidth,
-               atlasHeight,
-               0,
-               GL_RED,
-               GL_UNSIGNED_BYTE,
-               nullptr);
+  mTexture.LoadFromData(nullptr, atlasWidth, atlasHeight, GL_RED);
 
   // Now that we have an empty texture, fill it with the image data
   // for each of the first 128 ASCII characters.
@@ -219,9 +211,6 @@ void Font::CreateTexture(int aSize)
   // unpack alignment to the default (4).
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
   glPixelStorei(GL_PACK_ALIGNMENT, 4);
-
-  // Next, calculate a GlyphMap for this font at this size.
-  CreateGlyphMap(aSize);
 }
 
 /******************************************************************************/

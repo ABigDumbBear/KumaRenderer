@@ -27,6 +27,20 @@ void Texture::LoadFromFile(const std::string& aFile, GLint aLoadFormat)
                         &channels,
                         0);
 
+  LoadFromData(data, mWidth, mHeight, aLoadFormat);
+
+  stbi_image_free(data);
+}
+
+/******************************************************************************/
+void Texture::LoadFromData(unsigned char* aData,
+                           unsigned int aWidth,
+                           unsigned int aHeight,
+                           GLint aLoadFormat)
+{
+  mWidth = aWidth;
+  mHeight = aHeight;
+
   glBindTexture(GL_TEXTURE_2D, mID);
 
   // Copy the image data into the currently bound texture.
@@ -38,12 +52,10 @@ void Texture::LoadFromFile(const std::string& aFile, GLint aLoadFormat)
                0,
                aLoadFormat,
                GL_UNSIGNED_BYTE,
-               data);
+               aData);
 
   // Create a mipmap for this texture; used on small/far away objects.
   glGenerateMipmap(GL_TEXTURE_2D);
-
-  stbi_image_free(data);
 }
 
 } // namespace Kuma3D

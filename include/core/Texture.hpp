@@ -13,7 +13,12 @@ class Texture
     Texture();
     ~Texture();
 
-    void LoadFromFile(const std::string& aFile, GLint aLoadFormat = GL_RGBA);
+    void LoadFromFile(const std::string& aFile,
+                      GLint aLoadFormat = GL_RGBA);
+    void LoadFromData(unsigned char* aData,
+                      unsigned int aWidth,
+                      unsigned int aHeight,
+                      GLint aLoadFormat = GL_RGBA);
 
     int GetWidth() const { return mWidth; }
     int GetHeight() const { return mHeight; }
