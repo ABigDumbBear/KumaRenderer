@@ -6,6 +6,7 @@
 #include <assimp/material.h>
 #include <assimp/scene.h>
 
+#include "Material.hpp"
 #include "Mesh.hpp"
 #include "Texture.hpp"
 
@@ -30,9 +31,6 @@ class Model
                      unsigned int aMeshIndex,
                      const aiScene& aScene,
                      const std::string& aWorkingDirectory);
-    std::vector<Texture> GetTexturesForMaterial(const aiMaterial& aMaterial,
-                                                aiTextureType aType,
-                                                const std::string& aWorkingDirectory);
 
     std::vector<Mesh> mMeshes;
 };

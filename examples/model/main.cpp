@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <Model.hpp>
+#include <Texture.hpp>
 
 #include <Transform.hpp>
 
@@ -37,7 +38,7 @@ int main()
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
-  auto window = glfwCreateWindow(1280, 720, "cubes", nullptr, nullptr);
+  auto window = glfwCreateWindow(1280, 720, "model", nullptr, nullptr);
   if(window == nullptr)
   {
     std::cout << "Failed to create window!" << std::endl;
@@ -63,6 +64,10 @@ int main()
   // Load the model.
   Kuma3D::Model model;
   model.LoadFromFile("resources/model/Spitfire.obj");
+  Kuma3D::Texture tex;
+  tex.LoadFromFile("resources/model/Spitfire_Red.png", GL_RGB);
+  glBindTexture(GL_TEXTURE_2D, tex.GetID());
+  glActiveTexture(GL_TEXTURE0);
 
   // Set shader uniforms.
   Kuma3D::Transform modelTransform;
@@ -79,6 +84,9 @@ int main()
   {
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    modelTransform.SetRotation(0, sin(glfwGetTime()) * 100, 0);
+    shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
 
     model.Draw(shader);
 

@@ -89,87 +89,11 @@ void Model::ProcessMesh(aiMesh& aMesh,
                             aMesh.mVertices[i].z);
 
     // Retrieve the texture coordinates.
-    // TODO: for now, this only retrieves the texture coordinates for the first
-    // texture, since MeshVertex only supports one set of coordinates. It might
-    // be worth addressing this in the future.
     auto texCoords = aMesh.mTextureCoords[0];
     if(texCoords != nullptr)
     {
       vertex.mTexCoords[0] = texCoords[i].x;
       vertex.mTexCoords[1] = texCoords[i].y;
-    }
-
-    // Load the textures themselves, if there are any.
-    if(aMesh.mMaterialIndex >= 0)
-    {
-      auto material = aScene.mMaterials[aMesh.mMaterialIndex];
-
-      // Load each texture of each type for the material.
-      auto textures = GetTexturesForMaterial(*material, aiTextureType_NONE, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_DIFFUSE, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_SPECULAR, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_AMBIENT, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_EMISSIVE, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_HEIGHT, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_NORMALS, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_SHININESS, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_OPACITY, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_DISPLACEMENT, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_LIGHTMAP, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_REFLECTION, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
-      textures = GetTexturesForMaterial(*material, aiTextureType_UNKNOWN, aWorkingDirectory);
-      for(const auto& texture : textures)
-      {
-        //mesh.AddTexture(texture);
-      }
     }
 
     mesh.mVertices.emplace_back(vertex);
@@ -185,31 +109,13 @@ void Model::ProcessMesh(aiMesh& aMesh,
     }
   }
 
-  mesh.UpdateVertices();
-  mesh.UpdateIndices();
-}
-
-/******************************************************************************/
-std::vector<Texture> Model::GetTexturesForMaterial(const aiMaterial& aMaterial,
-                                                   aiTextureType aType,
-                                                   const std::string& aWorkingDirectory)
-{
-  std::vector<Texture> textures;
-
-  for(int i = 0; i < aMaterial.GetTextureCount(aType); ++i)
+  // Retrieve the material data.
+  if(aMesh.mMaterialIndex >= 0)
   {
-    aiString str;
-    aMaterial.GetTexture(aType, i, &str);
-
-    std::stringstream texturePath;
-    texturePath << aWorkingDirectory << "/" << str.C_Str();
-
-    Texture texture;
-    texture.LoadFromFile(texturePath.str());
-    textures.emplace_back(texture);
   }
 
-  return textures;
+  mesh.UpdateVertices();
+  mesh.UpdateIndices();
 }
 
 } // namespace Kuma3D
