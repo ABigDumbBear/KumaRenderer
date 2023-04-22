@@ -108,7 +108,7 @@ Mesh::~Mesh()
 }
 
 /******************************************************************************/
-void Mesh::Draw(const Shader& aShader, GLenum aMode)
+void Mesh::Draw(const Shader& aShader, GLenum aMode) const
 {
   glBindVertexArray(mVertexArray);
 
@@ -125,7 +125,7 @@ void Mesh::Draw(const Shader& aShader, GLenum aMode)
 /******************************************************************************/
 void Mesh::DrawInstanced(const Shader& aShader,
                          int aNumInstances,
-                         GLenum aMode)
+                         GLenum aMode) const
 {
   glBindVertexArray(mVertexArray);
 

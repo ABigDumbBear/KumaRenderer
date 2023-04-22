@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <random>
 
 #include <Mesh.hpp>
 #include <Shader.hpp>
@@ -17,22 +18,22 @@ void CreateCubeMesh(Kuma3D::Mesh& aMesh)
   Kuma3D::MeshVertex vertex;
 
   // Front face
-  vertex.mPosition = Kuma3D::Vec3(0, 0, 0);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, -0.5, 0.5);
   vertex.mNormal = Kuma3D::Vec3(0, 0, -1);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 0;
+  vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 0, 0);
-  vertex.mTexCoords[0] = 1;
-  vertex.mTexCoords[1] = 0;
-  aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 1, 0);
+  vertex.mPosition = Kuma3D::Vec3(0.5, -0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(0, 1, 0);
+  vertex.mPosition = Kuma3D::Vec3(0.5, 0.5, 0.5);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  aMesh.mVertices.emplace_back(vertex);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, 0.5, 0.5);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 1;
+  vertex.mTexCoords[1] = 0;
   aMesh.mVertices.emplace_back(vertex);
 
   aMesh.mIndices.emplace_back(0);
@@ -43,22 +44,22 @@ void CreateCubeMesh(Kuma3D::Mesh& aMesh)
   aMesh.mIndices.emplace_back(3);
 
   // Top face
-  vertex.mPosition = Kuma3D::Vec3(0, 1, 0);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, 0.5, 0.5);
   vertex.mNormal = Kuma3D::Vec3(0, 1, 0);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 0;
+  vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 1, 0);
-  vertex.mTexCoords[0] = 1;
-  vertex.mTexCoords[1] = 0;
-  aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 1, 1);
+  vertex.mPosition = Kuma3D::Vec3(0.5, 0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(0, 1, 1);
+  vertex.mPosition = Kuma3D::Vec3(0.5, 0.5, -0.5);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  aMesh.mVertices.emplace_back(vertex);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 1;
+  vertex.mTexCoords[1] = 0;
   aMesh.mVertices.emplace_back(vertex);
 
   aMesh.mIndices.emplace_back(4);
@@ -69,22 +70,22 @@ void CreateCubeMesh(Kuma3D::Mesh& aMesh)
   aMesh.mIndices.emplace_back(7);
 
   // Back face
-  vertex.mPosition = Kuma3D::Vec3(0, 0, 1);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, -0.5, -0.5);
   vertex.mNormal = Kuma3D::Vec3(0, 0, 1);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 0;
+  vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 0, 1);
-  vertex.mTexCoords[0] = 1;
-  vertex.mTexCoords[1] = 0;
-  aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 1, 1);
+  vertex.mPosition = Kuma3D::Vec3(0.5, -0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(0, 1, 1);
+  vertex.mPosition = Kuma3D::Vec3(0.5, 0.5, -0.5);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  aMesh.mVertices.emplace_back(vertex);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 1;
+  vertex.mTexCoords[1] = 0;
   aMesh.mVertices.emplace_back(vertex);
 
   aMesh.mIndices.emplace_back(8);
@@ -95,22 +96,22 @@ void CreateCubeMesh(Kuma3D::Mesh& aMesh)
   aMesh.mIndices.emplace_back(11);
 
   // Left face
-  vertex.mPosition = Kuma3D::Vec3(0, 0, 1);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, -0.5, -0.5);
   vertex.mNormal = Kuma3D::Vec3(-1, 0, 0);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 0;
+  vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(0, 0, 0);
-  vertex.mTexCoords[0] = 1;
-  vertex.mTexCoords[1] = 0;
-  aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(0, 1, 0);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, -0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(0, 1, 1);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, 0.5, 0.5);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  aMesh.mVertices.emplace_back(vertex);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 1;
+  vertex.mTexCoords[1] = 0;
   aMesh.mVertices.emplace_back(vertex);
 
   aMesh.mIndices.emplace_back(12);
@@ -121,22 +122,22 @@ void CreateCubeMesh(Kuma3D::Mesh& aMesh)
   aMesh.mIndices.emplace_back(15);
 
   // Bottom face
-  vertex.mPosition = Kuma3D::Vec3(0, 0, 1);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, -0.5, -0.5);
   vertex.mNormal = Kuma3D::Vec3(0, -1, 0);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 0;
+  vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 0, 1);
-  vertex.mTexCoords[0] = 1;
-  vertex.mTexCoords[1] = 0;
-  aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 0, 0);
+  vertex.mPosition = Kuma3D::Vec3(0.5, -0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(0, 0, 0);
+  vertex.mPosition = Kuma3D::Vec3(0.5, -0.5, 0.5);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  aMesh.mVertices.emplace_back(vertex);
+  vertex.mPosition = Kuma3D::Vec3(-0.5, -0.5, 0.5);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 1;
+  vertex.mTexCoords[1] = 0;
   aMesh.mVertices.emplace_back(vertex);
 
   aMesh.mIndices.emplace_back(16);
@@ -147,22 +148,22 @@ void CreateCubeMesh(Kuma3D::Mesh& aMesh)
   aMesh.mIndices.emplace_back(19);
 
   // Right face
-  vertex.mPosition = Kuma3D::Vec3(1, 0, 0);
+  vertex.mPosition = Kuma3D::Vec3(0.5, -0.5, 0.5);
   vertex.mNormal = Kuma3D::Vec3(1, 0, 0);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 0;
+  vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 0, 1);
-  vertex.mTexCoords[0] = 1;
-  vertex.mTexCoords[1] = 0;
-  aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 1, 1);
+  vertex.mPosition = Kuma3D::Vec3(0.5, -0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   aMesh.mVertices.emplace_back(vertex);
-  vertex.mPosition = Kuma3D::Vec3(1, 1, 0);
+  vertex.mPosition = Kuma3D::Vec3(0.5, 0.5, -0.5);
+  vertex.mTexCoords[0] = 1;
+  vertex.mTexCoords[1] = 0;
+  aMesh.mVertices.emplace_back(vertex);
+  vertex.mPosition = Kuma3D::Vec3(0.5, 0.5, 0.5);
   vertex.mTexCoords[0] = 0;
-  vertex.mTexCoords[1] = 1;
+  vertex.mTexCoords[1] = 0;
   aMesh.mVertices.emplace_back(vertex);
 
   aMesh.mIndices.emplace_back(20);
@@ -174,6 +175,19 @@ void CreateCubeMesh(Kuma3D::Mesh& aMesh)
 
   aMesh.UpdateVertices();
   aMesh.UpdateIndices();
+}
+
+/******************************************************************************/
+Kuma3D::Transform CreateRandomTransform(std::random_device& aDevice)
+{
+  Kuma3D::Transform transform;
+
+  std::mt19937 generator(aDevice());
+  std::uniform_real_distribution<> dist(-25, 25);
+
+  transform.Translate(Kuma3D::Vec3(dist(generator), dist(generator), dist(generator) - 50));
+
+  return transform;
 }
 
 /******************************************************************************/
@@ -204,7 +218,7 @@ int main()
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
-  auto window = glfwCreateWindow(1000, 1000, "cubes", nullptr, nullptr);
+  auto window = glfwCreateWindow(1280, 720, "cubes", nullptr, nullptr);
   if(window == nullptr)
   {
     std::cout << "Failed to create window!" << std::endl;
@@ -219,7 +233,7 @@ int main()
     return -1;
   }
 
-  glViewport(0, 0, 1000, 1000);
+  glViewport(0, 0, 1280, 720);
   glEnable(GL_DEPTH_TEST);
 
   // Load the shader.
@@ -229,22 +243,29 @@ int main()
 
   // Load the texture.
   Kuma3D::Texture texture;
+  glBindTexture(GL_TEXTURE_2D, texture.GetID());
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   texture.LoadFromFile("resources/texture.png");
 
-  // Create a cube.
+  // Create a cube mesh.
   Kuma3D::Mesh mesh;
   CreateCubeMesh(mesh);
-  Kuma3D::Transform cubeTransform;
-  cubeTransform.SetPosition(Kuma3D::Vec3(0, 0, -10));
+
+  // Generate a number of random transforms.
+  std::random_device rd;
+  std::vector<Kuma3D::Transform> transforms;
+  for(int i = 0; i < 10000; ++i)
+  {
+    transforms.emplace_back(CreateRandomTransform(rd));
+  }
 
   // Set the shader uniforms.
   shader.Activate();
   shader.SetMat4("viewMatrix", Kuma3D::View(Kuma3D::Vec3(0, 0, 1),
                                             Kuma3D::Vec3(1, 0, 0),
                                             Kuma3D::Vec3(0, 0, 0)));
-  shader.SetMat4("projectionMatrix", Kuma3D::Perspective(45, 1000, 1000, 0.1, 100));
-
-  std::vector<Kuma3D::Mat4> matrices;
+  shader.SetMat4("projectionMatrix", Kuma3D::Perspective(45, 1280, 720, 0.1, 100));
 
   // Run until instructed to close.
   while(!glfwWindowShouldClose(window))
@@ -252,22 +273,32 @@ int main()
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    cubeTransform.Rotate(Kuma3D::Vec3(0, 1, 0), 1);
-    matrices.clear();
-    matrices.emplace_back(cubeTransform.GetMatrix());
+    // Rotate each transform.
+    for(auto& transform : transforms)
+    {
+      transform.SetRotation(0, sin(glfwGetTime()) * 180, 0);
+    }
 
-    // Copy data into the cube instance buffer.
+    // Add each transformation matrix to a vector.
+    std::vector<Kuma3D::Mat4> matrices;
+    for(const auto& transform : transforms)
+    {
+      matrices.emplace_back(transform.GetMatrix());
+    }
+
+    // Copy the matrices into the cube instance buffer.
     glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
     glBufferData(GL_ARRAY_BUFFER,
                  matrices.size() * sizeof(Kuma3D::Mat4),
-                 &matrices[0],
+                 matrices.data(),
                  GL_DYNAMIC_DRAW);
-    mesh.DrawInstanced(shader, 1);
+
+    // Draw the cube a number of times.
+    mesh.DrawInstanced(shader, 10000);
 
     glfwPollEvents();
   }
 
   glfwTerminate();
-
   return 0;
 }

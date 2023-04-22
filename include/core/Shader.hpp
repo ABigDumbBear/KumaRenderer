@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include <glad/glad.h>
+
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
@@ -26,10 +28,9 @@ class Shader
     void SetVec3(const std::string& aName, const Vec3& aValue) const;
     void SetMat4(const std::string& aName, const Mat4& aValue) const;
 
-    unsigned int GetID() const { return mID; }
+    GLuint GetID() const { return mID; }
 
   private:
-
     enum class ShaderType
     {
       eVERTEX,
@@ -39,7 +40,7 @@ class Shader
     void CompileShader(unsigned int& aID, const std::string& aSource, ShaderType aType);
     void LinkProgram(unsigned int aVertexID, unsigned int aFragmentID);
 
-    unsigned int mID { 0 };
+    GLuint mID { 0 };
 };
 
 } // namespace Kuma3D
