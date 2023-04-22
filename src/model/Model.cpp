@@ -15,6 +15,18 @@ void Model::LoadFromFile(const std::string& aFile)
   Assimp::Importer importer;
   auto scene = importer.ReadFile(aFile,
                                  aiProcess_Triangulate | aiProcess_FlipUVs);
+
+  // Remove any current meshes and create a new default mesh for each
+  // mesh in the model.
+  mMeshes.clear();
+  mMeshes.shrink_to_fit();
+  mMeshes.reserve(scene->mNumMeshes);
+
+  for(int i = 0; i < scene->mNumMeshes; ++i)
+  {
+    mMeshes.emplace_back();
+  }
+
   ProcessNode(*scene->mRootNode, *scene, workingDirectory);
 }
 
@@ -45,7 +57,7 @@ void Model::ProcessNode(aiNode& aNode,
   for(int i = 0; i < aNode.mNumMeshes; ++i)
   {
     auto mesh = aScene.mMeshes[aNode.mMeshes[i]];
-    ProcessMesh(*mesh, aScene, aWorkingDirectory);
+    ProcessMesh(*mesh, i, aScene, aWorkingDirectory);
   }
 
   // Process each of this node's children.
@@ -57,10 +69,11 @@ void Model::ProcessNode(aiNode& aNode,
 
 /******************************************************************************/
 void Model::ProcessMesh(aiMesh& aMesh,
+                        unsigned int aMeshIndex,
                         const aiScene& aScene,
                         const std::string& aWorkingDirectory)
 {
-  Mesh mesh;
+  auto& mesh = mMeshes[aMeshIndex];
 
   // Retrieve the vertex data.
   for(int i = 0; i < aMesh.mNumVertices; ++i)
@@ -174,7 +187,6 @@ void Model::ProcessMesh(aiMesh& aMesh,
 
   mesh.UpdateVertices();
   mesh.UpdateIndices();
-  mMeshes.emplace_back(mesh);
 }
 
 /******************************************************************************/

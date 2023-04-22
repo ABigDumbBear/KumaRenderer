@@ -27,6 +27,7 @@ class Model
                      const aiScene& aScene,
                      const std::string& aWorkingDirectory);
     void ProcessMesh(aiMesh& aMesh,
+                     unsigned int aMeshIndex,
                      const aiScene& aScene,
                      const std::string& aWorkingDirectory);
     std::vector<Texture> GetTexturesForMaterial(const aiMaterial& aMaterial,

@@ -10,3 +10,7 @@ add_subdirectory(cubes)
 if(TEXT_SUPPORT)
   add_subdirectory(text)
 endif(TEXT_SUPPORT)
+
+if(MODEL_SUPPORT)
+  add_subdirectory(model)
+endif(MODEL_SUPPORT)
