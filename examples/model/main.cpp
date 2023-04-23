@@ -57,27 +57,27 @@ int main()
   glEnable(GL_DEPTH_TEST);
 
   // Load the shader.
-  Kuma3D::Shader shader;
+  KumaGL::Shader shader;
   shader.LoadFromFiles("resources/shaders/Model.vert",
                        "resources/shaders/Model.frag");
 
   // Load the model.
-  Kuma3D::Model model;
+  KumaGL::Model model;
   model.LoadFromFile("resources/model/Spitfire.obj");
-  Kuma3D::Texture tex;
+  KumaGL::Texture tex;
   tex.LoadFromFile("resources/model/Spitfire_Red.png", GL_RGB);
   glBindTexture(GL_TEXTURE_2D, tex.GetID());
   glActiveTexture(GL_TEXTURE0);
 
   // Set shader uniforms.
-  Kuma3D::Transform modelTransform;
-  modelTransform.SetPosition(Kuma3D::Vec3(0, 0, -10));
+  KumaGL::Transform modelTransform;
+  modelTransform.SetPosition(KumaGL::Vec3(0, 0, -10));
   shader.Activate();
   shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
-  shader.SetMat4("viewMatrix", Kuma3D::View(Kuma3D::Vec3(0, 0, 1),
-                                            Kuma3D::Vec3(1, 0, 0),
-                                            Kuma3D::Vec3(0, 0, 0)));
-  shader.SetMat4("projectionMatrix", Kuma3D::Perspective(45, 1280, 720, 0.1, 100));
+  shader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
+                                            KumaGL::Vec3(1, 0, 0),
+                                            KumaGL::Vec3(0, 0, 0)));
+  shader.SetMat4("projectionMatrix", KumaGL::Perspective(45, 1280, 720, 0.1, 100));
 
   // Run until instructed to close.
   while(!glfwWindowShouldClose(window))

@@ -12,7 +12,7 @@
 
 #include "Mat4.hpp"
 
-namespace Kuma3D {
+namespace KumaGL {
 
 struct MeshVertex
 {
@@ -52,6 +52,6 @@ class Mesh
     GLuint mElementBuffer { 0 };
 };
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

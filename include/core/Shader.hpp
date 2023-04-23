@@ -8,7 +8,7 @@
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
-namespace Kuma3D {
+namespace KumaGL {
 
 class Shader
 {
@@ -43,6 +43,6 @@ class Shader
     GLuint mID { 0 };
 };
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

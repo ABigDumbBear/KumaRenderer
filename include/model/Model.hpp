@@ -10,7 +10,7 @@
 #include "Mesh.hpp"
 #include "Texture.hpp"
 
-namespace Kuma3D {
+namespace KumaGL {
 
 class Model
 {
@@ -35,6 +35,6 @@ class Model
     std::vector<Mesh> mMeshes;
 };
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

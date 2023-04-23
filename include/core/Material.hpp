@@ -3,7 +3,7 @@
 
 #include <Texture.hpp>
 
-namespace Kuma3D {
+namespace KumaGL {
 
 struct Material
 {
@@ -11,6 +11,6 @@ struct Material
   Texture mSpecular;
 };
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

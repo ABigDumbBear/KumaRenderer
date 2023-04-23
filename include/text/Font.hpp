@@ -10,7 +10,7 @@
 class FT_FaceRec_;
 class FT_LibraryRec_;
 
-namespace Kuma3D {
+namespace KumaGL {
 
 class Font
 {
@@ -46,6 +46,6 @@ class Font
     static int mInstances;
 };
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

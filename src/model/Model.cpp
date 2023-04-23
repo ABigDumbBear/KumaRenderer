@@ -5,7 +5,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
-namespace Kuma3D {
+namespace KumaGL {
 
 /******************************************************************************/
 void Model::LoadFromFile(const std::string& aFile)
@@ -118,4 +118,4 @@ void Model::ProcessMesh(aiMesh& aMesh,
   mesh.UpdateIndices();
 }
 
-} // namespace Kuma3D
+} // namespace KumaGL

@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 
-namespace Kuma3D {
+namespace KumaGL {
 
 /******************************************************************************/
 Mesh::Mesh()
@@ -160,4 +160,4 @@ void Mesh::UpdateIndices()
                GL_STATIC_DRAW);
 }
 
-} // namespace Kuma3D
+} // namespace KumaGL

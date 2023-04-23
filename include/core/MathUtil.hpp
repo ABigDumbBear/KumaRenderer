@@ -6,7 +6,7 @@
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
-namespace Kuma3D {
+namespace KumaGL {
 
 /**
  * Creates and returns the normalized version of a given vector.
@@ -253,6 +253,6 @@ inline Vec3 Lerp(const Vec3& aStart, const Vec3& aTarget, float aPercent)
               Lerp(aStart.z, aTarget.z, aPercent));
 }
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

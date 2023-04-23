@@ -5,7 +5,7 @@
 
 #include <glad/glad.h>
 
-namespace Kuma3D {
+namespace KumaGL {
 
 class Texture
 {
@@ -32,6 +32,6 @@ class Texture
     GLuint mID { 0 };
 };
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

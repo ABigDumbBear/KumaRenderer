@@ -6,12 +6,12 @@
 
 #include "MathUtil.hpp"
 
-namespace Kuma3D {
+namespace KumaGL {
 
 class Transform
 {
   public:
-    void Translate(const Kuma3D::Vec3& aPos)
+    void Translate(const KumaGL::Vec3& aPos)
     {
       mPosition += aPos;
       UpdateMatrix();
@@ -19,15 +19,15 @@ class Transform
 
     void Rotate(float x, float y, float z)
     {
-      mRotation = mRotation * Kuma3D::Rotate(Vec3(1, 0, 0), x);
-      mRotation = mRotation * Kuma3D::Rotate(Vec3(0, 1, 0), y);
-      mRotation = mRotation * Kuma3D::Rotate(Vec3(0, 0, 1), z);
+      mRotation = mRotation * KumaGL::Rotate(Vec3(1, 0, 0), x);
+      mRotation = mRotation * KumaGL::Rotate(Vec3(0, 1, 0), y);
+      mRotation = mRotation * KumaGL::Rotate(Vec3(0, 0, 1), z);
       UpdateMatrix();
     }
 
-    void Rotate(const Kuma3D::Vec3& aAxis, float aDegrees)
+    void Rotate(const KumaGL::Vec3& aAxis, float aDegrees)
     {
-      mRotation = mRotation * Kuma3D::Rotate(aAxis, aDegrees);
+      mRotation = mRotation * KumaGL::Rotate(aAxis, aDegrees);
       UpdateMatrix();
     }
 
@@ -45,15 +45,15 @@ class Transform
 
     void SetRotation(float x, float y, float z)
     {
-      mRotation = Kuma3D::Rotate(Vec3(1, 0, 0), x);
-      mRotation = mRotation * Kuma3D::Rotate(Vec3(0, 1, 0), y);
-      mRotation = mRotation * Kuma3D::Rotate(Vec3(0, 0, 1), z);
+      mRotation = KumaGL::Rotate(Vec3(1, 0, 0), x);
+      mRotation = mRotation * KumaGL::Rotate(Vec3(0, 1, 0), y);
+      mRotation = mRotation * KumaGL::Rotate(Vec3(0, 0, 1), z);
       UpdateMatrix();
     }
 
-    void SetRotation(const Kuma3D::Vec3& aAxis, float aDegrees)
+    void SetRotation(const KumaGL::Vec3& aAxis, float aDegrees)
     {
-      mRotation = Kuma3D::Rotate(aAxis, aDegrees);
+      mRotation = KumaGL::Rotate(aAxis, aDegrees);
       UpdateMatrix();
     }
 
@@ -72,9 +72,9 @@ class Transform
   private:
     void UpdateMatrix()
     {
-      mMatrix = Kuma3D::Translate(mPosition);
+      mMatrix = KumaGL::Translate(mPosition);
       mMatrix = mMatrix * mRotation;
-      mMatrix = mMatrix * Kuma3D::Scale(mScalar);
+      mMatrix = mMatrix * KumaGL::Scale(mScalar);
     }
 
     Vec3 mPosition;
@@ -94,6 +94,6 @@ class Transform
   bool mUseParent { false };
 };*/
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

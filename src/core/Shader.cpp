@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-namespace Kuma3D {
+namespace KumaGL {
 
 /******************************************************************************/
 Shader::Shader()
@@ -134,4 +134,4 @@ void Shader::LinkProgram(unsigned int aVertexID,
   }
 }
 
-} // namespace Kuma3D
+} // namespace KumaGL

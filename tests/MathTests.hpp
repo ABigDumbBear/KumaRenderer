@@ -8,7 +8,7 @@
 
 #include "MathUtil.hpp"
 
-namespace Kuma3D {
+namespace KumaGL {
 
 inline void TestVec3Addition()
 {
@@ -142,6 +142,6 @@ inline void TestLerp()
   assert(Lerp(5.0, 15.0, 0.5) == 10.0);
 }
 
-} // namespace Kuma3D
+} // namespace KumaGL
 
 #endif

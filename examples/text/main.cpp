@@ -58,25 +58,25 @@ int main()
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   // Load the shader.
-  Kuma3D::Shader shader;
+  KumaGL::Shader shader;
   shader.LoadFromFiles("resources/shaders/Text.vert",
                        "resources/shaders/Text.frag");
 
   // Load the font.
-  Kuma3D::Font font;
+  KumaGL::Font font;
   font.LoadFromFile("resources/font/Roboto-Regular.ttf");
 
   // Create a mesh and update its geometry to display some text.
-  Kuma3D::Mesh mesh;
+  KumaGL::Mesh mesh;
   font.UpdateMeshToDisplayText(mesh, "This is some text.");
 
-  Kuma3D::Transform meshTransform;
-  meshTransform.SetPosition(Kuma3D::Vec3(5, 69, 0));
+  KumaGL::Transform meshTransform;
+  meshTransform.SetPosition(KumaGL::Vec3(5, 69, 0));
 
   // Set the shader uniforms.
   shader.Activate();
   shader.SetMat4("modelMatrix", meshTransform.GetMatrix());
-  shader.SetMat4("projectionMatrix", Kuma3D::Orthographic(1280, 720, 0, 100));
+  shader.SetMat4("projectionMatrix", KumaGL::Orthographic(1280, 720, 0, 100));
 
   // Run until instructed to close.
   while(!glfwWindowShouldClose(window))
