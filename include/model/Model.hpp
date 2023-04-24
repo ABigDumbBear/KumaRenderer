@@ -1,6 +1,7 @@
 #ifndef MODEL_HPP
 #define MODEL_HPP
 
+#include <memory>
 #include <vector>
 
 #include <assimp/material.h>
@@ -32,7 +33,7 @@ class Model
                      const aiScene& aScene,
                      const std::string& aWorkingDirectory);
 
-    std::vector<Mesh> mMeshes;
+    std::vector<std::unique_ptr<Mesh>> mMeshes;
 };
 
 } // namespace KumaGL

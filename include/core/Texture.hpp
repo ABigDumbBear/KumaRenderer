@@ -12,9 +12,10 @@ class Texture
   public:
     Texture();
     ~Texture();
-
     Texture(const Texture& aTexture) = delete;
     Texture& operator=(const Texture& aTexture) = delete;
+    Texture(Texture&&) = delete;
+    Texture& operator=(Texture&& aMesh) = delete;
 
     void LoadFromFile(const std::string& aFile,
                       GLint aLoadFormat = GL_RGBA);

@@ -15,9 +15,10 @@ class Shader
   public:
     Shader();
     ~Shader();
-
     Shader(const Shader& aShader) = delete;
     Shader& operator=(const Shader& aShader) = delete;
+    Shader(Shader&&) = delete;
+    Shader& operator=(Shader&& aMesh) = delete;
 
     void LoadFromFiles(const std::string& aVertexFile,
                        const std::string& aFragmentFile);

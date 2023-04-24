@@ -10,17 +10,13 @@ namespace KumaGL {
 /******************************************************************************/
 void Model::LoadFromFile(const std::string& aFile)
 {
-  auto workingDirectory = aFile.substr(0, aFile.find_last_of("/\\"));
+  mMeshes.clear();
 
   Assimp::Importer importer;
   auto scene = importer.ReadFile(aFile,
                                  aiProcess_Triangulate | aiProcess_FlipUVs);
 
-  // Remove any previous meshes and reserve enough space for each new mesh.
-  mMeshes.clear();
-  mMeshes.shrink_to_fit();
-  mMeshes.reserve(scene->mNumMeshes);
-
+  auto workingDirectory = aFile.substr(0, aFile.find_last_of("/\\"));
   ProcessNode(*scene->mRootNode, *scene, workingDirectory);
 }
 
@@ -29,7 +25,7 @@ void Model::Draw(const Shader& aShader, GLenum aMode) const
 {
   for(const auto& mesh : mMeshes)
   {
-    mesh.Draw(aShader, aMode);
+    mesh->Draw(aShader, aMode);
   }
 }
 
@@ -38,7 +34,7 @@ void Model::DrawInstanced(const Shader& aShader, int aNumInstances, GLenum aMode
 {
   for(const auto& mesh : mMeshes)
   {
-    mesh.DrawInstanced(aShader, aNumInstances, aMode);
+    mesh->DrawInstanced(aShader, aNumInstances, aMode);
   }
 }
 
@@ -67,9 +63,7 @@ void Model::ProcessMesh(aiMesh& aMesh,
                         const aiScene& aScene,
                         const std::string& aWorkingDirectory)
 {
-  // Create a new mesh.
-  mMeshes.emplace_back();
-  auto& mesh = mMeshes.back();
+  auto mesh = std::make_unique<Mesh>();
 
   // Retrieve the vertex data.
   for(int i = 0; i < aMesh.mNumVertices; ++i)
@@ -92,7 +86,7 @@ void Model::ProcessMesh(aiMesh& aMesh,
       vertex.mTexCoords[1] = texCoords[i].y;
     }
 
-    mesh.mVertices.emplace_back(vertex);
+    mesh->mVertices.emplace_back(vertex);
   }
 
   // Retrieve the index data.
@@ -101,7 +95,7 @@ void Model::ProcessMesh(aiMesh& aMesh,
     auto face = aMesh.mFaces[i];
     for(int j = 0; j < face.mNumIndices; ++j)
     {
-      mesh.mIndices.emplace_back(face.mIndices[j]);
+      mesh->mIndices.emplace_back(face.mIndices[j]);
     }
   }
 
@@ -110,8 +104,9 @@ void Model::ProcessMesh(aiMesh& aMesh,
   {
   }
 
-  mesh.UpdateVertices();
-  mesh.UpdateIndices();
+  mesh->UpdateVertices();
+  mesh->UpdateIndices();
+  mMeshes.emplace_back(std::move(mesh));
 }
 
 } // namespace KumaGL

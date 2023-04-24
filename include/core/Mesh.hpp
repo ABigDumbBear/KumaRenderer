@@ -27,10 +27,10 @@ class Mesh
   public:
     Mesh();
     ~Mesh();
-
     Mesh(const Mesh& aMesh) = delete;
     Mesh& operator=(const Mesh& aMesh) = delete;
-    Mesh(Mesh&&) = default;
+    Mesh(Mesh&&) = delete;
+    Mesh& operator=(Mesh&& aMesh) = delete;
 
     void Draw(const Shader& aShader,
               GLenum aMode = GL_TRIANGLES) const;
