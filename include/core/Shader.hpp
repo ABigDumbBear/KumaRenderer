@@ -16,6 +16,9 @@ class Shader
     Shader();
     ~Shader();
 
+    Shader(const Shader& aShader) = delete;
+    Shader& operator=(const Shader& aShader) = delete;
+
     void LoadFromFiles(const std::string& aVertexFile,
                        const std::string& aFragmentFile);
     void LoadFromSource(const std::string& aVertexSource,

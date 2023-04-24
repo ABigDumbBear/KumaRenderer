@@ -28,6 +28,10 @@ class Mesh
     Mesh();
     ~Mesh();
 
+    Mesh(const Mesh& aMesh) = delete;
+    Mesh& operator=(const Mesh& aMesh) = delete;
+    Mesh(Mesh&&) = default;
+
     void Draw(const Shader& aShader,
               GLenum aMode = GL_TRIANGLES) const;
     void DrawInstanced(const Shader& aShader,

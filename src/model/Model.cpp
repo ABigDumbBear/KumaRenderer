@@ -16,16 +16,10 @@ void Model::LoadFromFile(const std::string& aFile)
   auto scene = importer.ReadFile(aFile,
                                  aiProcess_Triangulate | aiProcess_FlipUVs);
 
-  // Remove any current meshes and create a new default mesh for each
-  // mesh in the model.
+  // Remove any previous meshes and reserve enough space for each new mesh.
   mMeshes.clear();
   mMeshes.shrink_to_fit();
   mMeshes.reserve(scene->mNumMeshes);
-
-  for(int i = 0; i < scene->mNumMeshes; ++i)
-  {
-    mMeshes.emplace_back();
-  }
 
   ProcessNode(*scene->mRootNode, *scene, workingDirectory);
 }
@@ -73,7 +67,9 @@ void Model::ProcessMesh(aiMesh& aMesh,
                         const aiScene& aScene,
                         const std::string& aWorkingDirectory)
 {
-  auto& mesh = mMeshes[aMeshIndex];
+  // Create a new mesh.
+  mMeshes.emplace_back();
+  auto& mesh = mMeshes.back();
 
   // Retrieve the vertex data.
   for(int i = 0; i < aMesh.mNumVertices; ++i)

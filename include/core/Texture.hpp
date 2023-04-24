@@ -13,6 +13,9 @@ class Texture
     Texture();
     ~Texture();
 
+    Texture(const Texture& aTexture) = delete;
+    Texture& operator=(const Texture& aTexture) = delete;
+
     void LoadFromFile(const std::string& aFile,
                       GLint aLoadFormat = GL_RGBA);
     void LoadFromData(unsigned char* aData,
