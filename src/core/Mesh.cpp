@@ -113,7 +113,7 @@ void Mesh::Draw(const Shader& aShader, GLenum aMode) const
   glBindVertexArray(mVertexArray);
 
   // Draw the mesh.
-  aShader.Activate();
+  aShader.Use();
   glDrawElements(aMode,
                  mIndices.size(),
                  GL_UNSIGNED_INT,
@@ -130,7 +130,7 @@ void Mesh::DrawInstanced(const Shader& aShader,
   glBindVertexArray(mVertexArray);
 
   // Draw the mesh.
-  aShader.Activate();
+  aShader.Use();
   glDrawElementsInstanced(aMode,
                           mIndices.size(),
                           GL_UNSIGNED_INT,

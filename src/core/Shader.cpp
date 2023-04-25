@@ -55,7 +55,7 @@ void Shader::LoadFromSource(const std::string& aVertexSource,
 }
 
 /******************************************************************************/
-void Shader::Activate() const
+void Shader::Use() const
 {
   glUseProgram(mID);
 }

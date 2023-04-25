@@ -25,7 +25,7 @@ class Shader
     void LoadFromSource(const std::string& aVertexSource,
                         const std::string& aFragmentSource);
 
-    void Activate() const;
+    void Use() const;
 
     void SetInt(const std::string& aName, int aValue) const;
     void SetFloat(const std::string& aName, float aValue) const;

@@ -15,16 +15,17 @@ list(APPEND HEADER_FILES
             include/3rd_party/KHR/khrplatform.h
             include/3rd_party/glad/glad.h
             include/3rd_party/stb_image/stb_image.h
-            include/core/Mat4.hpp
-            include/core/MathUtil.hpp
             include/core/Mesh.hpp
             include/core/Shader.hpp
             include/core/Texture.hpp
             include/core/Transform.hpp
-            include/core/Vec3.hpp)
+            include/math/Mat4.hpp
+            include/math/MathUtil.hpp
+            include/math/Vec3.hpp)
 list(APPEND INCLUDE_DIRS
             include/3rd_party/
-            include/core)
+            include/core
+            include/math)
 
 # Add optional features.
 option(TEXT_SUPPORT "Adds support for loading font files." ON)

@@ -74,7 +74,7 @@ int main()
   meshTransform.SetPosition(KumaGL::Vec3(5, 69, 0));
 
   // Set the shader uniforms.
-  shader.Activate();
+  shader.Use();
   shader.SetMat4("modelMatrix", meshTransform.GetMatrix());
   shader.SetMat4("projectionMatrix", KumaGL::Orthographic(1280, 720, 0, 100));
 

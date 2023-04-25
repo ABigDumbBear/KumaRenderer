@@ -7,7 +7,6 @@
 #include <assimp/material.h>
 #include <assimp/scene.h>
 
-#include "Material.hpp"
 #include "Mesh.hpp"
 #include "Texture.hpp"
 

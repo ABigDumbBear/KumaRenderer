@@ -72,7 +72,7 @@ int main()
   // Set shader uniforms.
   KumaGL::Transform modelTransform;
   modelTransform.SetPosition(KumaGL::Vec3(0, 0, -10));
-  shader.Activate();
+  shader.Use();
   shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
   shader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
                                             KumaGL::Vec3(1, 0, 0),

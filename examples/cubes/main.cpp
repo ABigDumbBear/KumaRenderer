@@ -261,7 +261,7 @@ int main()
   }
 
   // Set the shader uniforms.
-  shader.Activate();
+  shader.Use();
   shader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
                                             KumaGL::Vec3(1, 0, 0),
                                             KumaGL::Vec3(0, 0, 0)));

@@ -84,16 +84,6 @@ class Transform
     Mat4 mMatrix;
 };
 
-/*struct Transform
-{
-  Vec3 mPosition;
-  Mat4 mRotation;
-  Vec3 mScalar { 1.0, 1.0, 1.0 };
-
-  Entity mParent;
-  bool mUseParent { false };
-};*/
-
 } // namespace KumaGL
 
 #endif
