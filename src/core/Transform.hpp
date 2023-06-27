@@ -33,7 +33,6 @@ public:
     mLocalRotation = Vec3(x, y, z);
     mWorldRotation = Vec3(x, y, z);
     UpdateMatrix();
-    UpdateAxes();
   }
 
   void SetScale(float x, float y, float z) {
@@ -51,8 +50,6 @@ public:
     mWorldScalar.x = aParent.mWorldScalar.x * mLocalScalar.x;
     mWorldScalar.y = aParent.mWorldScalar.y * mLocalScalar.y;
     mWorldScalar.z = aParent.mWorldScalar.z * mLocalScalar.z;
-
-    UpdateAxes();
   }
 
   const Vec3 &GetLocalPosition() const { return mLocalPosition; }
@@ -65,9 +62,29 @@ public:
 
   const Mat4 &GetMatrix() const { return mMatrix; }
 
-  const Vec3 &GetRight() const { return mRight; }
-  const Vec3 &GetUp() const { return mUp; }
-  const Vec3 &GetForward() const { return mForward; }
+  const Vec3 GetRight() const {
+    auto r = KumaGL::Rotate(Vec3(1, 0, 0), mWorldRotation.x);
+    r = KumaGL::Rotate(Vec3(0, 1, 0), mWorldRotation.y) * r;
+    r = KumaGL::Rotate(Vec3(0, 0, 1), mWorldRotation.z) * r;
+
+    return r * Vec3(1, 0, 0);
+  }
+
+  const Vec3 GetUp() const {
+    auto r = KumaGL::Rotate(Vec3(1, 0, 0), mWorldRotation.x);
+    r = KumaGL::Rotate(Vec3(0, 1, 0), mWorldRotation.y) * r;
+    r = KumaGL::Rotate(Vec3(0, 0, 1), mWorldRotation.z) * r;
+
+    return r * Vec3(0, 1, 0);
+  }
+
+  const Vec3 GetForward() const {
+    auto r = KumaGL::Rotate(Vec3(1, 0, 0), mWorldRotation.x);
+    r = KumaGL::Rotate(Vec3(0, 1, 0), mWorldRotation.y) * r;
+    r = KumaGL::Rotate(Vec3(0, 0, 1), mWorldRotation.z) * r;
+
+    return r * Vec3(0, 0, -1);
+  }
 
 private:
   void UpdateMatrix() {
@@ -78,16 +95,6 @@ private:
     auto s = KumaGL::Scale(mLocalScalar);
 
     mMatrix = t * r * s;
-  }
-
-  void UpdateAxes() {
-    auto r = KumaGL::Rotate(Vec3(1, 0, 0), mWorldRotation.x);
-    r = KumaGL::Rotate(Vec3(0, 1, 0), mWorldRotation.y) * r;
-    r = KumaGL::Rotate(Vec3(0, 0, 1), mWorldRotation.z) * r;
-
-    mRight = r * Vec3(1, 0, 0);
-    mUp = r * Vec3(0, 1, 0);
-    mForward = r * Vec3(0, 0, -1);
   }
 
   // These values are relative to the object's parent (or the world,
@@ -104,11 +111,6 @@ private:
   // Converts a vector from the object's coordinate space to
   // the world's coordinate space.
   Mat4 mMatrix;
-
-  // These values are relative to the object itself.
-  Vec3 mRight{1, 0, 0};
-  Vec3 mUp{0, 1, 0};
-  Vec3 mForward{0, 0, -1};
 };
 
 } // namespace KumaGL
