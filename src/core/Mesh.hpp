@@ -5,12 +5,11 @@
 
 #include <glad/glad.h>
 
-#include "Vec3.hpp"
-
 #include "Shader.hpp"
 #include "Texture.hpp"
 
 #include "Mat4.hpp"
+#include "Vec3.hpp"
 
 namespace KumaGL {
 
