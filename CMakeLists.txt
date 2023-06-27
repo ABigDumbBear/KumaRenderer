@@ -7,25 +7,25 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Gather up the source and header files for core features.
 list(APPEND SOURCE_FILES
-            src/core/glad.c
+            src/3rd_party/glad/glad.c
             src/core/Mesh.cpp
             src/core/Shader.cpp
             src/core/Texture.cpp)
 list(APPEND HEADER_FILES
-            include/3rd_party/KHR/khrplatform.h
-            include/3rd_party/glad/glad.h
-            include/3rd_party/stb_image/stb_image.h
-            include/core/Mesh.hpp
-            include/core/Shader.hpp
-            include/core/Texture.hpp
-            include/core/Transform.hpp
-            include/math/Mat4.hpp
-            include/math/MathUtil.hpp
-            include/math/Vec3.hpp)
+            src/3rd_party/KHR/khrplatform.h
+            src/3rd_party/glad/glad.h
+            src/3rd_party/stb_image/stb_image.h
+            src/core/Mesh.hpp
+            src/core/Shader.hpp
+            src/core/Texture.hpp
+            src/core/Transform.hpp
+            src/math/Mat4.hpp
+            src/math/MathUtil.hpp
+            src/math/Vec3.hpp)
 list(APPEND INCLUDE_DIRS
-            include/3rd_party/
-            include/core
-            include/math)
+            src/3rd_party
+            src/core
+            src/math)
 
 # Add optional features.
 option(TEXT_SUPPORT "Adds support for loading font files." ON)
@@ -33,16 +33,16 @@ option(MODEL_SUPPORT "Adds support for loading model files." ON)
 
 if(TEXT_SUPPORT)
   list(APPEND SOURCE_FILES src/text/Font.cpp)
-  list(APPEND HEADER_FILES include/text/Font.hpp)
-  list(APPEND INCLUDE_DIRS include/text)
+  list(APPEND HEADER_FILES src/text/Font.hpp)
+  list(APPEND INCLUDE_DIRS src/text)
 
   find_package(Freetype REQUIRED)
 endif(TEXT_SUPPORT)
 
 if(MODEL_SUPPORT)
   list(APPEND SOURCE_FILES src/model/Model.cpp)
-  list(APPEND HEADER_FILES include/model/Model.hpp)
-  list(APPEND INCLUDE_DIRS include/model)
+  list(APPEND HEADER_FILES src/model/Model.hpp)
+  list(APPEND INCLUDE_DIRS src/model)
 
   find_package(assimp REQUIRED)
 endif(MODEL_SUPPORT)
