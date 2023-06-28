@@ -8,9 +8,6 @@ add_executable(cubes main.cpp)
 target_link_libraries(cubes PUBLIC glfw
                                    KumaGL)
 
-# Include the header files.
-target_include_directories(cubes PUBLIC ${CMAKE_SOURCE_DIR}/include)
-
 # Install the executable and the resources.
 install(TARGETS cubes DESTINATION ${EXAMPLES_INSTALL_DIR}/cubes)
 install(DIRECTORY resources DESTINATION ${EXAMPLES_INSTALL_DIR}/cubes)
