@@ -73,10 +73,13 @@ int main() {
 
   // Load the texture.
   KumaGL::Texture texture;
+  texture.LoadFromFile("resources/texture.png");
+
+  // Set texture filtering options to linear; we don't want it to be blurry.
   glBindTexture(GL_TEXTURE_2D, texture.GetID());
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  texture.LoadFromFile("resources/texture.png");
+  glGenerateMipmap(GL_TEXTURE_2D);
 
   // Create a cube mesh.
   KumaGL::Mesh mesh;
@@ -85,7 +88,7 @@ int main() {
   // Generate a number of random transforms.
   std::random_device rd;
   std::vector<KumaGL::Transform> transforms;
-  for (int i = 0; i < 10000; ++i) {
+  for (int i = 0; i < 20000; ++i) {
     transforms.emplace_back(CreateRandomTransform(rd));
   }
 
