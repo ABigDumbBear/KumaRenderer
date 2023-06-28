@@ -18,7 +18,7 @@ list(APPEND HEADER_FILES
             src/core/Mesh.hpp
             src/core/Shader.hpp
             src/core/Texture.hpp
-            src/core/Transform.hpp
+            src/math/Transform.hpp
             src/math/Mat4.hpp
             src/math/MathUtil.hpp
             src/math/Vec3.hpp)
