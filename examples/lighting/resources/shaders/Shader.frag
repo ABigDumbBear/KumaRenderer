@@ -6,8 +6,8 @@ in vec2 texCoords;
 
 out vec4 fragColor;
 
-uniform sampler2D diffuse;
-uniform sampler2D specular;
+uniform sampler2D diffuseTexture;
+uniform sampler2D specularTexture;
 uniform float shininess;
 
 uniform vec3 lightColor;
@@ -17,8 +17,8 @@ uniform vec3 viewPos;
 
 void main() {
   // Calculate the lighting values of the fragment using the supplied textures.
-  vec3 diffVal = texture(diffuse, texCoords).xyz;
-  vec3 specVal = texture(specular, texCoords).xyz;
+  vec3 diffVal = texture(diffuseTexture, texCoords).xyz;
+  vec3 specVal = texture(specularTexture, texCoords).xyz;
 
   // Calculate any direction vectors needed for lighting.
   vec3 lightDir = normalize(lightPos - fragPos);
@@ -35,6 +35,5 @@ void main() {
 
   // Combine each component.
   fragColor = vec4(diffuse + specular, 1.0);
-  //fragColor = vec4(normal, 1);
-  //fragColor = vec4(d, 1, 1, 1);
+  //fragColor = vec4(normal, 1.0);
 }
