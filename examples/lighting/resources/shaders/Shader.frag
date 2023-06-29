@@ -27,12 +27,14 @@ void main() {
 
   // Calculate the diffuse component.
   float d = max(dot(normal, lightDir), 0.0);
-  vec3 diffuse = lightColor * d * diffVal;
+  vec3 diffuse = lightColor * diffVal * d;
 
   // Calculate the specular component.
   float s = pow(max(dot(viewDir, lightDirReflect), 0.0), shininess);
-  vec3 specular = lightColor * s * specVal;
+  vec3 specular = lightColor * specVal * s;
 
   // Combine each component.
   fragColor = vec4(diffuse + specular, 1.0);
+  //fragColor = vec4(normal, 1);
+  //fragColor = vec4(d, 1, 1, 1);
 }

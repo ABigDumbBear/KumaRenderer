@@ -16,7 +16,7 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 void main() {
-  normal = aNormal;
+  normal = normalize(vec3(aMatrix * vec4(aNormal, 1.0)));
   texCoords = aTexCoords;
 
   // Calculate the fragment position in world space.

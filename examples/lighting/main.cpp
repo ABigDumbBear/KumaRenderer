@@ -83,9 +83,9 @@ int main() {
 
   shader.SetInt("diffuse", 0);
   shader.SetInt("specular", 1);
-  shader.SetFloat("shininess", 128);
+  shader.SetFloat("shininess", 256);
 
-  shader.SetVec3("lightColor", KumaGL::Vec3(1, 0.5, 0));
+  shader.SetVec3("lightColor", KumaGL::Vec3(1, 1, 1));
 
   shader.SetVec3("viewPos", KumaGL::Vec3(0, 0, 0));
 
@@ -98,7 +98,7 @@ int main() {
   KumaGL::Transform light;
 
   obj.SetPosition(KumaGL::Vec3(0, 0, -5));
-  light.SetPosition(KumaGL::Vec3(0, -15, 10));
+  light.SetPosition(KumaGL::Vec3(0, 1, 10));
 
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {
@@ -106,13 +106,13 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Translate the light.
-    light.Translate(KumaGL::Vec3(0, 0.1, 0));
+    // light.Translate(KumaGL::Vec3(0, 0.1, 0));
 
     // Set the light position in the shader.
     shader.SetVec3("lightPos", light.GetWorldPosition());
 
     // Rotate the cube object.
-    obj.Rotate(0, 1, 0);
+    obj.Rotate(1, 1, 0);
 
     // Copy the cube object's matrix to the instance buffer.
     glBindBuffer(GL_ARRAY_BUFFER, cube.GetInstanceBufferID());

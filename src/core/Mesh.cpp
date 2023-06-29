@@ -185,20 +185,20 @@ void Mesh::InitCube() {
   MeshVertex vertex;
 
   // Front face
-  vertex.mPosition = Vec3(0, 0, 1);
+  vertex.mPosition = Vec3(-0.5, -0.5, 0.5);
   vertex.mNormal = Vec3(0, 0, -1);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 0, 1);
+  vertex.mPosition = Vec3(0.5, -0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 1, 1);
+  vertex.mPosition = Vec3(0.5, 0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 1, 1);
+  vertex.mPosition = Vec3(-0.5, 0.5, 0.5);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
@@ -211,20 +211,20 @@ void Mesh::InitCube() {
   mIndices.emplace_back(3);
 
   // Top face
-  vertex.mPosition = Vec3(0, 1, 1);
-  vertex.mNormal = Vec3(0, 1, 0);
+  vertex.mPosition = Vec3(-0.5, 0.5, 0.5);
+  vertex.mNormal = Vec3(0, -1, 0);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 1, 1);
+  vertex.mPosition = Vec3(0.5, 0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 1, 0);
+  vertex.mPosition = Vec3(0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 1, 0);
+  vertex.mPosition = Vec3(-0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
@@ -237,20 +237,20 @@ void Mesh::InitCube() {
   mIndices.emplace_back(7);
 
   // Back face
-  vertex.mPosition = Vec3(0, 0, 0);
+  vertex.mPosition = Vec3(-0.5, -0.5, -0.5);
   vertex.mNormal = Vec3(0, 0, 1);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 0, 0);
+  vertex.mPosition = Vec3(0.5, -0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 1, 0);
+  vertex.mPosition = Vec3(0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 1, 0);
+  vertex.mPosition = Vec3(-0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
@@ -263,20 +263,20 @@ void Mesh::InitCube() {
   mIndices.emplace_back(11);
 
   // Left face
-  vertex.mPosition = Vec3(0, 0, 0);
-  vertex.mNormal = Vec3(-1, 0, 0);
+  vertex.mPosition = Vec3(-0.5, -0.5, -0.5);
+  vertex.mNormal = Vec3(1, 0, 0);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 0, 1);
+  vertex.mPosition = Vec3(-0.5, -0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 1, 1);
+  vertex.mPosition = Vec3(-0.5, 0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 1, 0);
+  vertex.mPosition = Vec3(-0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
@@ -289,20 +289,20 @@ void Mesh::InitCube() {
   mIndices.emplace_back(15);
 
   // Bottom face
-  vertex.mPosition = Vec3(0, 0, 0);
-  vertex.mNormal = Vec3(0, -1, 0);
+  vertex.mPosition = Vec3(-0.5, -0.5, -0.5);
+  vertex.mNormal = Vec3(0, 1, 0);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 0, 0);
+  vertex.mPosition = Vec3(0.5, -0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 0, 1);
+  vertex.mPosition = Vec3(0.5, -0.5, 0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(0, 0, 1);
+  vertex.mPosition = Vec3(-0.5, -0.5, 0.5);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
@@ -315,20 +315,20 @@ void Mesh::InitCube() {
   mIndices.emplace_back(19);
 
   // Right face
-  vertex.mPosition = Vec3(1, 0, 1);
-  vertex.mNormal = Vec3(1, 0, 0);
+  vertex.mPosition = Vec3(0.5, -0.5, 0.5);
+  vertex.mNormal = Vec3(-1, 0, 0);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 0, 0);
+  vertex.mPosition = Vec3(0.5, -0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 1, 0);
+  vertex.mPosition = Vec3(0.5, 0.5, -0.5);
   vertex.mTexCoords[0] = 1;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
-  vertex.mPosition = Vec3(1, 1, 1);
+  vertex.mPosition = Vec3(0.5, 0.5, 0.5);
   vertex.mTexCoords[0] = 0;
   vertex.mTexCoords[1] = 0;
   mVertices.emplace_back(vertex);
