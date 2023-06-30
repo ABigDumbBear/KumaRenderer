@@ -4,8 +4,6 @@
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
-#include "MathUtil.hpp"
-
 namespace KumaGL {
 
 class Transform {
