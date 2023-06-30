@@ -35,5 +35,4 @@ void main() {
 
   // Combine each component.
   fragColor = vec4(diffuse + specular, 1.0);
-  //fragColor = vec4(normal, 1.0);
 }

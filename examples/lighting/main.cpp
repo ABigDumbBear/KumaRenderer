@@ -1,6 +1,8 @@
+#include "Mat4.hpp"
 #include "Mesh.hpp"
 #include "Transform.hpp"
 #include "Vec3.hpp"
+#include <array>
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -93,34 +95,42 @@ int main() {
   KumaGL::Mesh cube;
   cube.InitCube();
 
-  // Create a transform for the cube object and for the light.
-  KumaGL::Transform obj;
+  // Create a transform for the light, as well as several cubes.
   KumaGL::Transform light;
+  std::array<KumaGL::Transform, 5> cubes;
 
-  obj.SetPosition(KumaGL::Vec3(0, 0, -5));
   light.SetPosition(KumaGL::Vec3(0, 0, 10));
+  cubes[0].SetPosition(KumaGL::Vec3(0, 0, -10));
+  cubes[1].SetPosition(KumaGL::Vec3(0, 2, -10));
+  cubes[2].SetPosition(KumaGL::Vec3(2, 0, -10));
+  cubes[3].SetPosition(KumaGL::Vec3(0, -2, -10));
+  cubes[4].SetPosition(KumaGL::Vec3(-2, 0, -10));
+
+  // Set the light position in the shader.
+  shader.SetVec3("lightPos", light.GetWorldPosition());
 
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Translate the light.
-    // light.Translate(KumaGL::Vec3(0, 0.1, 0));
+    // Rotate each cube object.
+    for (auto &t : cubes) {
+      t.Rotate(1, 1, 0);
+    }
 
-    // Set the light position in the shader.
-    shader.SetVec3("lightPos", light.GetWorldPosition());
+    // Copy the cube matrices to the instance buffer.
+    std::vector<KumaGL::Mat4> matrices;
+    for (auto &t : cubes) {
+      matrices.emplace_back(t.GetMatrix());
+    }
 
-    // Rotate the cube object.
-    obj.Rotate(1, 1, 1);
-
-    // Copy the cube object's matrix to the instance buffer.
     glBindBuffer(GL_ARRAY_BUFFER, cube.GetInstanceBufferID());
-    glBufferData(GL_ARRAY_BUFFER, sizeof(KumaGL::Mat4),
-                 (void *)(&obj.GetMatrix()), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, matrices.size() * sizeof(KumaGL::Mat4),
+                 matrices.data(), GL_DYNAMIC_DRAW);
 
-    // Draw the cube.
-    cube.DrawInstanced(shader, 1);
+    // Draw the cubes.
+    cube.DrawInstanced(shader, cubes.size());
 
     glfwPollEvents();
   }
