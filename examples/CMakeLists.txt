@@ -6,6 +6,7 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath -Wl,${CMAKE_SOU
 
 # Add each example.
 add_subdirectory(cubes)
+add_subdirectory(lighting)
 
 if(TEXT_SUPPORT)
   add_subdirectory(text)
