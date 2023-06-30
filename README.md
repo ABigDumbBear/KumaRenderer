@@ -5,13 +5,12 @@ KumaGL is a 3D rendering library for OpenGL that aims to be as flexible as possi
 * Simple 3D math implementation (3D vectors, 4D matrices)
 * Automatic buffer creation via the Mesh class
 * Simple instanced rendering via the Mesh class
-* 2D textures
+* 2D texture loading/mapping
 * Font loading/rendering (requires Freetype)
 * 3D model loading/rendering (requires Assimp)
 
 ## Planned Features
 * More detailed materials (normal maps, bump maps, etc.)
-* Phong lighting
 * Custom framebuffers
 
 ## External dependencies
