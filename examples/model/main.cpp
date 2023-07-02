@@ -12,6 +12,11 @@
 #include <MathUtil.hpp>
 
 /******************************************************************************/
+void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
+  glViewport(0, 0, aWidth, aHeight);
+}
+
+/******************************************************************************/
 int main() {
   // Initialize GLFW.
   if (!glfwInit()) {
@@ -48,6 +53,10 @@ int main() {
     return -1;
   }
 
+  // Set any GLFW callbacks.
+  glfwSetFramebufferSizeCallback(window, &FramebufferSizeCallback);
+
+  // Set up preliminary OpenGL state.
   glViewport(0, 0, 1280, 720);
   glEnable(GL_DEPTH_TEST);
 
@@ -80,7 +89,7 @@ int main() {
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    modelTransform.SetRotation(0, sin(glfwGetTime()) * 100, 0);
+    modelTransform.Rotate(0, 1, 0);
     shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
 
     model.Draw(shader);

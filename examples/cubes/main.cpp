@@ -14,6 +14,11 @@
 #include <MathUtil.hpp>
 
 /******************************************************************************/
+void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
+  glViewport(0, 0, aWidth, aHeight);
+}
+
+/******************************************************************************/
 KumaGL::Transform CreateRandomTransform(std::random_device &aDevice) {
   KumaGL::Transform transform;
 
@@ -63,6 +68,10 @@ int main() {
     return -1;
   }
 
+  // Set any GLFW callbacks.
+  glfwSetFramebufferSizeCallback(window, &FramebufferSizeCallback);
+
+  // Set up preliminary OpenGL state.
   glViewport(0, 0, 1280, 720);
   glEnable(GL_DEPTH_TEST);
 
@@ -107,7 +116,7 @@ int main() {
 
     // Rotate each transform.
     for (auto &transform : transforms) {
-      transform.SetRotation(0, sin(glfwGetTime()) * 180, 0);
+      transform.Rotate(1, 1, 0);
     }
 
     // Add each transformation matrix to a vector.

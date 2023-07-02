@@ -12,6 +12,11 @@
 #include <MathUtil.hpp>
 
 /******************************************************************************/
+void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
+  glViewport(0, 0, aWidth, aHeight);
+}
+
+/******************************************************************************/
 int main() {
   // Initialize GLFW.
   if (!glfwInit()) {
@@ -48,6 +53,10 @@ int main() {
     return -1;
   }
 
+  // Set any GLFW callbacks.
+  glfwSetFramebufferSizeCallback(window, &FramebufferSizeCallback);
+
+  // Set up preliminary OpenGL state.
   glViewport(0, 0, 1280, 720);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
