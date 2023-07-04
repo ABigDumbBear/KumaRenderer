@@ -37,3 +37,5 @@ cd build
 cmake -DTEXT_SUPPORT=OFF -DMODEL_SUPPORT=OFF -DBUILD_EXAMPLES=OFF ..
 make install
 ```
+
+The library will then be built and installed in KumaGL/install/.
