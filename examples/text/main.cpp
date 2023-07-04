@@ -4,12 +4,10 @@
 
 #include <iostream>
 
-#include <Font.hpp>
-#include <Mesh.hpp>
-#include <Shader.hpp>
-#include <Transform.hpp>
-
-#include <MathUtil.hpp>
+#include <KumaGL/Font.hpp>
+#include <KumaGL/Shader.hpp>
+#include <KumaGL/Texture.hpp>
+#include <KumaGL/Transform.hpp>
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {

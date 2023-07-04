@@ -4,12 +4,10 @@
 
 #include <iostream>
 
-#include <Model.hpp>
-#include <Texture.hpp>
-
-#include <Transform.hpp>
-
-#include <MathUtil.hpp>
+#include <KumaGL/Model.hpp>
+#include <KumaGL/Shader.hpp>
+#include <KumaGL/Texture.hpp>
+#include <KumaGL/Transform.hpp>
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {

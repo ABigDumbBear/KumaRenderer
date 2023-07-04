@@ -1,4 +1,4 @@
-#include "Shader.hpp"
+#include "KumaGL/Shader.hpp"
 
 #include <fstream>
 #include <iostream>

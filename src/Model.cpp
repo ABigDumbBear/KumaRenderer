@@ -1,4 +1,4 @@
-#include "Model.hpp"
+#include "KumaGL/Model.hpp"
 
 #include <sstream>
 

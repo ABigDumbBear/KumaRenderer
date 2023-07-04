@@ -3,10 +3,10 @@
 
 #include <cassert>
 
-#include "Mat4.hpp"
-#include "Vec3.hpp"
+#include "KumaGL/Mat4.hpp"
+#include "KumaGL/Vec3.hpp"
 
-#include "MathUtil.hpp"
+#include "KumaGL/MathUtil.hpp"
 
 namespace KumaGL {
 

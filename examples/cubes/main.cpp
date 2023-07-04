@@ -5,13 +5,10 @@
 #include <iostream>
 #include <random>
 
-#include <Mesh.hpp>
-#include <Shader.hpp>
-#include <Texture.hpp>
-
-#include <Transform.hpp>
-
-#include <MathUtil.hpp>
+#include <KumaGL/Mesh.hpp>
+#include <KumaGL/Shader.hpp>
+#include <KumaGL/Texture.hpp>
+#include <KumaGL/Transform.hpp>
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {

@@ -1,16 +1,14 @@
-#include "Mat4.hpp"
-#include "Mesh.hpp"
-#include "Transform.hpp"
-#include "Vec3.hpp"
-#include <array>
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
 
+#include <array>
 #include <iostream>
 
-#include <Shader.hpp>
-#include <Texture.hpp>
+#include <KumaGL/Mesh.hpp>
+#include <KumaGL/Shader.hpp>
+#include <KumaGL/Texture.hpp>
+#include <KumaGL/Transform.hpp>
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
