@@ -10,22 +10,27 @@ find_package(Freetype REQUIRED)
 
 set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 list(APPEND SOURCE_FILES
-            src/3rd_party/glad/glad.c
-            src/Font.cpp
-            src/Mesh.cpp
-            src/Model.cpp
-            src/Shader.cpp
-            src/Texture.cpp)
+  src/3rd_party/glad/glad.c
+  src/Font.cpp
+  src/Mesh.cpp
+  src/Model.cpp
+  src/Shader.cpp
+  src/Texture.cpp)
 
 # Create the library.
 add_library(KumaGL SHARED ${SOURCE_FILES})
-target_include_directories(KumaGL PUBLIC ${INCLUDE_DIR}
-                                         ${ASSIMP_INCLUDE_DIRS}
-                                         ${FREETYPE_INCLUDE_DIRS})
-target_link_libraries(KumaGL PUBLIC ${ASSIMP_LIBRARIES}
-                                    ${FREETYPE_LIBRARIES})
+target_include_directories(KumaGL PUBLIC
+  ${INCLUDE_DIR}
+  ${ASSIMP_INCLUDE_DIRS}
+  ${FREETYPE_INCLUDE_DIRS})
+target_link_libraries(KumaGL PUBLIC
+  ${ASSIMP_LIBRARIES}
+  ${FREETYPE_LIBRARIES})
+
+install(TARGETS KumaGL DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 # Add extra build options.
+set(LOCAL_INSTALL_DIR ${CMAKE_SOURCE_DIR}/install)
 option(BUILD_TESTS "Build the unit tests." ON)
 option(BUILD_EXAMPLES "Build the example applications." ON)
 

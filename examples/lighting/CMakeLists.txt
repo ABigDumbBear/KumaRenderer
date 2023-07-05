@@ -1,9 +1,7 @@
-# Find any third-party libraries.
 find_package(glfw3 REQUIRED)
 
-# Create the executable.
 add_executable(lighting main.cpp)
+target_link_libraries(lighting PUBLIC glfw KumaGL)
 
-# Link the executable with GLFW.
-target_link_libraries(lighting PUBLIC glfw
-                                      KumaGL)
+install(TARGETS lighting DESTINATION ${EXAMPLE_INSTALL_DIR}/lighting)
+install(DIRECTORY resources DESTINATION ${EXAMPLE_INSTALL_DIR}/lighting)

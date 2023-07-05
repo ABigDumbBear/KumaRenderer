@@ -1,9 +1,7 @@
-# Find any third-party libraries.
 find_package(glfw3 REQUIRED)
 
-# Create the executable.
 add_executable(model main.cpp)
+target_link_libraries(model PUBLIC glfw KumaGL)
 
-# Link the executable with GLFW.
-target_link_libraries(model PUBLIC glfw
-                                   KumaGL)
+install(TARGETS model DESTINATION ${EXAMPLE_INSTALL_DIR}/model)
+install(DIRECTORY resources DESTINATION ${EXAMPLE_INSTALL_DIR}/model)
