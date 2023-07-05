@@ -1,26 +1,27 @@
 # KumaGL
-KumaGL is a 3D rendering library for OpenGL that aims to be as flexible as possible. In order to achieve this, it prioritizes using raw OpenGL over any wrapper/boilerplate classes (except where it makes sense).
+KumaGL is a small 3D rendering library for OpenGL. The goal of KumaGL is not to be a monolithic, one-stop-shop for all use cases when it comes to rendering. Rather, it provides a few wrapper classes to make managing OpenGL a little easier and a little more automatic.
 
 ## Features
-* Simple 3D math implementation (3D vectors, 4D matrices)
-* Automatic buffer creation via the Mesh class
+* Simple 3D math implementation
+* Automatic creation and deletion of vertex buffers via the Mesh class
 * Simple instanced rendering via the Mesh class
-* 2D texture loading/mapping
-* Font loading/rendering (requires Freetype)
-* 3D model loading/rendering (requires Assimp)
+* GLSL shader loading
+* Texture loading/mapping
+* 3D model loading/rendering
+* Font loading/rendering
 
 ## Planned Features
-* More detailed materials (normal maps, bump maps, etc.)
 * Custom framebuffers
 
 ## External dependencies
-KumaGL can make use of some 3rd party libraries for additional features. These optional libraries are as follows:
-* GLFW (for the example projects)
-* Freetype (for font loading/rendering)
-* Assimp (for 3D model loading/rendering)
+KumaGL depends on a few other libraries:
+* Freetype (for font loading)
+* Assimp (for 3D model loading)
+
+Additionally, to build the included example projects, you will need to install GLFW.
 
 ## Building
-To build KumaGL, the standard CMake procedure can be followed (note that it assumes all external dependencies are installed):
+To build KumaGL along with the example projects and unit tests, the standard CMake procedure can be followed:
 ```
 cd KumaGL
 mkdir build
@@ -29,13 +30,11 @@ cmake ..
 make install
 ```
 
-Alternatively, KumaGL can be built without any external dependencies like so:
+Alternatively, if you just want to build the library:
 ```
 cd KumaGL
 mkdir build
 cd build
-cmake -DTEXT_SUPPORT=OFF -DMODEL_SUPPORT=OFF -DBUILD_EXAMPLES=OFF ..
+cmake -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF ..
 make install
 ```
-
-The library will then be built and installed in KumaGL/install/.
