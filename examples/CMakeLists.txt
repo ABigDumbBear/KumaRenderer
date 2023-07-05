@@ -1,4 +1,4 @@
-set(EXAMPLE_INSTALL_DIR ${CMAKE_SOURCE_DIR}/install/examples)
+set(EXAMPLE_INSTALL_DIR bin/KumaGL/examples)
 
 add_subdirectory(cubes)
 add_subdirectory(lighting)
