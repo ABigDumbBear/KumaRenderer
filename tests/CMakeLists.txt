@@ -1,4 +1,4 @@
 add_executable(mathTest main.cpp)
-target_include_directories(mathTest PUBLIC ${INCLUDE_DIR})
+target_link_libraries(mathTest PUBLIC KumaGL)
 
-install(TARGETS mathTest DESTINATION ${LOCAL_INSTALL_DIR}/tests)
+install(TARGETS mathTest DESTINATION tests)

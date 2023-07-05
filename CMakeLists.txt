@@ -8,7 +8,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(assimp REQUIRED)
 find_package(Freetype REQUIRED)
 
-set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 list(APPEND SOURCE_FILES
   src/3rd_party/glad/glad.c
   src/Font.cpp
@@ -20,19 +19,27 @@ list(APPEND SOURCE_FILES
 # Create the library.
 add_library(KumaGL SHARED ${SOURCE_FILES})
 target_include_directories(KumaGL PUBLIC
-  ${INCLUDE_DIR}
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/>
   ${ASSIMP_INCLUDE_DIRS}
   ${FREETYPE_INCLUDE_DIRS})
 target_link_libraries(KumaGL PUBLIC
   ${ASSIMP_LIBRARIES}
   ${FREETYPE_LIBRARIES})
 
-install(TARGETS KumaGL DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS KumaGL
+  EXPORT KumaGLTargets
+  LIBRARY DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include)
+
+install(EXPORT KumaGLTargets
+  FILE KumaGLConfig.cmake
+  NAMESPACE KumaGL::
+  DESTINATION lib/cmake/KumaGL)
 
 # Add extra build options.
-set(LOCAL_INSTALL_DIR ${CMAKE_SOURCE_DIR}/install)
-option(BUILD_TESTS "Build the unit tests." ON)
-option(BUILD_EXAMPLES "Build the example applications." ON)
+option(BUILD_TESTS "Build the unit tests." OFF)
+option(BUILD_EXAMPLES "Build the example applications." OFF)
 
 if(BUILD_TESTS)
   add_subdirectory(tests)

@@ -1,4 +1,4 @@
-set(EXAMPLE_INSTALL_DIR ${LOCAL_INSTALL_DIR}/examples)
+set(EXAMPLE_INSTALL_DIR ${CMAKE_SOURCE_DIR}/install/examples)
 
 add_subdirectory(cubes)
 add_subdirectory(lighting)
