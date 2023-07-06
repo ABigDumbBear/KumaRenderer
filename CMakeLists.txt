@@ -12,6 +12,7 @@ find_package(Freetype REQUIRED)
 list(APPEND SOURCE_FILES
   src/3rd_party/glad/glad.c
   src/Font.cpp
+  src/Framebuffer.cpp
   src/Mesh.cpp
   src/Model.cpp
   src/Shader.cpp
