@@ -22,16 +22,11 @@ public:
   std::vector<Mesh> &GetMeshes() { return mMeshes; }
 
 private:
-  void ProcessNode(aiNode &aNode, const aiScene &aScene,
-                   const std::string &aWorkingDirectory);
+  void ProcessNode(aiNode &aNode, const aiScene &aScene);
   void ProcessMesh(aiMesh &aMesh, unsigned int aMeshIndex,
-                   const aiScene &aScene, const std::string &aWorkingDirectory);
-  void ProcessMaterialTextures(aiMaterial &aMaterial,
-                               aiTextureType aTextureType,
-                               const std::string &aWorkingDirectory);
+                   const aiScene &aScene);
 
   std::vector<Mesh> mMeshes;
-  std::vector<Texture> mTextures;
 };
 
 } // namespace KumaGL
