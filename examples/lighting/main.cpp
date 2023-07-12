@@ -137,7 +137,7 @@ int main() {
                  matrices.data(), GL_DYNAMIC_DRAW);
 
     // Draw the cubes.
-    cube.DrawInstanced(shader, cubes.size());
+    cube.DrawInstanced(cubes.size());
 
     glfwPollEvents();
   }

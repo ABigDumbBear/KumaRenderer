@@ -5,10 +5,6 @@
 
 #include <glad/glad.h>
 
-#include "Shader.hpp"
-#include "Texture.hpp"
-
-#include "Mat4.hpp"
 #include "Vec3.hpp"
 
 namespace KumaGL {
@@ -29,9 +25,8 @@ public:
   Mesh(const Mesh &aMesh) = delete;
   Mesh &operator=(const Mesh &aMesh) = delete;
 
-  void Draw(const Shader &aShader, GLenum aMode = GL_TRIANGLES) const;
-  void DrawInstanced(const Shader &aShader, int aNumInstances,
-                     GLenum aMode = GL_TRIANGLES) const;
+  void Draw(GLenum aMode = GL_TRIANGLES) const;
+  void DrawInstanced(int aNumInstances, GLenum aMode = GL_TRIANGLES) const;
 
   void UpdateVertices();
   void UpdateIndices();

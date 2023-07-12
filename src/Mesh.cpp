@@ -1,5 +1,7 @@
 #include "KumaGL/Mesh.hpp"
 
+#include <KumaGL/Mat4.hpp>
+
 namespace KumaGL {
 
 /******************************************************************************/
@@ -111,26 +113,17 @@ Mesh &Mesh::operator=(Mesh &&aMesh) {
 }
 
 /******************************************************************************/
-void Mesh::Draw(const Shader &aShader, GLenum aMode) const {
+void Mesh::Draw(GLenum aMode) const {
   glBindVertexArray(mVertexArray);
-
-  // Draw the mesh.
-  aShader.Use();
   glDrawElements(aMode, mIndices.size(), GL_UNSIGNED_INT, 0);
-
   glBindVertexArray(0);
 }
 
 /******************************************************************************/
-void Mesh::DrawInstanced(const Shader &aShader, int aNumInstances,
-                         GLenum aMode) const {
+void Mesh::DrawInstanced(int aNumInstances, GLenum aMode) const {
   glBindVertexArray(mVertexArray);
-
-  // Draw the mesh.
-  aShader.Use();
   glDrawElementsInstanced(aMode, mIndices.size(), GL_UNSIGNED_INT, 0,
                           aNumInstances);
-
   glBindVertexArray(0);
 }
 
