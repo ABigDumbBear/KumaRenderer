@@ -1,22 +1,30 @@
 # KumaGL
-KumaGL is a small 3D rendering library for OpenGL. The goal of KumaGL is not to be a monolithic, one-stop-shop for all use cases when it comes to rendering. Rather, it provides a few wrapper classes to make managing OpenGL a little easier and a little more automatic.
+KumaGL is a small 3D rendering library for OpenGL.
+
+The goals of KumaGL are:
+* to make managing OpenGL state more automatic
+* to provide a basis for common rendering scenarios
+* to incorporate some 3rd-party libraries for loading and storing resources (like textures and models)
+
+Unlike some larger and more ambitious graphics libraries, KumaGL does not intend to wrap every last bit of OpenGL functionality. Rather, it provides a handful of utility classes to help any rendering-focused projects get off the ground.
 
 ## Features
 * Simple 3D math implementation
-* Automatic creation and deletion of vertex buffers via the Mesh class
-* Simple instanced rendering via the Mesh class
+* Automatic creation and deletion of vertex buffers
+* Simple instanced rendering
 * GLSL shader loading
 * Texture loading/mapping
 * 3D model loading/rendering
 * Font loading/rendering
 
 ## Planned Features
-* Custom framebuffers
+* Framebuffers and renderbuffers
+* Skeletal animation
 
 ## External dependencies
 KumaGL depends on a few other libraries:
-* Freetype (for font loading)
 * Assimp (for 3D model loading)
+* Freetype (for font loading)
 
 Additionally, to build the included example projects, you will need to install GLFW.
 

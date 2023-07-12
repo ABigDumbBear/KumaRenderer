@@ -66,6 +66,8 @@ int main() {
   // Load the model.
   KumaGL::Model model;
   model.LoadFromFile("resources/model/Spitfire.obj");
+
+  // Load the textures.
   KumaGL::Texture tex;
   tex.LoadFromFile("resources/model/Spitfire_Red.png", GL_RGB);
   glBindTexture(GL_TEXTURE_2D, tex.GetID());
@@ -81,6 +83,7 @@ int main() {
                               KumaGL::Vec3(0, 0, 0)));
   shader.SetMat4("projectionMatrix",
                  KumaGL::Perspective(45, 1280, 720, 0.1, 100));
+  shader.SetInt("texSampler", 0);
 
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {

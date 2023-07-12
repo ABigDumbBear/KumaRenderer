@@ -1,6 +1,5 @@
 #include "KumaGL/Model.hpp"
-
-#include <sstream>
+#include "KumaGL/Vec3.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
@@ -15,17 +14,11 @@ void Model::LoadFromFile(const std::string &aFile) {
   auto scene =
       importer.ReadFile(aFile, aiProcess_Triangulate | aiProcess_FlipUVs);
 
-  auto workingDirectory = aFile.substr(0, aFile.find_last_of("/\\") + 1);
-  ProcessNode(*scene->mRootNode, *scene, workingDirectory);
+  ProcessNode(*scene->mRootNode, *scene);
 }
 
 /******************************************************************************/
 void Model::Draw(const Shader &aShader, GLenum aMode) const {
-  for (size_t i = 0; i < mTextures.size(); ++i) {
-    glActiveTexture(GL_TEXTURE0 + i);
-    glBindTexture(GL_TEXTURE_2D, mTextures[i].GetID());
-  }
-
   for (const auto &mesh : mMeshes) {
     mesh.Draw(aShader, aMode);
   }
@@ -34,53 +27,57 @@ void Model::Draw(const Shader &aShader, GLenum aMode) const {
 /******************************************************************************/
 void Model::DrawInstanced(const Shader &aShader, int aNumInstances,
                           GLenum aMode) const {
-  for (size_t i = 0; i < mTextures.size(); ++i) {
-    glActiveTexture(GL_TEXTURE0 + i);
-    glBindTexture(GL_TEXTURE_2D, mTextures[i].GetID());
-  }
-
   for (const auto &mesh : mMeshes) {
     mesh.DrawInstanced(aShader, aNumInstances, aMode);
   }
 }
 
 /******************************************************************************/
-void Model::ProcessNode(aiNode &aNode, const aiScene &aScene,
-                        const std::string &aWorkingDirectory) {
+void Model::ProcessNode(aiNode &aNode, const aiScene &aScene) {
   // Process each mesh in this node.
   for (int i = 0; i < aNode.mNumMeshes; ++i) {
     auto mesh = aScene.mMeshes[aNode.mMeshes[i]];
-    ProcessMesh(*mesh, i, aScene, aWorkingDirectory);
+    ProcessMesh(*mesh, i, aScene);
   }
 
   // Process each of this node's children.
   for (int i = 0; i < aNode.mNumChildren; ++i) {
-    ProcessNode(*aNode.mChildren[i], aScene, aWorkingDirectory);
+    ProcessNode(*aNode.mChildren[i], aScene);
   }
 }
 
 /******************************************************************************/
 void Model::ProcessMesh(aiMesh &aMesh, unsigned int aMeshIndex,
-                        const aiScene &aScene,
-                        const std::string &aWorkingDirectory) {
+                        const aiScene &aScene) {
   Mesh mesh;
 
   // Retrieve the vertex data.
   for (int i = 0; i < aMesh.mNumVertices; ++i) {
     MeshVertex vertex;
 
-    // Default the vertex color to white.
-    vertex.mColor = Vec3(1.0, 1.0, 1.0);
+    // Retrieve the vertex position.
+    if (aMesh.HasPositions()) {
+      auto &position = aMesh.mVertices[i];
+      vertex.mPosition = Vec3(position.x, position.y, position.z);
+    }
 
-    // Retrieve the position data.
-    vertex.mPosition =
-        Vec3(aMesh.mVertices[i].x, aMesh.mVertices[i].y, aMesh.mVertices[i].z);
+    // Retrieve the vertex color (for channel 0).
+    if (aMesh.HasVertexColors(0)) {
+      auto &color = aMesh.mColors[0][i];
+      vertex.mColor = Vec3(color.r, color.g, color.b);
+    }
 
-    // Retrieve the texture coordinates.
-    auto texCoords = aMesh.mTextureCoords[0];
-    if (texCoords != nullptr) {
-      vertex.mTexCoords[0] = texCoords[i].x;
-      vertex.mTexCoords[1] = texCoords[i].y;
+    // Retrieve the vertex normal.
+    if (aMesh.HasNormals()) {
+      auto &normal = aMesh.mNormals[i];
+      vertex.mNormal = Vec3(normal.x, normal.y, normal.z);
+    }
+
+    // Retrieve the vertex texture coordinates (for channel 0).
+    if (aMesh.HasTextureCoords(0)) {
+      auto &texCoords = aMesh.mTextureCoords[0][i];
+      vertex.mTexCoords[0] = texCoords.x;
+      vertex.mTexCoords[1] = texCoords.y;
     }
 
     mesh.mVertices.emplace_back(vertex);
@@ -94,35 +91,10 @@ void Model::ProcessMesh(aiMesh &aMesh, unsigned int aMeshIndex,
     }
   }
 
-  // Retrieve the material data.
-  if (aMesh.mMaterialIndex >= 0) {
-    auto &material = *aScene.mMaterials[aMesh.mMaterialIndex];
-    ProcessMaterialTextures(material, aiTextureType_DIFFUSE, aWorkingDirectory);
-  }
-
   mesh.UpdateVertices();
   mesh.UpdateIndices();
 
   mMeshes.emplace_back(std::move(mesh));
-}
-
-/******************************************************************************/
-void Model::ProcessMaterialTextures(aiMaterial &aMaterial,
-                                    aiTextureType aTextureType,
-                                    const std::string &aWorkingDirectory) {
-  std::stringstream path;
-  for (size_t i = 0; i < aMaterial.GetTextureCount(aTextureType); ++i) {
-    aiString str;
-    aMaterial.GetTexture(aTextureType, i, &str);
-
-    path << aWorkingDirectory << str.C_Str();
-
-    Texture texture;
-    texture.LoadFromFile(path.str());
-    mTextures.emplace_back(std::move(texture));
-
-    path.str("");
-  }
 }
 
 } // namespace KumaGL
