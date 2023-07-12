@@ -7,7 +7,6 @@
 #include <assimp/scene.h>
 
 #include "Mesh.hpp"
-#include "Texture.hpp"
 
 namespace KumaGL {
 

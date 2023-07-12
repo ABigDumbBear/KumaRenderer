@@ -1,9 +1,6 @@
 #include "KumaGL/Model.hpp"
 #include "KumaGL/Vec3.hpp"
 
-#include <assimp/material.h>
-#include <sstream>
-
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
