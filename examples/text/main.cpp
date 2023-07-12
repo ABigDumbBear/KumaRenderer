@@ -85,7 +85,7 @@ int main() {
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    mesh.Draw(shader);
+    mesh.Draw();
 
     glfwPollEvents();
   }

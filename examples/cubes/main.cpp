@@ -94,7 +94,7 @@ int main() {
   // Generate a number of random transforms.
   std::random_device rd;
   std::vector<KumaGL::Transform> transforms;
-  for (int i = 0; i < 20000; ++i) {
+  for (int i = 0; i < 10000; ++i) {
     transforms.emplace_back(CreateRandomTransform(rd));
   }
 
@@ -128,7 +128,7 @@ int main() {
                  matrices.data(), GL_DYNAMIC_DRAW);
 
     // Draw the cube a number of times.
-    mesh.DrawInstanced(shader, 10000);
+    mesh.DrawInstanced(10000);
 
     glfwPollEvents();
   }

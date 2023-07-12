@@ -93,7 +93,7 @@ int main() {
     modelTransform.Rotate(0, 1, 0);
     shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
 
-    model.Draw(shader);
+    model.Draw();
 
     glfwPollEvents();
   }
