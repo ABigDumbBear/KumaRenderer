@@ -14,9 +14,8 @@ class Model {
 public:
   void LoadFromFile(const std::string &aFile);
 
-  void Draw(const Shader &aShader, GLenum aMode = GL_TRIANGLES) const;
-  void DrawInstanced(const Shader &aShader, int aNumInstances,
-                     GLenum aMode = GL_TRIANGLES) const;
+  void Draw(GLenum aMode = GL_TRIANGLES) const;
+  void DrawInstanced(int aNumInstances, GLenum aMode = GL_TRIANGLES) const;
 
   std::vector<Mesh> &GetMeshes() { return mMeshes; }
 

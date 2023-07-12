@@ -18,17 +18,16 @@ void Model::LoadFromFile(const std::string &aFile) {
 }
 
 /******************************************************************************/
-void Model::Draw(const Shader &aShader, GLenum aMode) const {
+void Model::Draw(GLenum aMode) const {
   for (const auto &mesh : mMeshes) {
-    mesh.Draw(aShader, aMode);
+    mesh.Draw(aMode);
   }
 }
 
 /******************************************************************************/
-void Model::DrawInstanced(const Shader &aShader, int aNumInstances,
-                          GLenum aMode) const {
+void Model::DrawInstanced(int aNumInstances, GLenum aMode) const {
   for (const auto &mesh : mMeshes) {
-    mesh.DrawInstanced(aShader, aNumInstances, aMode);
+    mesh.DrawInstanced(aNumInstances, aMode);
   }
 }
 
