@@ -15,6 +15,7 @@ list(APPEND SOURCE_FILES
   src/Framebuffer.cpp
   src/Mesh.cpp
   src/Model.cpp
+  src/Renderbuffer.cpp
   src/Shader.cpp
   src/Texture.cpp
 )

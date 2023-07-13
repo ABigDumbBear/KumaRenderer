@@ -1,13 +1,12 @@
 #include "KumaGL/Framebuffer.hpp"
+#include "KumaGL/Renderbuffer.hpp"
 
 namespace KumaGL {
 
 /******************************************************************************/
 Framebuffer::Framebuffer() {
-  if (!mValid) {
-    glGenFramebuffers(1, &mID);
-    mValid = true;
-  }
+  glGenFramebuffers(1, &mID);
+  mValid = true;
 }
 
 /******************************************************************************/
@@ -44,8 +43,17 @@ void Framebuffer::Bind(GLenum aBufferType) {
 /******************************************************************************/
 void Framebuffer::AttachTexture(const Texture &aTexture, GLenum aBufferType,
                                 GLenum aAttachmentType, GLenum aTextureType) {
+  Bind();
   glFramebufferTexture2D(aBufferType, aAttachmentType, aTextureType,
                          aTexture.GetID(), 0);
+}
+
+/******************************************************************************/
+void Framebuffer::AttachRenderbuffer(const Renderbuffer &aBuffer,
+                                     GLenum aAttachmentType) {
+  Bind();
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, aAttachmentType, GL_RENDERBUFFER,
+                            aBuffer.GetID());
 }
 
 } // namespace KumaGL

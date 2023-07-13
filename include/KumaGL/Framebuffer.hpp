@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 
+#include "KumaGL/Renderbuffer.hpp"
 #include "KumaGL/Texture.hpp"
 
 namespace KumaGL {
@@ -21,6 +22,8 @@ public:
                      GLenum aBufferType = GL_FRAMEBUFFER,
                      GLenum aAttachmentType = GL_COLOR_ATTACHMENT0,
                      GLenum aTextureType = GL_TEXTURE_2D);
+  void AttachRenderbuffer(const Renderbuffer &aBuffer,
+                          GLenum aAttachmentType = GL_DEPTH_STENCIL_ATTACHMENT);
 
   GLuint GetID() const { return mID; }
 
