@@ -12,9 +12,14 @@
 #include <KumaGL/Texture.hpp>
 #include <KumaGL/Transform.hpp>
 
+int w = 0;
+int h = 0;
+
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
-  glViewport(0, 0, aWidth, aHeight);
+  // glViewport(0, 0, aWidth, aHeight);
+  w = aWidth;
+  h = aHeight;
 }
 
 /******************************************************************************/
@@ -69,10 +74,6 @@ bool InitializeContext(GLFWwindow &aWindow) {
     return success;
   }
 
-  // Set up preliminary OpenGL state.
-  glViewport(0, 0, 1280, 720);
-  glEnable(GL_DEPTH_TEST);
-
   return true;
 }
 
@@ -109,6 +110,11 @@ int main() {
   screenTexture.LoadFromData(nullptr, 1280, 720);
 
   glBindTexture(GL_TEXTURE_2D, cubeTexture.GetID());
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glGenerateMipmap(GL_TEXTURE_2D);
+
+  glBindTexture(GL_TEXTURE_2D, screenTexture.GetID());
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glGenerateMipmap(GL_TEXTURE_2D);
@@ -176,18 +182,26 @@ int main() {
 
     // Render to the framebuffer.
     fb.Bind();
-    cubeShader.Use();
-    glBindTexture(GL_TEXTURE_2D, cubeTexture.GetID());
-    glClearColor(0.2, 0.2, 0.2, 1.0);
+    glViewport(0, 0, screenTexture.GetWidth(), screenTexture.GetHeight());
+    glEnable(GL_DEPTH_TEST);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    cubeShader.Use();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, cubeTexture.GetID());
     cubeMesh.DrawInstanced(numCubes);
+
+    // Bind default framebuffer.
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_DEPTH_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     // Render the screen texture.
+    glViewport(0, 0, w, h);
     screenShader.Use();
     glBindTexture(GL_TEXTURE_2D, screenTexture.GetID());
-    glClearColor(0.5, 0.5, 0.5, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     screenMesh.DrawInstanced(1);
 
     glfwPollEvents();

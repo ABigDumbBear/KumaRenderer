@@ -162,9 +162,9 @@ void Mesh::InitQuad() {
   vertex.mTexCoords[1] = 1;
   mVertices.emplace_back(vertex);
 
+  mIndices.emplace_back(3);
   mIndices.emplace_back(0);
   mIndices.emplace_back(1);
-  mIndices.emplace_back(3);
   mIndices.emplace_back(3);
   mIndices.emplace_back(1);
   mIndices.emplace_back(2);
