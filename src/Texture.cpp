@@ -51,8 +51,8 @@ void Texture::LoadFromFile(const std::string &aFile, GLint aLoadFormat) {
 }
 
 /******************************************************************************/
-void Texture::LoadFromData(unsigned char *aData, unsigned int aWidth,
-                           unsigned int aHeight, GLint aLoadFormat) {
+void Texture::LoadFromData(unsigned char *aData, GLsizei aWidth,
+                           GLsizei aHeight, GLint aLoadFormat) {
   mWidth = aWidth;
   mHeight = aHeight;
 

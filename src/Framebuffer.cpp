@@ -38,22 +38,28 @@ Framebuffer &Framebuffer::operator=(Framebuffer &&aBuffer) {
 /******************************************************************************/
 void Framebuffer::Bind(GLenum aBufferType) {
   glBindFramebuffer(aBufferType, mID);
+  glViewport(0, 0, mTextureWidth, mTextureHeight);
 }
 
 /******************************************************************************/
-void Framebuffer::AttachTexture(const Texture &aTexture, GLenum aBufferType,
-                                GLenum aAttachmentType, GLenum aTextureType) {
-  Bind();
-  glFramebufferTexture2D(aBufferType, aAttachmentType, aTextureType,
+void Framebuffer::AttachTexture(const Texture &aTexture, GLenum aAttachmentType,
+                                GLenum aTextureType) {
+  mTextureWidth = aTexture.GetWidth();
+  mTextureHeight = aTexture.GetHeight();
+
+  glBindFramebuffer(GL_FRAMEBUFFER, mID);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, aAttachmentType, aTextureType,
                          aTexture.GetID(), 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 /******************************************************************************/
 void Framebuffer::AttachRenderbuffer(const Renderbuffer &aBuffer,
                                      GLenum aAttachmentType) {
-  Bind();
+  glBindFramebuffer(GL_FRAMEBUFFER, mID);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, aAttachmentType, GL_RENDERBUFFER,
                             aBuffer.GetID());
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 } // namespace KumaGL

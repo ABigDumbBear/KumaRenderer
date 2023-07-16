@@ -19,7 +19,6 @@ public:
   void Bind(GLenum aBufferType = GL_FRAMEBUFFER);
 
   void AttachTexture(const Texture &aTexture,
-                     GLenum aBufferType = GL_FRAMEBUFFER,
                      GLenum aAttachmentType = GL_COLOR_ATTACHMENT0,
                      GLenum aTextureType = GL_TEXTURE_2D);
   void AttachRenderbuffer(const Renderbuffer &aBuffer,
@@ -29,6 +28,9 @@ public:
 
 private:
   bool mValid{false};
+
+  GLsizei mTextureWidth{0};
+  GLsizei mTextureHeight{0};
 
   GLuint mID{0};
 };

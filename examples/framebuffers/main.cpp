@@ -17,7 +17,6 @@ int h = 0;
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
-  // glViewport(0, 0, aWidth, aHeight);
   w = aWidth;
   h = aHeight;
 }
@@ -48,7 +47,7 @@ GLFWwindow *CreateWindow() {
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
-  window = glfwCreateWindow(1280, 720, "cubes", nullptr, nullptr);
+  window = glfwCreateWindow(1280, 720, "framebuffers", nullptr, nullptr);
   if (window == nullptr) {
     std::cout << "Failed to create window!" << std::endl;
     return window;
@@ -73,6 +72,9 @@ bool InitializeContext(GLFWwindow &aWindow) {
     std::cout << "Failed to initialize GLAD!" << std::endl;
     return success;
   }
+
+  // Set up global OpenGL state.
+  glEnable(GL_DEPTH_TEST);
 
   return true;
 }
@@ -107,7 +109,7 @@ int main() {
   KumaGL::Texture screenTexture;
 
   cubeTexture.LoadFromFile("resources/texture.png");
-  screenTexture.LoadFromData(nullptr, 1280, 720);
+  screenTexture.LoadFromData(nullptr, 1280, 700);
 
   glBindTexture(GL_TEXTURE_2D, cubeTexture.GetID());
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -158,11 +160,10 @@ int main() {
   cubeShader.SetMat4("projectionMatrix",
                      KumaGL::Perspective(45, 1280, 720, 0.1, 100));
 
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
+    glfwPollEvents();
 
     // Rotate each transform.
     for (auto &transform : transforms) {
@@ -180,31 +181,25 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, matrices.size() * sizeof(KumaGL::Mat4),
                  matrices.data(), GL_DYNAMIC_DRAW);
 
-    // Render to the framebuffer.
+    // Bind the scene framebuffer.
     fb.Bind();
-    glViewport(0, 0, screenTexture.GetWidth(), screenTexture.GetHeight());
-    glEnable(GL_DEPTH_TEST);
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    cubeShader.Use();
-
+    // Render the cubes.
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, cubeTexture.GetID());
+    cubeShader.Use();
     cubeMesh.DrawInstanced(numCubes);
 
     // Bind default framebuffer.
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDisable(GL_DEPTH_TEST);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glViewport(0, 0, w, h);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the screen texture.
-    glViewport(0, 0, w, h);
-    screenShader.Use();
     glBindTexture(GL_TEXTURE_2D, screenTexture.GetID());
+    screenShader.Use();
     screenMesh.DrawInstanced(1);
-
-    glfwPollEvents();
   }
 
   glfwTerminate();
