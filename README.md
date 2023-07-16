@@ -12,13 +12,13 @@ Unlike some larger and more ambitious graphics libraries, KumaGL does not intend
 * Simple 3D math implementation
 * Automatic creation and deletion of vertex buffers
 * Simple instanced rendering
+* Framebuffers and renderbuffers
 * GLSL shader loading
 * Texture loading/mapping
 * 3D model loading/rendering
 * Font loading/rendering
 
 ## Planned Features
-* Framebuffers and renderbuffers
 * Skeletal animation
 
 ## External dependencies
