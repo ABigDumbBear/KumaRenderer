@@ -9,7 +9,6 @@
 #include "Vec3.hpp"
 
 namespace KumaGL {
-
 class Shader {
 public:
   Shader();
@@ -44,7 +43,6 @@ private:
 
   bool mValid{false};
 };
-
 } // namespace KumaGL
 
-#endif
+#endif // !SHADER_HPP

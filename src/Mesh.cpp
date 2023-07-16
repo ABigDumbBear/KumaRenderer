@@ -3,7 +3,6 @@
 #include <KumaGL/Mat4.hpp>
 
 namespace KumaGL {
-
 /******************************************************************************/
 Mesh::Mesh() {
   // Generate a VAO and several VBOs for the mesh, then configure them.
@@ -336,5 +335,4 @@ void Mesh::InitCube() {
   UpdateVertices();
   UpdateIndices();
 }
-
 } // namespace KumaGL

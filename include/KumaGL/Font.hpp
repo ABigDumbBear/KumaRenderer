@@ -11,7 +11,6 @@ class FT_FaceRec_;
 class FT_LibraryRec_;
 
 namespace KumaGL {
-
 class Font {
 public:
   Font();
@@ -45,7 +44,6 @@ private:
   static FT_LibraryRec_ *mLibrary;
   static int mInstances;
 };
-
 } // namespace KumaGL
 
-#endif
+#endif // !FONT_HPP

@@ -2,7 +2,6 @@
 #include "KumaGL/Renderbuffer.hpp"
 
 namespace KumaGL {
-
 /******************************************************************************/
 Framebuffer::Framebuffer() {
   glGenFramebuffers(1, &mID);
@@ -61,5 +60,4 @@ void Framebuffer::AttachRenderbuffer(const Renderbuffer &aBuffer,
                             aBuffer.GetID());
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
-
 } // namespace KumaGL

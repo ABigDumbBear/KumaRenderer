@@ -36,4 +36,4 @@ private:
 };
 } // namespace KumaGL
 
-#endif // !DEBUG
+#endif // !FRAMEBUFFER_HPP

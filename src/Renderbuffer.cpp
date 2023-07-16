@@ -1,7 +1,6 @@
 #include <KumaGL/Renderbuffer.hpp>
 
 namespace KumaGL {
-
 /******************************************************************************/
 Renderbuffer::Renderbuffer() {
   glGenRenderbuffers(1, &mID);
@@ -43,5 +42,4 @@ void Renderbuffer::SetStorageParameters(GLenum aStorageFormat, GLsizei aWidth,
   Bind();
   glRenderbufferStorage(GL_RENDERBUFFER, aStorageFormat, aWidth, aHeight);
 }
-
 } // namespace KumaGL

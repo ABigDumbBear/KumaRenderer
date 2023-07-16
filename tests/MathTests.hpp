@@ -9,7 +9,6 @@
 #include "KumaGL/MathUtil.hpp"
 
 namespace KumaGL {
-
 inline void TestVec3Addition() {
 
   Vec3 a(5.0, 10.0, 15.0);
@@ -125,7 +124,6 @@ inline void TestMat4Scaling() {
 }
 
 inline void TestLerp() { assert(Lerp(5.0, 15.0, 0.5) == 10.0); }
-
 } // namespace KumaGL
 
-#endif
+#endif // !MATHTESTS_HPP

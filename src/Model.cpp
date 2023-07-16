@@ -5,7 +5,6 @@
 #include <assimp/postprocess.h>
 
 namespace KumaGL {
-
 /******************************************************************************/
 void Model::LoadFromFile(const std::string &aFile) {
   mMeshes.clear();
@@ -95,5 +94,4 @@ void Model::ProcessMesh(aiMesh &aMesh, unsigned int aMeshIndex,
 
   mMeshes.emplace_back(std::move(mesh));
 }
-
 } // namespace KumaGL

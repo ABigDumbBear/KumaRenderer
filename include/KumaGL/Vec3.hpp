@@ -5,22 +5,9 @@
 #include <ostream>
 
 namespace KumaGL {
-
-/**
- * A simple 3-dimensional vector class.
- */
 class Vec3 {
 public:
   Vec3() : x(0.0), y(0.0), z(0.0) {}
-
-  /**
-   * Value constructor. This allows the initialization of each value
-   * in the vector.
-   *
-   * @param a The x-coordinate of the vector.
-   * @param b The y-coordinate of the vector.
-   * @param c The z-coordinate of the vector.
-   */
   Vec3(float a, float b, float c) : x(a), y(b), z(c){};
 
   Vec3 &operator+=(const Vec3 &rhs) {
@@ -131,7 +118,6 @@ inline float Distance(const Vec3 &aVectorA, const Vec3 &aVectorB) {
 
   return std::sqrt(std::pow(xVal, 2) + std::pow(yVal, 2) + std::pow(zVal, 2));
 }
-
 } // namespace KumaGL
 
-#endif
+#endif // !VEC3_HPP

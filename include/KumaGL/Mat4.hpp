@@ -1,22 +1,13 @@
-#ifndef MATRIX4D_HPP
-#define MATRIX4D_HPP
+#ifndef MAT4_HPP
+#define MAT4_HPP
 
 #include <ostream>
 
 #include "Vec3.hpp"
 
 namespace KumaGL {
-
-/**
- * A 4x4 matrix used for vector transformation purposes. The values of the
- * matrix are stored in column-major order.
- */
 class Mat4 {
 public:
-  /**
-   * Default constructor. This initializes the matrix to be an
-   * identity matrix.
-   */
   Mat4() {
     data[0][0] = 1.0;
     data[1][0] = 0.0;
@@ -36,12 +27,6 @@ public:
     data[3][3] = 1.0;
   };
 
-  /**
-   * Value constructor. This allows the initialization of each value
-   * in the matrix.
-   *
-   * @params The values of the matrix, given in column-major order.
-   */
   Mat4(float n00, float n10, float n20, float n30, float n01, float n11,
        float n21, float n31, float n02, float n12, float n22, float n32,
        float n03, float n13, float n23, float n33) {
@@ -206,7 +191,6 @@ inline Mat4 Orthographic(float aViewportWidth, float aViewportHeight,
   return Mat4(2.0 / right, 0.0, 0.0, -1.0, 0.0, 2.0 / top, 0.0, -1.0, 0.0, 0.0,
               1.0 / (far - near), -near / (far - near), 0.0, 0.0, 0.0, 1.0);
 }
-
 } // namespace KumaGL
 
-#endif
+#endif // !MAT4_HPP

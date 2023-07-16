@@ -5,7 +5,6 @@
 #include <sstream>
 
 namespace KumaGL {
-
 /******************************************************************************/
 Shader::Shader() { mID = glCreateProgram(); }
 
@@ -139,5 +138,4 @@ void Shader::LinkProgram(unsigned int aVertexID, unsigned int aFragmentID) {
     std::cout << "Error linking program!\n" << infoLog << std::endl;
   }
 }
-
 } // namespace KumaGL

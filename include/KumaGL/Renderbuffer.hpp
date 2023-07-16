@@ -4,7 +4,6 @@
 #include <glad/glad.h>
 
 namespace KumaGL {
-
 class Renderbuffer {
 public:
   Renderbuffer();
@@ -25,7 +24,6 @@ private:
 
   GLuint mID{0};
 };
-
 } // namespace KumaGL
 
 #endif // !RENDERBUFFER_HPP

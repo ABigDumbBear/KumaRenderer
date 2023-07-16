@@ -6,7 +6,6 @@
 #include <glad/glad.h>
 
 namespace KumaGL {
-
 FT_Library Font::mLibrary = nullptr;
 int Font::mInstances = 0;
 
@@ -219,5 +218,4 @@ void Font::CreateGlyphMap(int aSize) {
     xOffset += info.mWidth;
   }
 }
-
 } // namespace KumaGL

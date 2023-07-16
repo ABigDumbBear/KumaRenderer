@@ -8,7 +8,6 @@
 #include "Vec3.hpp"
 
 namespace KumaGL {
-
 struct MeshVertex {
   Vec3 mPosition;
   Vec3 mColor;
@@ -52,7 +51,6 @@ private:
 
   bool mValid{false};
 };
-
 } // namespace KumaGL
 
-#endif
+#endif // !MESH_HPP

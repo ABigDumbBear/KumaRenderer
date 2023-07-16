@@ -5,7 +5,6 @@
 #include "Vec3.hpp"
 
 namespace KumaGL {
-
 class Transform {
 public:
   void Translate(const KumaGL::Vec3 &aPos) {
@@ -110,7 +109,6 @@ private:
   // the world's coordinate space.
   Mat4 mMatrix;
 };
-
 } // namespace KumaGL
 
-#endif
+#endif // !TRANSFORM_HPP

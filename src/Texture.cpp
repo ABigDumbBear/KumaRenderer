@@ -4,7 +4,6 @@
 #include <stb/stb_image.h>
 
 namespace KumaGL {
-
 /******************************************************************************/
 Texture::Texture() {
   glGenTextures(1, &mID);
@@ -65,5 +64,4 @@ void Texture::LoadFromData(unsigned char *aData, GLsizei aWidth,
   // Create a mipmap for this texture; used on small/far away objects.
   glGenerateMipmap(GL_TEXTURE_2D);
 }
-
 } // namespace KumaGL

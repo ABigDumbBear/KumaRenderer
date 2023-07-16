@@ -9,7 +9,6 @@
 #include "Mesh.hpp"
 
 namespace KumaGL {
-
 class Model {
 public:
   void LoadFromFile(const std::string &aFile);
@@ -26,7 +25,6 @@ private:
 
   std::vector<Mesh> mMeshes;
 };
-
 } // namespace KumaGL
 
-#endif
+#endif // !MODEL_HPP

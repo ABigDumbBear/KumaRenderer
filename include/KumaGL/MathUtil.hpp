@@ -4,7 +4,6 @@
 #include "Vec3.hpp"
 
 namespace KumaGL {
-
 /******************************************************************************/
 inline float Lerp(float aStart, float aTarget, float aPercent) {
   return (aStart + (aTarget - aStart) * aPercent);
@@ -16,7 +15,6 @@ inline Vec3 Lerp(const Vec3 &aStart, const Vec3 &aTarget, float aPercent) {
               Lerp(aStart.y, aTarget.y, aPercent),
               Lerp(aStart.z, aTarget.z, aPercent));
 }
-
 } // namespace KumaGL
 
-#endif
+#endif // !MATHUTIL_HPP

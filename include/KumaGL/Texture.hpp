@@ -6,7 +6,6 @@
 #include <glad/glad.h>
 
 namespace KumaGL {
-
 class Texture {
 public:
   Texture();
@@ -33,7 +32,6 @@ private:
 
   bool mValid{false};
 };
-
 } // namespace KumaGL
 
-#endif
+#endif // !TEXTURE_HPP
