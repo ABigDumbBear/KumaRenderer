@@ -5,6 +5,8 @@
 #include <sstream>
 
 namespace KumaGL {
+GLuint Shader::mBoundShader = 0;
+
 /******************************************************************************/
 Shader::Shader() { mID = glCreateProgram(); }
 
@@ -12,6 +14,9 @@ Shader::Shader() { mID = glCreateProgram(); }
 Shader::~Shader() {
   if (mValid) {
     glDeleteProgram(mID);
+    if (mID == mBoundShader) {
+      mBoundShader = 0;
+    }
   }
 }
 
@@ -68,30 +73,41 @@ void Shader::LoadFromSource(const std::string &aVertexSource,
 }
 
 /******************************************************************************/
-void Shader::Use() const { glUseProgram(mID); }
+void Shader::Use() const {
+  glUseProgram(mID);
+  mBoundShader = mID;
+}
 
 /******************************************************************************/
 void Shader::SetInt(const std::string &aName, int aValue) const {
+  glUseProgram(mID);
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform1i(loc, aValue);
+  glUseProgram(mBoundShader);
 }
 
 /******************************************************************************/
 void Shader::SetFloat(const std::string &aName, float aValue) const {
+  glUseProgram(mID);
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform1f(loc, aValue);
+  glUseProgram(mBoundShader);
 }
 
 /******************************************************************************/
 void Shader::SetVec3(const std::string &aName, const Vec3 &aValue) const {
+  glUseProgram(mID);
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform3fv(loc, 1, &aValue.x);
+  glUseProgram(mBoundShader);
 }
 
 /******************************************************************************/
 void Shader::SetMat4(const std::string &aName, const Mat4 &aValue) const {
+  glUseProgram(mID);
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniformMatrix4fv(loc, 1, GL_FALSE, &aValue(0, 0));
+  glUseProgram(mBoundShader);
 }
 
 /******************************************************************************/

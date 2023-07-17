@@ -4,6 +4,8 @@
 #include <stb/stb_image.h>
 
 namespace KumaGL {
+GLuint Texture::mBoundTexture = 0;
+
 /******************************************************************************/
 Texture::Texture() {
   glGenTextures(1, &mID);
@@ -14,6 +16,9 @@ Texture::Texture() {
 Texture::~Texture() {
   if (mValid) {
     glDeleteTextures(1, &mID);
+    if (mBoundTexture == mID) {
+      mBoundTexture = 0;
+    }
   }
 }
 
@@ -56,12 +61,37 @@ void Texture::LoadFromData(unsigned char *aData, GLsizei aWidth,
   mHeight = aHeight;
 
   glBindTexture(GL_TEXTURE_2D, mID);
-
-  // Copy the image data into the currently bound texture.
   glTexImage2D(GL_TEXTURE_2D, 0, aLoadFormat, mWidth, mHeight, 0, aLoadFormat,
                GL_UNSIGNED_BYTE, aData);
-
-  // Create a mipmap for this texture; used on small/far away objects.
   glGenerateMipmap(GL_TEXTURE_2D);
+
+  glBindTexture(GL_TEXTURE_2D, mBoundTexture);
+}
+
+/******************************************************************************/
+void Texture::Bind() const {
+  glBindTexture(GL_TEXTURE_2D, mID);
+  mBoundTexture = mID;
+}
+
+/******************************************************************************/
+void Texture::GenerateMipmap() const {
+  glBindTexture(GL_TEXTURE_2D, mID);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, mBoundTexture);
+}
+
+/******************************************************************************/
+void Texture::SetParameter(GLenum aParam, GLint aValue) const {
+  glBindTexture(GL_TEXTURE_2D, mID);
+  glTexParameteri(GL_TEXTURE_2D, aParam, aValue);
+  glBindTexture(GL_TEXTURE_2D, mBoundTexture);
+}
+
+/******************************************************************************/
+void Texture::SetParameter(GLenum aParam, GLfloat aValue) const {
+  glBindTexture(GL_TEXTURE_2D, mID);
+  glTexParameterf(GL_TEXTURE_2D, aParam, aValue);
+  glBindTexture(GL_TEXTURE_2D, mBoundTexture);
 }
 } // namespace KumaGL

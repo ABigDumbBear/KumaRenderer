@@ -82,10 +82,9 @@ int main() {
   texture.LoadFromFile("resources/texture.png");
 
   // Set texture filtering options to linear; we don't want it to be blurry.
-  glBindTexture(GL_TEXTURE_2D, texture.GetID());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glGenerateMipmap(GL_TEXTURE_2D);
+  texture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  texture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  texture.GenerateMipmap();
 
   // Create a cube mesh.
   KumaGL::Mesh mesh;
@@ -99,7 +98,6 @@ int main() {
   }
 
   // Set the shader uniforms.
-  shader.Use();
   shader.SetMat4("viewMatrix",
                  KumaGL::View(KumaGL::Vec3(0, 0, 1), KumaGL::Vec3(1, 0, 0),
                               KumaGL::Vec3(0, 0, 0)));
@@ -128,6 +126,8 @@ int main() {
                  matrices.data(), GL_DYNAMIC_DRAW);
 
     // Draw the cube a number of times.
+    shader.Use();
+    texture.Bind();
     mesh.DrawInstanced(10000);
 
     glfwPollEvents();

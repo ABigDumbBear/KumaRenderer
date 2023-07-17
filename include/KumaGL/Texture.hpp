@@ -19,9 +19,15 @@ public:
   void LoadFromData(unsigned char *aData, GLsizei aWidth, GLsizei aHeight,
                     GLint aLoadFormat = GL_RGBA);
 
+  void Bind() const;
+
+  void GenerateMipmap() const;
+
+  void SetParameter(GLenum aParam, GLint aValue) const;
+  void SetParameter(GLenum aParam, GLfloat aValue) const;
+
   GLsizei GetWidth() const { return mWidth; }
   GLsizei GetHeight() const { return mHeight; }
-
   GLuint GetID() const { return mID; }
 
 private:
@@ -31,6 +37,8 @@ private:
   GLuint mID{0};
 
   bool mValid{false};
+
+  static GLuint mBoundTexture;
 };
 } // namespace KumaGL
 

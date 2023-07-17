@@ -42,6 +42,8 @@ private:
   GLuint mID{0};
 
   bool mValid{false};
+
+  static GLuint mBoundShader;
 };
 } // namespace KumaGL
 
