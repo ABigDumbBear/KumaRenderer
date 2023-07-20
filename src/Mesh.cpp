@@ -1,19 +1,22 @@
 #include "KumaGL/Mesh.hpp"
 
 #include <KumaGL/Mat4.hpp>
-#include <iostream>
 
 namespace KumaGL {
 /******************************************************************************/
 Mesh::Mesh() {
   // Generate a VAO and several VBOs for the mesh, then configure them.
   glGenVertexArrays(1, &mVertexArray);
+  glGenBuffers(1, &mVertexBuffer);
+  glGenBuffers(1, &mInstanceBuffer);
+  glGenBuffers(1, &mCustomBuffer);
+  glGenBuffers(1, &mElementBuffer);
 
   // Bind the vertex array.
   glBindVertexArray(mVertexArray);
 
   // Bind the vertex buffer.
-  mVertexBuffer.Bind(GL_ARRAY_BUFFER);
+  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 
   // Configure the vertex position attribute.
   glEnableVertexAttribArray(0);
@@ -36,7 +39,7 @@ Mesh::Mesh() {
                         (void *)(offsetof(MeshVertex, mTexCoords)));
 
   // Bind the instance buffer.
-  mInstanceBuffer.Bind(GL_ARRAY_BUFFER);
+  glBindBuffer(GL_ARRAY_BUFFER, mInstanceBuffer);
 
   // Configure the instance attributes.
   glEnableVertexAttribArray(4);
@@ -57,7 +60,7 @@ Mesh::Mesh() {
   glVertexAttribDivisor(7, 1);
 
   // Bind the element buffer.
-  mElementBuffer.Bind(GL_ELEMENT_ARRAY_BUFFER);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBuffer);
 
   // Unbind the vertex array.
   glBindVertexArray(0);
@@ -69,6 +72,10 @@ Mesh::Mesh() {
 Mesh::~Mesh() {
   if (mValid) {
     glDeleteVertexArrays(1, &mVertexArray);
+    glDeleteBuffers(1, &mVertexBuffer);
+    glDeleteBuffers(1, &mInstanceBuffer);
+    glDeleteBuffers(1, &mCustomBuffer);
+    glDeleteBuffers(1, &mElementBuffer);
   }
 }
 
@@ -77,20 +84,11 @@ Mesh::Mesh(Mesh &&aMesh) {
   mVertices = aMesh.mVertices;
   mIndices = aMesh.mIndices;
 
-  std::cout << "other mesh buffer: " << aMesh.mVertexBuffer.GetID()
-            << std::endl;
-  std::cout << "this mesh buffer: " << mVertexBuffer.GetID() << std::endl;
-
   mVertexArray = aMesh.mVertexArray;
-  mVertexBuffer = std::move(aMesh.mVertexBuffer);
-  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
-  mCustomBuffer = std::move(aMesh.mCustomBuffer);
-  mElementBuffer = std::move(aMesh.mElementBuffer);
-
-  std::cout << "other mesh buffer after move: " << aMesh.mVertexBuffer.GetID()
-            << std::endl;
-  std::cout << "this mesh buffer after move: " << mVertexBuffer.GetID()
-            << std::endl;
+  mVertexBuffer = aMesh.mVertexBuffer;
+  mInstanceBuffer = aMesh.mInstanceBuffer;
+  mCustomBuffer = aMesh.mCustomBuffer;
+  mElementBuffer = aMesh.mElementBuffer;
 
   aMesh.mValid = false;
   mValid = true;
@@ -102,10 +100,10 @@ Mesh &Mesh::operator=(Mesh &&aMesh) {
   mIndices = aMesh.mIndices;
 
   mVertexArray = aMesh.mVertexArray;
-  mVertexBuffer = std::move(aMesh.mVertexBuffer);
-  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
-  mCustomBuffer = std::move(aMesh.mCustomBuffer);
-  mElementBuffer = std::move(aMesh.mElementBuffer);
+  mVertexBuffer = aMesh.mVertexBuffer;
+  mInstanceBuffer = aMesh.mInstanceBuffer;
+  mCustomBuffer = aMesh.mCustomBuffer;
+  mElementBuffer = aMesh.mElementBuffer;
 
   aMesh.mValid = false;
   mValid = true;
@@ -130,15 +128,16 @@ void Mesh::DrawInstanced(int aNumInstances, GLenum aMode) const {
 
 /******************************************************************************/
 void Mesh::UpdateVertices() {
-  mVertexBuffer.CopyData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(MeshVertex),
-                         mVertices.data(), GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+  glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(MeshVertex),
+               &mVertices[0], GL_STATIC_DRAW);
 }
 
 /******************************************************************************/
 void Mesh::UpdateIndices() {
-  mElementBuffer.CopyData(GL_ELEMENT_ARRAY_BUFFER,
-                          mIndices.size() * sizeof(unsigned int),
-                          mIndices.data(), GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBuffer);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int),
+               &mIndices[0], GL_STATIC_DRAW);
 }
 
 /******************************************************************************/

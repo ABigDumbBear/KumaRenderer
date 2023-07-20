@@ -13,6 +13,7 @@ list(APPEND SOURCE_FILES
   src/3rd_party/glad/glad.c
   src/Font.cpp
   src/Framebuffer.cpp
+  src/GLObject.cpp
   src/Mesh.cpp
   src/Model.cpp
   src/Renderbuffer.cpp

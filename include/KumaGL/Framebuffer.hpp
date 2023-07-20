@@ -3,11 +3,12 @@
 
 #include <glad/glad.h>
 
+#include "KumaGL/GLObject.hpp"
 #include "KumaGL/Renderbuffer.hpp"
 #include "KumaGL/Texture.hpp"
 
 namespace KumaGL {
-class Framebuffer {
+class Framebuffer : public GLObject {
 public:
   Framebuffer();
   ~Framebuffer();
@@ -27,11 +28,6 @@ public:
   void AttachRenderbuffer(const Renderbuffer &aBuffer,
                           GLenum aTarget = GL_FRAMEBUFFER,
                           GLenum aAttachmentType = GL_DEPTH_STENCIL_ATTACHMENT);
-
-  GLuint GetID() const { return mID; }
-
-private:
-  GLuint mID{0};
 };
 } // namespace KumaGL
 

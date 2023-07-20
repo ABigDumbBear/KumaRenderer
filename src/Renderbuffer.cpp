@@ -1,4 +1,7 @@
 #include "KumaGL/Renderbuffer.hpp"
+#include "KumaGL/GLObject.hpp"
+
+#include <algorithm>
 
 namespace KumaGL {
 /******************************************************************************/
@@ -8,17 +11,12 @@ Renderbuffer::Renderbuffer() { Generate(); }
 Renderbuffer::~Renderbuffer() { Delete(); }
 
 /******************************************************************************/
-Renderbuffer::Renderbuffer(Renderbuffer &&aBuffer) {
-  mID = aBuffer.mID;
-  aBuffer.mID = 0;
-}
+Renderbuffer::Renderbuffer(Renderbuffer &&aBuffer)
+    : GLObject(std::move(aBuffer)) {}
 
 /******************************************************************************/
 Renderbuffer &Renderbuffer::operator=(Renderbuffer &&aBuffer) {
-  Delete();
-  mID = aBuffer.mID;
-  aBuffer.mID = 0;
-
+  GLObject::operator=(std::move(aBuffer));
   return *this;
 }
 
@@ -31,8 +29,10 @@ void Renderbuffer::Generate() {
 
 /******************************************************************************/
 void Renderbuffer::Delete() {
-  glDeleteRenderbuffers(1, &mID);
-  mID = 0;
+  if (mID) {
+    glDeleteRenderbuffers(1, &mID);
+    mID = 0;
+  }
 }
 
 /******************************************************************************/

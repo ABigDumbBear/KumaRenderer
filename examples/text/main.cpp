@@ -76,6 +76,7 @@ int main() {
   meshTransform.SetPosition(KumaGL::Vec3(5, 69, 0));
 
   // Set the shader uniforms.
+  shader.Use();
   shader.SetMat4("modelMatrix", meshTransform.GetMatrix());
   shader.SetMat4("projectionMatrix", KumaGL::Orthographic(1280, 720, 0, 100));
 
@@ -84,7 +85,6 @@ int main() {
     glfwSwapBuffers(window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader.Bind();
     mesh.Draw();
 
     glfwPollEvents();

@@ -1,12 +1,12 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
-#include <glad/glad.h>
-
 #include <string>
 
+#include "GLObject.hpp"
+
 namespace KumaGL {
-class Texture {
+class Texture : public GLObject {
 public:
   Texture();
   ~Texture();
@@ -30,13 +30,10 @@ public:
 
   GLsizei GetWidth() const { return mWidth; }
   GLsizei GetHeight() const { return mHeight; }
-  GLuint GetID() const { return mID; }
 
 private:
   GLsizei mWidth{0};
   GLsizei mHeight{0};
-
-  GLuint mID{0};
 };
 } // namespace KumaGL
 

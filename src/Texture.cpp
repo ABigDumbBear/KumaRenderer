@@ -1,4 +1,5 @@
 #include "KumaGL/Texture.hpp"
+#include "KumaGL/GLObject.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
@@ -11,23 +12,16 @@ Texture::Texture() { Generate(); }
 Texture::~Texture() { Delete(); }
 
 /******************************************************************************/
-Texture::Texture(Texture &&aTexture) {
-  mID = aTexture.mID;
+Texture::Texture(Texture &&aTexture) : GLObject(std::move(aTexture)) {
   mWidth = aTexture.mWidth;
   mHeight = aTexture.mHeight;
-
-  aTexture.mID = 0;
 }
 
 /******************************************************************************/
 Texture &Texture::operator=(Texture &&aTexture) {
-  Delete();
-
-  mID = aTexture.mID;
+  GLObject::operator=(std::move(aTexture));
   mWidth = aTexture.mWidth;
   mHeight = aTexture.mHeight;
-
-  aTexture.mID = 0;
 
   return *this;
 }
@@ -41,8 +35,10 @@ void Texture::Generate() {
 
 /******************************************************************************/
 void Texture::Delete() {
-  glDeleteTextures(1, &mID);
-  mID = 0;
+  if (mID) {
+    glDeleteTextures(1, &mID);
+    mID = 0;
+  }
 }
 
 /******************************************************************************/
