@@ -7,16 +7,12 @@ namespace KumaGL {
 Mesh::Mesh() {
   // Generate a VAO and several VBOs for the mesh, then configure them.
   glGenVertexArrays(1, &mVertexArray);
-  glGenBuffers(1, &mVertexBuffer);
-  glGenBuffers(1, &mInstanceBuffer);
-  glGenBuffers(1, &mCustomBuffer);
-  glGenBuffers(1, &mElementBuffer);
 
   // Bind the vertex array.
   glBindVertexArray(mVertexArray);
 
   // Bind the vertex buffer.
-  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
+  mVertexBuffer.Bind(GL_ARRAY_BUFFER);
 
   // Configure the vertex position attribute.
   glEnableVertexAttribArray(0);
@@ -39,7 +35,7 @@ Mesh::Mesh() {
                         (void *)(offsetof(MeshVertex, mTexCoords)));
 
   // Bind the instance buffer.
-  glBindBuffer(GL_ARRAY_BUFFER, mInstanceBuffer);
+  mInstanceBuffer.Bind(GL_ARRAY_BUFFER);
 
   // Configure the instance attributes.
   glEnableVertexAttribArray(4);
@@ -60,7 +56,7 @@ Mesh::Mesh() {
   glVertexAttribDivisor(7, 1);
 
   // Bind the element buffer.
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBuffer);
+  mElementBuffer.Bind(GL_ELEMENT_ARRAY_BUFFER);
 
   // Unbind the vertex array.
   glBindVertexArray(0);
@@ -72,10 +68,6 @@ Mesh::Mesh() {
 Mesh::~Mesh() {
   if (mValid) {
     glDeleteVertexArrays(1, &mVertexArray);
-    glDeleteBuffers(1, &mVertexBuffer);
-    glDeleteBuffers(1, &mInstanceBuffer);
-    glDeleteBuffers(1, &mCustomBuffer);
-    glDeleteBuffers(1, &mElementBuffer);
   }
 }
 
@@ -85,10 +77,10 @@ Mesh::Mesh(Mesh &&aMesh) {
   mIndices = aMesh.mIndices;
 
   mVertexArray = aMesh.mVertexArray;
-  mVertexBuffer = aMesh.mVertexBuffer;
-  mInstanceBuffer = aMesh.mInstanceBuffer;
-  mCustomBuffer = aMesh.mCustomBuffer;
-  mElementBuffer = aMesh.mElementBuffer;
+  mVertexBuffer = std::move(aMesh.mVertexBuffer);
+  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
+  mCustomBuffer = std::move(aMesh.mCustomBuffer);
+  mElementBuffer = std::move(aMesh.mElementBuffer);
 
   aMesh.mValid = false;
   mValid = true;
@@ -100,10 +92,10 @@ Mesh &Mesh::operator=(Mesh &&aMesh) {
   mIndices = aMesh.mIndices;
 
   mVertexArray = aMesh.mVertexArray;
-  mVertexBuffer = aMesh.mVertexBuffer;
-  mInstanceBuffer = aMesh.mInstanceBuffer;
-  mCustomBuffer = aMesh.mCustomBuffer;
-  mElementBuffer = aMesh.mElementBuffer;
+  mVertexBuffer = std::move(aMesh.mVertexBuffer);
+  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
+  mCustomBuffer = std::move(aMesh.mCustomBuffer);
+  mElementBuffer = std::move(aMesh.mElementBuffer);
 
   aMesh.mValid = false;
   mValid = true;
@@ -128,16 +120,15 @@ void Mesh::DrawInstanced(int aNumInstances, GLenum aMode) const {
 
 /******************************************************************************/
 void Mesh::UpdateVertices() {
-  glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(MeshVertex),
-               &mVertices[0], GL_STATIC_DRAW);
+  mVertexBuffer.CopyData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(MeshVertex),
+                         mVertices.data(), GL_STATIC_DRAW);
 }
 
 /******************************************************************************/
 void Mesh::UpdateIndices() {
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mElementBuffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(unsigned int),
-               &mIndices[0], GL_STATIC_DRAW);
+  mVertexBuffer.CopyData(GL_ELEMENT_ARRAY_BUFFER,
+                         mIndices.size() * sizeof(unsigned int),
+                         mIndices.data(), GL_STATIC_DRAW);
 }
 
 /******************************************************************************/

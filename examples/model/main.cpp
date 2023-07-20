@@ -70,13 +70,15 @@ int main() {
   // Load the textures.
   KumaGL::Texture tex;
   tex.LoadFromFile("resources/model/Spitfire_Red.png", GL_RGB);
-  glBindTexture(GL_TEXTURE_2D, tex.GetID());
+  tex.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  tex.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  tex.GenerateMipmap();
+  tex.Bind();
   glActiveTexture(GL_TEXTURE0);
 
   // Set shader uniforms.
   KumaGL::Transform modelTransform;
   modelTransform.SetPosition(KumaGL::Vec3(0, 0, -10));
-  shader.Use();
   shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
   shader.SetMat4("viewMatrix",
                  KumaGL::View(KumaGL::Vec3(0, 0, 1), KumaGL::Vec3(1, 0, 0),
@@ -93,6 +95,7 @@ int main() {
     modelTransform.Rotate(0, 1, 0);
     shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
 
+    shader.Bind();
     model.Draw();
 
     glfwPollEvents();

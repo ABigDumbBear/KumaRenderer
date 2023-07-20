@@ -153,7 +153,6 @@ int main() {
   }
 
   // Set the shader uniforms.
-  cubeShader.Use();
   cubeShader.SetMat4("viewMatrix",
                      KumaGL::View(KumaGL::Vec3(0, 0, 1), KumaGL::Vec3(1, 0, 0),
                                   KumaGL::Vec3(0, 0, 0)));
@@ -177,9 +176,9 @@ int main() {
     }
 
     // Copy the matrices into the cube instance buffer.
-    glBindBuffer(GL_ARRAY_BUFFER, cubeMesh.GetInstanceBufferID());
-    glBufferData(GL_ARRAY_BUFFER, matrices.size() * sizeof(KumaGL::Mat4),
-                 matrices.data(), GL_DYNAMIC_DRAW);
+    cubeMesh.mInstanceBuffer.CopyData(GL_ARRAY_BUFFER,
+                                      matrices.size() * sizeof(KumaGL::Mat4),
+                                      matrices.data(), GL_DYNAMIC_DRAW);
 
     // Bind the scene framebuffer.
     fb.Bind();
@@ -188,7 +187,7 @@ int main() {
     // Render the cubes.
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, cubeTexture.GetID());
-    cubeShader.Use();
+    cubeShader.Bind();
     cubeMesh.DrawInstanced(numCubes);
 
     // Bind default framebuffer.
@@ -198,7 +197,7 @@ int main() {
 
     // Render the screen texture.
     glBindTexture(GL_TEXTURE_2D, screenTexture.GetID());
-    screenShader.Use();
+    screenShader.Bind();
     screenMesh.DrawInstanced(1);
   }
 
