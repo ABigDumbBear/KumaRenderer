@@ -5,12 +5,11 @@
 
 #include <glad/glad.h>
 
-#include "KumaGL/GLObject.hpp"
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
 namespace KumaGL {
-class Shader : public GLObject {
+class Shader {
 public:
   Shader();
   ~Shader();
@@ -34,12 +33,16 @@ public:
   void SetVec3(const std::string &aName, const Vec3 &aValue);
   void SetMat4(const std::string &aName, const Mat4 &aValue);
 
+  GLuint GetID() const { return mID; }
+
 private:
   enum class ShaderType { eVERTEX, eFRAGMENT };
 
   void CompileShader(unsigned int &aID, const std::string &aSource,
                      ShaderType aType);
   void LinkProgram(unsigned int aVertexID, unsigned int aFragmentID);
+
+  GLuint mID{0};
 };
 } // namespace KumaGL
 

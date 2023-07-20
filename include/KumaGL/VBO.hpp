@@ -1,10 +1,10 @@
 #ifndef VBO_HPP
 #define VBO_HPP
 
-#include "GLObject.hpp"
+#include <glad/glad.h>
 
 namespace KumaGL {
-class VBO : public GLObject {
+class VBO {
 public:
   VBO();
   ~VBO();
@@ -20,6 +20,11 @@ public:
 
   void CopyData(GLenum aTarget, GLsizeiptr aSize, const void *aData,
                 GLenum aUsage);
+
+  GLuint GetID() const { return mID; }
+
+private:
+  GLuint mID{0};
 };
 } // namespace KumaGL
 

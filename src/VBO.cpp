@@ -1,7 +1,4 @@
 #include "KumaGL/VBO.hpp"
-#include "KumaGL/GLObject.hpp"
-
-#include <algorithm>
 
 namespace KumaGL {
 /******************************************************************************/
@@ -11,11 +8,17 @@ VBO::VBO() { Generate(); }
 VBO::~VBO() { Delete(); }
 
 /******************************************************************************/
-VBO::VBO(VBO &&aBuffer) : GLObject(std::move(aBuffer)) {}
+VBO::VBO(VBO &&aBuffer) {
+  mID = aBuffer.mID;
+  aBuffer.mID = 0;
+}
 
 /******************************************************************************/
 VBO &VBO::operator=(VBO &&aBuffer) {
-  GLObject::operator=(std::move(aBuffer));
+  Delete();
+  mID = aBuffer.mID;
+  aBuffer.mID = 0;
+
   return *this;
 }
 
@@ -28,10 +31,8 @@ void VBO::Generate() {
 
 /******************************************************************************/
 void VBO::Delete() {
-  if (mID) {
-    glDeleteBuffers(1, &mID);
-    mID = 0;
-  }
+  glDeleteBuffers(1, &mID);
+  mID = 0;
 }
 
 /******************************************************************************/

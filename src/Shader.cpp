@@ -1,5 +1,4 @@
 #include "KumaGL/Shader.hpp"
-#include "KumaGL/GLObject.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -13,11 +12,17 @@ Shader::Shader() { Generate(); }
 Shader::~Shader() { Delete(); }
 
 /******************************************************************************/
-Shader::Shader(Shader &&aShader) : GLObject(std::move(aShader)) {}
+Shader::Shader(Shader &&aShader) {
+  mID = aShader.mID;
+  aShader.mID = 0;
+}
 
 /******************************************************************************/
 Shader &Shader::operator=(Shader &&aShader) {
-  GLObject::operator=(std::move(aShader));
+  Delete();
+  mID = aShader.mID;
+  aShader.mID = 0;
+
   return *this;
 }
 
@@ -30,10 +35,8 @@ void Shader::Generate() {
 
 /******************************************************************************/
 void Shader::Delete() {
-  if (mID) {
-    glDeleteProgram(mID);
-    mID = 0;
-  }
+  glDeleteProgram(mID);
+  mID = 0;
 }
 
 /******************************************************************************/

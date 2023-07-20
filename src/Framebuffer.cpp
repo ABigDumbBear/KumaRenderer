@@ -1,6 +1,5 @@
 #include "KumaGL/Framebuffer.hpp"
 
-#include "KumaGL/GLObject.hpp"
 #include "KumaGL/Renderbuffer.hpp"
 
 namespace KumaGL {
@@ -11,12 +10,17 @@ Framebuffer::Framebuffer() { Generate(); }
 Framebuffer::~Framebuffer() { Delete(); }
 
 /******************************************************************************/
-Framebuffer::Framebuffer(Framebuffer &&aBuffer)
-    : GLObject(std::move(aBuffer)) {}
+Framebuffer::Framebuffer(Framebuffer &&aBuffer) {
+  mID = aBuffer.mID;
+  aBuffer.mID = 0;
+}
 
 /******************************************************************************/
 Framebuffer &Framebuffer::operator=(Framebuffer &&aBuffer) {
-  GLObject::operator=(std::move(aBuffer));
+  Delete();
+  mID = aBuffer.mID;
+  aBuffer.mID = 0;
+
   return *this;
 }
 
@@ -29,10 +33,8 @@ void Framebuffer::Generate() {
 
 /******************************************************************************/
 void Framebuffer::Delete() {
-  if (mID) {
-    glDeleteFramebuffers(1, &mID);
-    mID = 0;
-  }
+  glDeleteFramebuffers(1, &mID);
+  mID = 0;
 }
 
 /******************************************************************************/

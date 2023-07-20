@@ -83,7 +83,6 @@ int main() {
   glGenerateMipmap(GL_TEXTURE_2D);
 
   // Set the shader uniforms.
-  shader.Use();
   shader.SetMat4("viewMatrix",
                  KumaGL::View(KumaGL::Vec3(0, 0, 1), KumaGL::Vec3(1, 0, 0),
                               KumaGL::Vec3(0, 0, 0)));
@@ -132,11 +131,12 @@ int main() {
       matrices.emplace_back(t.GetMatrix());
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, cube.GetInstanceBufferID());
-    glBufferData(GL_ARRAY_BUFFER, matrices.size() * sizeof(KumaGL::Mat4),
-                 matrices.data(), GL_DYNAMIC_DRAW);
+    cube.mInstanceBuffer.CopyData(GL_ARRAY_BUFFER,
+                                  matrices.size() * sizeof(KumaGL::Mat4),
+                                  matrices.data(), GL_DYNAMIC_DRAW);
 
     // Draw the cubes.
+    shader.Bind();
     cube.DrawInstanced(cubes.size());
 
     glfwPollEvents();
