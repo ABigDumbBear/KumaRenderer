@@ -1,42 +1,46 @@
 #include "KumaGL/Shader.hpp"
+#include "KumaGL/GLObject.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
 namespace KumaGL {
-GLuint Shader::mBoundShader = 0;
+/******************************************************************************/
+Shader::Shader() { Generate(); }
 
 /******************************************************************************/
-Shader::Shader() { mID = glCreateProgram(); }
+Shader::~Shader() { Delete(); }
 
 /******************************************************************************/
-Shader::~Shader() {
-  if (mValid) {
-    glDeleteProgram(mID);
-    if (mID == mBoundShader) {
-      mBoundShader = 0;
-    }
+Shader::Shader(Shader &&aShader) : GLObject(std::move(aShader)) {}
+
+/******************************************************************************/
+Shader &Shader::operator=(Shader &&aShader) {
+  GLObject::operator=(std::move(aShader));
+  return *this;
+}
+
+/******************************************************************************/
+void Shader::Generate() {
+  if (!mID) {
+    mID = glCreateProgram();
   }
 }
 
 /******************************************************************************/
-Shader::Shader(Shader &&aShader) {
-  mID = aShader.mID;
-
-  aShader.mValid = false;
-  mValid = true;
+void Shader::Delete() {
+  if (mID) {
+    glDeleteProgram(mID);
+    mID = 0;
+  }
 }
 
 /******************************************************************************/
-Shader &Shader::operator=(Shader &&aShader) {
-  mID = aShader.mID;
+void Shader::Bind() { glUseProgram(mID); }
 
-  aShader.mValid = false;
-  mValid = true;
-
-  return *this;
-}
+/******************************************************************************/
+void Shader::Unbind() { glUseProgram(0); }
 
 /******************************************************************************/
 void Shader::LoadFromFiles(const std::string &aVertexFile,
@@ -73,41 +77,35 @@ void Shader::LoadFromSource(const std::string &aVertexSource,
 }
 
 /******************************************************************************/
-void Shader::Use() const {
-  glUseProgram(mID);
-  mBoundShader = mID;
-}
-
-/******************************************************************************/
-void Shader::SetInt(const std::string &aName, int aValue) const {
-  glUseProgram(mID);
+void Shader::SetInt(const std::string &aName, int aValue) {
+  Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform1i(loc, aValue);
-  glUseProgram(mBoundShader);
+  Unbind();
 }
 
 /******************************************************************************/
-void Shader::SetFloat(const std::string &aName, float aValue) const {
-  glUseProgram(mID);
+void Shader::SetFloat(const std::string &aName, float aValue) {
+  Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform1f(loc, aValue);
-  glUseProgram(mBoundShader);
+  Unbind();
 }
 
 /******************************************************************************/
-void Shader::SetVec3(const std::string &aName, const Vec3 &aValue) const {
-  glUseProgram(mID);
+void Shader::SetVec3(const std::string &aName, const Vec3 &aValue) {
+  Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform3fv(loc, 1, &aValue.x);
-  glUseProgram(mBoundShader);
+  Unbind();
 }
 
 /******************************************************************************/
-void Shader::SetMat4(const std::string &aName, const Mat4 &aValue) const {
-  glUseProgram(mID);
+void Shader::SetMat4(const std::string &aName, const Mat4 &aValue) {
+  Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniformMatrix4fv(loc, 1, GL_FALSE, &aValue(0, 0));
-  glUseProgram(mBoundShader);
+  Unbind();
 }
 
 /******************************************************************************/

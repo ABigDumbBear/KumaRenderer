@@ -1,63 +1,61 @@
 #include "KumaGL/Framebuffer.hpp"
+
+#include "KumaGL/GLObject.hpp"
 #include "KumaGL/Renderbuffer.hpp"
 
 namespace KumaGL {
 /******************************************************************************/
-Framebuffer::Framebuffer() {
-  glGenFramebuffers(1, &mID);
-  mValid = true;
-}
+Framebuffer::Framebuffer() { Generate(); }
 
 /******************************************************************************/
-Framebuffer::~Framebuffer() {
-  if (mValid) {
-    glDeleteFramebuffers(1, &mID);
-    mValid = false;
-  }
-}
+Framebuffer::~Framebuffer() { Delete(); }
 
 /******************************************************************************/
-Framebuffer::Framebuffer(Framebuffer &&aBuffer) {
-  mID = aBuffer.GetID();
-
-  aBuffer.mValid = false;
-  mValid = true;
-}
+Framebuffer::Framebuffer(Framebuffer &&aBuffer)
+    : GLObject(std::move(aBuffer)) {}
 
 /******************************************************************************/
 Framebuffer &Framebuffer::operator=(Framebuffer &&aBuffer) {
-  mID = aBuffer.GetID();
-
-  aBuffer.mValid = false;
-  mValid = true;
-
+  GLObject::operator=(std::move(aBuffer));
   return *this;
 }
 
 /******************************************************************************/
-void Framebuffer::Bind(GLenum aBufferType) {
-  glBindFramebuffer(aBufferType, mID);
-  glViewport(0, 0, mTextureWidth, mTextureHeight);
+void Framebuffer::Generate() {
+  if (!mID) {
+    glGenFramebuffers(1, &mID);
+  }
 }
 
 /******************************************************************************/
-void Framebuffer::AttachTexture(const Texture &aTexture, GLenum aAttachmentType,
-                                GLenum aTextureType) {
-  mTextureWidth = aTexture.GetWidth();
-  mTextureHeight = aTexture.GetHeight();
+void Framebuffer::Delete() {
+  if (mID) {
+    glDeleteFramebuffers(1, &mID);
+    mID = 0;
+  }
+}
 
-  glBindFramebuffer(GL_FRAMEBUFFER, mID);
+/******************************************************************************/
+void Framebuffer::Bind(GLenum aTarget) { glBindFramebuffer(aTarget, mID); }
+
+/******************************************************************************/
+void Framebuffer::Unbind(GLenum aTarget) { glBindFramebuffer(aTarget, 0); }
+
+/******************************************************************************/
+void Framebuffer::AttachTexture(const Texture &aTexture, GLenum aTarget,
+                                GLenum aAttachmentType, GLenum aTextureType) {
+  Bind(aTarget);
   glFramebufferTexture2D(GL_FRAMEBUFFER, aAttachmentType, aTextureType,
                          aTexture.GetID(), 0);
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  Unbind(aTarget);
 }
 
 /******************************************************************************/
 void Framebuffer::AttachRenderbuffer(const Renderbuffer &aBuffer,
-                                     GLenum aAttachmentType) {
-  glBindFramebuffer(GL_FRAMEBUFFER, mID);
+                                     GLenum aTarget, GLenum aAttachmentType) {
+  Bind(aTarget);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, aAttachmentType, GL_RENDERBUFFER,
                             aBuffer.GetID());
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  Unbind(aTarget);
 }
 } // namespace KumaGL

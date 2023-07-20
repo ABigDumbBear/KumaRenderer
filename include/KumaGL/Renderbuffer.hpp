@@ -3,8 +3,10 @@
 
 #include <glad/glad.h>
 
+#include "KumaGL/GLObject.hpp"
+
 namespace KumaGL {
-class Renderbuffer {
+class Renderbuffer : public GLObject {
 public:
   Renderbuffer();
   ~Renderbuffer();
@@ -13,16 +15,13 @@ public:
   Renderbuffer(const Renderbuffer &) = delete;
   Renderbuffer &operator=(const Renderbuffer &) = delete;
 
-  void Bind() const;
+  void Generate();
+  void Delete();
+  void Bind();
+  void Unbind();
+
   void SetStorageParameters(GLenum aStorageFormat, GLsizei aWidth,
                             GLsizei aHeight);
-
-  GLuint GetID() const { return mID; }
-
-private:
-  bool mValid{false};
-
-  GLuint mID{0};
 };
 } // namespace KumaGL
 

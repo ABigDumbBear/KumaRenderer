@@ -5,8 +5,6 @@
 #include <stb/stb_image.h>
 
 namespace KumaGL {
-GLuint Texture::mBoundTexture = 0;
-
 /******************************************************************************/
 Texture::Texture() { Generate(); }
 
@@ -44,16 +42,10 @@ void Texture::Delete() {
 }
 
 /******************************************************************************/
-void Texture::Bind() const {
-  glBindTexture(GL_TEXTURE_2D, mID);
-  mBoundTexture = mID;
-}
+void Texture::Bind() { glBindTexture(GL_TEXTURE_2D, mID); }
 
 /******************************************************************************/
-void Texture::Unbind() const {
-  glBindTexture(GL_TEXTURE_2D, 0);
-  mBoundTexture = 0;
-}
+void Texture::Unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 /******************************************************************************/
 void Texture::LoadFromFile(const std::string &aFile, GLint aLoadFormat) {
@@ -71,32 +63,30 @@ void Texture::LoadFromData(unsigned char *aData, GLsizei aWidth,
   mWidth = aWidth;
   mHeight = aHeight;
 
-  glBindTexture(GL_TEXTURE_2D, mID);
+  Bind();
   glTexImage2D(GL_TEXTURE_2D, 0, aLoadFormat, mWidth, mHeight, 0, aLoadFormat,
                GL_UNSIGNED_BYTE, aData);
-  glGenerateMipmap(GL_TEXTURE_2D);
-
-  glBindTexture(GL_TEXTURE_2D, mBoundTexture);
+  Unbind();
 }
 
 /******************************************************************************/
-void Texture::SetParameter(GLenum aParam, GLint aValue) const {
-  glBindTexture(GL_TEXTURE_2D, mID);
+void Texture::SetParameter(GLenum aParam, GLint aValue) {
+  Bind();
   glTexParameteri(GL_TEXTURE_2D, aParam, aValue);
-  glBindTexture(GL_TEXTURE_2D, mBoundTexture);
+  Unbind();
 }
 
 /******************************************************************************/
-void Texture::SetParameter(GLenum aParam, GLfloat aValue) const {
-  glBindTexture(GL_TEXTURE_2D, mID);
+void Texture::SetParameter(GLenum aParam, GLfloat aValue) {
+  Bind();
   glTexParameterf(GL_TEXTURE_2D, aParam, aValue);
-  glBindTexture(GL_TEXTURE_2D, mBoundTexture);
+  Unbind();
 }
 
 /******************************************************************************/
-void Texture::GenerateMipmap() const {
-  glBindTexture(GL_TEXTURE_2D, mID);
+void Texture::GenerateMipmap() {
+  Bind();
   glGenerateMipmap(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, mBoundTexture);
+  Unbind();
 }
 } // namespace KumaGL

@@ -5,11 +5,12 @@
 
 #include <glad/glad.h>
 
+#include "KumaGL/GLObject.hpp"
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 
 namespace KumaGL {
-class Shader {
+class Shader : public GLObject {
 public:
   Shader();
   ~Shader();
@@ -18,19 +19,20 @@ public:
   Shader(const Shader &aShader) = delete;
   Shader &operator=(const Shader &aShader) = delete;
 
+  void Generate();
+  void Delete();
+  void Bind();
+  void Unbind();
+
   void LoadFromFiles(const std::string &aVertexFile,
                      const std::string &aFragmentFile);
   void LoadFromSource(const std::string &aVertexSource,
                       const std::string &aFragmentSource);
 
-  void Use() const;
-
-  void SetInt(const std::string &aName, int aValue) const;
-  void SetFloat(const std::string &aName, float aValue) const;
-  void SetVec3(const std::string &aName, const Vec3 &aValue) const;
-  void SetMat4(const std::string &aName, const Mat4 &aValue) const;
-
-  GLuint GetID() const { return mID; }
+  void SetInt(const std::string &aName, int aValue);
+  void SetFloat(const std::string &aName, float aValue);
+  void SetVec3(const std::string &aName, const Vec3 &aValue);
+  void SetMat4(const std::string &aName, const Mat4 &aValue);
 
 private:
   enum class ShaderType { eVERTEX, eFRAGMENT };
@@ -38,12 +40,6 @@ private:
   void CompileShader(unsigned int &aID, const std::string &aSource,
                      ShaderType aType);
   void LinkProgram(unsigned int aVertexID, unsigned int aFragmentID);
-
-  GLuint mID{0};
-
-  bool mValid{false};
-
-  static GLuint mBoundShader;
 };
 } // namespace KumaGL
 
