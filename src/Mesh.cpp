@@ -77,10 +77,10 @@ Mesh::Mesh(Mesh &&aMesh) {
   mIndices = aMesh.mIndices;
 
   mVertexArray = aMesh.mVertexArray;
-  mVertexBuffer = std::move(aMesh.mVertexBuffer);
-  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
-  mCustomBuffer = std::move(aMesh.mCustomBuffer);
-  mElementBuffer = std::move(aMesh.mElementBuffer);
+  // mVertexBuffer = aMesh.mVertexBuffer;
+  // mInstanceBuffer = aMesh.mInstanceBuffer;
+  // mCustomBuffer = aMesh.mCustomBuffer;
+  // mElementBuffer = aMesh.mElementBuffer;
 
   aMesh.mValid = false;
   mValid = true;
@@ -92,10 +92,10 @@ Mesh &Mesh::operator=(Mesh &&aMesh) {
   mIndices = aMesh.mIndices;
 
   mVertexArray = aMesh.mVertexArray;
-  mVertexBuffer = std::move(aMesh.mVertexBuffer);
-  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
-  mCustomBuffer = std::move(aMesh.mCustomBuffer);
-  mElementBuffer = std::move(aMesh.mElementBuffer);
+  // mVertexBuffer = aMesh.mVertexBuffer;
+  // mInstanceBuffer = aMesh.mInstanceBuffer;
+  // mCustomBuffer = aMesh.mCustomBuffer;
+  // mElementBuffer = aMesh.mElementBuffer;
 
   aMesh.mValid = false;
   mValid = true;
@@ -126,9 +126,9 @@ void Mesh::UpdateVertices() {
 
 /******************************************************************************/
 void Mesh::UpdateIndices() {
-  mVertexBuffer.CopyData(GL_ELEMENT_ARRAY_BUFFER,
-                         mIndices.size() * sizeof(unsigned int),
-                         mIndices.data(), GL_STATIC_DRAW);
+  mElementBuffer.CopyData(GL_ELEMENT_ARRAY_BUFFER,
+                          mIndices.size() * sizeof(unsigned int),
+                          mIndices.data(), GL_STATIC_DRAW);
 }
 
 /******************************************************************************/
