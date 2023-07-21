@@ -18,6 +18,8 @@ Mesh::Mesh() {
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
                         (void *)(0));
+  mVertexBuffer.Unbind(GL_ARRAY_BUFFER);
+  mVertexBuffer.Bind(GL_ARRAY_BUFFER);
 
   // Configure the vertex color attribute.
   glEnableVertexAttribArray(1);
@@ -77,10 +79,10 @@ Mesh::Mesh(Mesh &&aMesh) {
   mIndices = aMesh.mIndices;
 
   mVertexArray = aMesh.mVertexArray;
-  // mVertexBuffer = aMesh.mVertexBuffer;
-  // mInstanceBuffer = aMesh.mInstanceBuffer;
-  // mCustomBuffer = aMesh.mCustomBuffer;
-  // mElementBuffer = aMesh.mElementBuffer;
+  mVertexBuffer = std::move(aMesh.mVertexBuffer);
+  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
+  mCustomBuffer = std::move(aMesh.mCustomBuffer);
+  mElementBuffer = std::move(aMesh.mElementBuffer);
 
   aMesh.mValid = false;
   mValid = true;
@@ -92,10 +94,10 @@ Mesh &Mesh::operator=(Mesh &&aMesh) {
   mIndices = aMesh.mIndices;
 
   mVertexArray = aMesh.mVertexArray;
-  // mVertexBuffer = aMesh.mVertexBuffer;
-  // mInstanceBuffer = aMesh.mInstanceBuffer;
-  // mCustomBuffer = aMesh.mCustomBuffer;
-  // mElementBuffer = aMesh.mElementBuffer;
+  mVertexBuffer = std::move(aMesh.mVertexBuffer);
+  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
+  mCustomBuffer = std::move(aMesh.mCustomBuffer);
+  mElementBuffer = std::move(aMesh.mElementBuffer);
 
   aMesh.mValid = false;
   mValid = true;

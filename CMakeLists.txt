@@ -19,6 +19,7 @@ list(APPEND SOURCE_FILES
   src/Renderbuffer.cpp
   src/Shader.cpp
   src/Texture.cpp
+  src/VAO.cpp
   src/VBO.cpp
 )
 

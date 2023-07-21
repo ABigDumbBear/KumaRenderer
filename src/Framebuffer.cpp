@@ -16,6 +16,7 @@ Framebuffer::Framebuffer(Framebuffer &&aBuffer)
 
 /******************************************************************************/
 Framebuffer &Framebuffer::operator=(Framebuffer &&aBuffer) {
+  Delete();
   GLObject::operator=(std::move(aBuffer));
   return *this;
 }

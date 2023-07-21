@@ -16,6 +16,7 @@ Renderbuffer::Renderbuffer(Renderbuffer &&aBuffer)
 
 /******************************************************************************/
 Renderbuffer &Renderbuffer::operator=(Renderbuffer &&aBuffer) {
+  Delete();
   GLObject::operator=(std::move(aBuffer));
   return *this;
 }

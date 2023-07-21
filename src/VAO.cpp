@@ -1,51 +1,43 @@
-#include "KumaGL/VBO.hpp"
+#include "KumaGL/VAO.hpp"
 #include "KumaGL/GLObject.hpp"
 
 #include <algorithm>
 
 namespace KumaGL {
 /******************************************************************************/
-VBO::VBO() { Generate(); }
+VAO::VAO() { Generate(); }
 
 /******************************************************************************/
-VBO::~VBO() { Delete(); }
+VAO::~VAO() { Delete(); }
 
 /******************************************************************************/
-VBO::VBO(VBO &&aBuffer) : GLObject(std::move(aBuffer)) {}
+VAO::VAO(VAO &&aObject) : GLObject(std::move(aObject)) {}
 
 /******************************************************************************/
-VBO &VBO::operator=(VBO &&aBuffer) {
+VAO &VAO::operator=(VAO &&aObject) {
   Delete();
-  GLObject::operator=(std::move(aBuffer));
+  GLObject::operator=(std::move(aObject));
   return *this;
 }
 
 /******************************************************************************/
-void VBO::Generate() {
+void VAO::Generate() {
   if (!mID) {
-    glGenBuffers(1, &mID);
+    glGenVertexArrays(1, &mID);
   }
 }
 
 /******************************************************************************/
-void VBO::Delete() {
+void VAO::Delete() {
   if (mID) {
-    glDeleteBuffers(1, &mID);
+    glDeleteVertexArrays(1, &mID);
     mID = 0;
   }
 }
 
 /******************************************************************************/
-void VBO::Bind(GLenum aTarget) { glBindBuffer(aTarget, mID); }
+void VAO::Bind() { glBindVertexArray(mID); }
 
 /******************************************************************************/
-void VBO::Unbind(GLenum aTarget) { glBindBuffer(aTarget, 0); }
-
-/******************************************************************************/
-void VBO::CopyData(GLenum aTarget, GLsizeiptr aSize, const void *aData,
-                   GLenum aUsage) {
-  Bind(aTarget);
-  glBufferData(aTarget, aSize, aData, aUsage);
-  Unbind(aTarget);
-}
+void VAO::Unbind() { glBindVertexArray(0); }
 } // namespace KumaGL

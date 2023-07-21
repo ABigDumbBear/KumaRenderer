@@ -17,6 +17,7 @@ Shader::Shader(Shader &&aShader) : GLObject(std::move(aShader)) {}
 
 /******************************************************************************/
 Shader &Shader::operator=(Shader &&aShader) {
+  Delete();
   GLObject::operator=(std::move(aShader));
   return *this;
 }

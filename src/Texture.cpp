@@ -19,6 +19,7 @@ Texture::Texture(Texture &&aTexture) : GLObject(std::move(aTexture)) {
 
 /******************************************************************************/
 Texture &Texture::operator=(Texture &&aTexture) {
+  Delete();
   GLObject::operator=(std::move(aTexture));
   mWidth = aTexture.mWidth;
   mHeight = aTexture.mHeight;

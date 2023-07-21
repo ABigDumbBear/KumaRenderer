@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <numeric>
 #include <random>
 
 #include <KumaGL/Mesh.hpp>
@@ -121,9 +122,6 @@ int main() {
     }
 
     // Copy the matrices into the cube instance buffer.
-    /**glBindBuffer(GL_ARRAY_BUFFER, mesh.GetInstanceBufferID());
-    glBufferData(GL_ARRAY_BUFFER, matrices.size() * sizeof(KumaGL::Mat4),
-                 matrices.data(), GL_DYNAMIC_DRAW);*/
     mesh.mInstanceBuffer.CopyData(GL_ARRAY_BUFFER,
                                   matrices.size() * sizeof(KumaGL::Mat4),
                                   matrices.data(), GL_DYNAMIC_DRAW);
