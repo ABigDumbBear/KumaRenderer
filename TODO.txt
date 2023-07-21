@@ -1,1 +1,0 @@
-don't forget to delete the current object during move assignment
