@@ -21,18 +21,18 @@ public:
 
   void Generate();
   void Delete();
-  void Bind();
-  void Unbind();
+  void Bind() const;
+  void Unbind() const;
 
   void LoadFromFiles(const std::string &aVertexFile,
                      const std::string &aFragmentFile);
   void LoadFromSource(const std::string &aVertexSource,
                       const std::string &aFragmentSource);
 
-  void SetInt(const std::string &aName, int aValue);
-  void SetFloat(const std::string &aName, float aValue);
-  void SetVec3(const std::string &aName, const Vec3 &aValue);
-  void SetMat4(const std::string &aName, const Mat4 &aValue);
+  void SetInt(const std::string &aName, int aValue) const;
+  void SetFloat(const std::string &aName, float aValue) const;
+  void SetVec3(const std::string &aName, const Vec3 &aValue) const;
+  void SetMat4(const std::string &aName, const Mat4 &aValue) const;
 
 private:
   enum class ShaderType { eVERTEX, eFRAGMENT };

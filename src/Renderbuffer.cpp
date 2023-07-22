@@ -37,14 +37,14 @@ void Renderbuffer::Delete() {
 }
 
 /******************************************************************************/
-void Renderbuffer::Bind() { glBindRenderbuffer(GL_RENDERBUFFER, mID); }
+void Renderbuffer::Bind() const { glBindRenderbuffer(GL_RENDERBUFFER, mID); }
 
 /******************************************************************************/
-void Renderbuffer::Unbind() { glBindRenderbuffer(GL_RENDERBUFFER, 0); }
+void Renderbuffer::Unbind() const { glBindRenderbuffer(GL_RENDERBUFFER, 0); }
 
 /******************************************************************************/
 void Renderbuffer::SetStorageParameters(GLenum aStorageFormat, GLsizei aWidth,
-                                        GLsizei aHeight) {
+                                        GLsizei aHeight) const {
   Bind();
   glRenderbufferStorage(GL_RENDERBUFFER, aStorageFormat, aWidth, aHeight);
   Unbind();

@@ -1,123 +1,55 @@
 #include "KumaGL/Mesh.hpp"
 
 #include <KumaGL/Mat4.hpp>
+#include <cstddef>
 
 namespace KumaGL {
 /******************************************************************************/
 Mesh::Mesh() {
-  // Generate a VAO and several VBOs for the mesh, then configure them.
-  glGenVertexArrays(1, &mVertexArray);
-
-  // Bind the vertex array.
-  glBindVertexArray(mVertexArray);
-
-  // Bind the vertex buffer.
-  mVertexBuffer.Bind(GL_ARRAY_BUFFER);
-
-  // Configure the vertex position attribute.
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
-                        (void *)(0));
-  mVertexBuffer.Unbind(GL_ARRAY_BUFFER);
-  mVertexBuffer.Bind(GL_ARRAY_BUFFER);
-
-  // Configure the vertex color attribute.
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
-                        (void *)(offsetof(MeshVertex, mColor)));
-
-  // Configure the vertex normal attribute.
-  glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
-                        (void *)(offsetof(MeshVertex, mNormal)));
-
-  // Configure the vertex texture coordinate attribute.
-  glEnableVertexAttribArray(3);
-  glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
-                        (void *)(offsetof(MeshVertex, mTexCoords)));
-
-  // Bind the instance buffer.
-  mInstanceBuffer.Bind(GL_ARRAY_BUFFER);
+  // Configure the vertex attributes.
+  mVertexArray.ConfigureVertexAttribute(
+      mVertexBuffer, 0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
+      (void *)offsetof(MeshVertex, mPosition));
+  mVertexArray.ConfigureVertexAttribute(mVertexBuffer, 1, 3, GL_FLOAT, GL_FALSE,
+                                        sizeof(MeshVertex),
+                                        (void *)(offsetof(MeshVertex, mColor)));
+  mVertexArray.ConfigureVertexAttribute(
+      mVertexBuffer, 2, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
+      (void *)(offsetof(MeshVertex, mNormal)));
+  mVertexArray.ConfigureVertexAttribute(
+      mVertexBuffer, 3, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
+      (void *)(offsetof(MeshVertex, mTexCoords)));
 
   // Configure the instance attributes.
-  glEnableVertexAttribArray(4);
-  glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4), (void *)0);
-  glEnableVertexAttribArray(5);
-  glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
-                        (void *)(4 * sizeof(float)));
-  glEnableVertexAttribArray(6);
-  glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
-                        (void *)(8 * sizeof(float)));
-  glEnableVertexAttribArray(7);
-  glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
-                        (void *)(12 * sizeof(float)));
-
-  glVertexAttribDivisor(4, 1);
-  glVertexAttribDivisor(5, 1);
-  glVertexAttribDivisor(6, 1);
-  glVertexAttribDivisor(7, 1);
+  mVertexArray.ConfigureVertexAttributeWithDivisor(
+      mInstanceBuffer, 4, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4), (void *)0, 1);
+  mVertexArray.ConfigureVertexAttributeWithDivisor(
+      mInstanceBuffer, 5, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
+      (void *)(4 * sizeof(float)), 1);
+  mVertexArray.ConfigureVertexAttributeWithDivisor(
+      mInstanceBuffer, 6, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
+      (void *)(8 * sizeof(float)), 1);
+  mVertexArray.ConfigureVertexAttributeWithDivisor(
+      mInstanceBuffer, 7, 4, GL_FLOAT, GL_FALSE, sizeof(Mat4),
+      (void *)(12 * sizeof(float)), 1);
 
   // Bind the element buffer.
-  mElementBuffer.Bind(GL_ELEMENT_ARRAY_BUFFER);
-
-  // Unbind the vertex array.
-  glBindVertexArray(0);
-
-  mValid = true;
-}
-
-/******************************************************************************/
-Mesh::~Mesh() {
-  if (mValid) {
-    glDeleteVertexArrays(1, &mVertexArray);
-  }
-}
-
-/******************************************************************************/
-Mesh::Mesh(Mesh &&aMesh) {
-  mVertices = aMesh.mVertices;
-  mIndices = aMesh.mIndices;
-
-  mVertexArray = aMesh.mVertexArray;
-  mVertexBuffer = std::move(aMesh.mVertexBuffer);
-  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
-  mCustomBuffer = std::move(aMesh.mCustomBuffer);
-  mElementBuffer = std::move(aMesh.mElementBuffer);
-
-  aMesh.mValid = false;
-  mValid = true;
-}
-
-/******************************************************************************/
-Mesh &Mesh::operator=(Mesh &&aMesh) {
-  mVertices = aMesh.mVertices;
-  mIndices = aMesh.mIndices;
-
-  mVertexArray = aMesh.mVertexArray;
-  mVertexBuffer = std::move(aMesh.mVertexBuffer);
-  mInstanceBuffer = std::move(aMesh.mInstanceBuffer);
-  mCustomBuffer = std::move(aMesh.mCustomBuffer);
-  mElementBuffer = std::move(aMesh.mElementBuffer);
-
-  aMesh.mValid = false;
-  mValid = true;
-
-  return *this;
+  mVertexArray.SetElementBuffer(mElementBuffer);
 }
 
 /******************************************************************************/
 void Mesh::Draw(GLenum aMode) const {
-  glBindVertexArray(mVertexArray);
+  mVertexArray.Bind();
   glDrawElements(aMode, mIndices.size(), GL_UNSIGNED_INT, 0);
-  glBindVertexArray(0);
+  mVertexArray.Unbind();
 }
 
 /******************************************************************************/
 void Mesh::DrawInstanced(int aNumInstances, GLenum aMode) const {
-  glBindVertexArray(mVertexArray);
+  mVertexArray.Bind();
   glDrawElementsInstanced(aMode, mIndices.size(), GL_UNSIGNED_INT, 0,
                           aNumInstances);
-  glBindVertexArray(0);
+  mVertexArray.Unbind();
 }
 
 /******************************************************************************/

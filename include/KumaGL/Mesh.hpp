@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 
+#include "VAO.hpp"
 #include "VBO.hpp"
 #include "Vec3.hpp"
 
@@ -19,9 +20,9 @@ struct MeshVertex {
 class Mesh {
 public:
   Mesh();
-  ~Mesh();
-  Mesh(Mesh &&aMesh);
-  Mesh &operator=(Mesh &&aMesh);
+  ~Mesh() = default;
+  Mesh(Mesh &&aMesh) = default;
+  Mesh &operator=(Mesh &&aMesh) = default;
   Mesh(const Mesh &aMesh) = delete;
   Mesh &operator=(const Mesh &aMesh) = delete;
 
@@ -34,20 +35,15 @@ public:
   void InitQuad();
   void InitCube();
 
-  GLuint GetVertexArrayID() const { return mVertexArray; }
-
   std::vector<MeshVertex> mVertices;
   std::vector<unsigned int> mIndices;
+
+  VAO mVertexArray;
 
   VBO mVertexBuffer;
   VBO mInstanceBuffer;
   VBO mCustomBuffer;
   VBO mElementBuffer;
-
-private:
-  GLuint mVertexArray{0};
-
-  bool mValid{false};
 };
 } // namespace KumaGL
 

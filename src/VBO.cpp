@@ -36,14 +36,14 @@ void VBO::Delete() {
 }
 
 /******************************************************************************/
-void VBO::Bind(GLenum aTarget) { glBindBuffer(aTarget, mID); }
+void VBO::Bind(GLenum aTarget) const { glBindBuffer(aTarget, mID); }
 
 /******************************************************************************/
-void VBO::Unbind(GLenum aTarget) { glBindBuffer(aTarget, 0); }
+void VBO::Unbind(GLenum aTarget) const { glBindBuffer(aTarget, 0); }
 
 /******************************************************************************/
 void VBO::CopyData(GLenum aTarget, GLsizeiptr aSize, const void *aData,
-                   GLenum aUsage) {
+                   GLenum aUsage) const {
   Bind(aTarget);
   glBufferData(aTarget, aSize, aData, aUsage);
   Unbind(aTarget);

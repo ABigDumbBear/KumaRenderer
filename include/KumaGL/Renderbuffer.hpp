@@ -17,11 +17,11 @@ public:
 
   void Generate();
   void Delete();
-  void Bind();
-  void Unbind();
+  void Bind() const;
+  void Unbind() const;
 
   void SetStorageParameters(GLenum aStorageFormat, GLsizei aWidth,
-                            GLsizei aHeight);
+                            GLsizei aHeight) const;
 };
 } // namespace KumaGL
 

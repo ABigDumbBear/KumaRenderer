@@ -43,10 +43,10 @@ void Texture::Delete() {
 }
 
 /******************************************************************************/
-void Texture::Bind() { glBindTexture(GL_TEXTURE_2D, mID); }
+void Texture::Bind() const { glBindTexture(GL_TEXTURE_2D, mID); }
 
 /******************************************************************************/
-void Texture::Unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
+void Texture::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
 /******************************************************************************/
 void Texture::LoadFromFile(const std::string &aFile, GLint aLoadFormat) {
@@ -71,21 +71,21 @@ void Texture::LoadFromData(unsigned char *aData, GLsizei aWidth,
 }
 
 /******************************************************************************/
-void Texture::SetParameter(GLenum aParam, GLint aValue) {
+void Texture::SetParameter(GLenum aParam, GLint aValue) const {
   Bind();
   glTexParameteri(GL_TEXTURE_2D, aParam, aValue);
   Unbind();
 }
 
 /******************************************************************************/
-void Texture::SetParameter(GLenum aParam, GLfloat aValue) {
+void Texture::SetParameter(GLenum aParam, GLfloat aValue) const {
   Bind();
   glTexParameterf(GL_TEXTURE_2D, aParam, aValue);
   Unbind();
 }
 
 /******************************************************************************/
-void Texture::GenerateMipmap() {
+void Texture::GenerateMipmap() const {
   Bind();
   glGenerateMipmap(GL_TEXTURE_2D);
   Unbind();

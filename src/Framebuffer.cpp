@@ -37,14 +37,19 @@ void Framebuffer::Delete() {
 }
 
 /******************************************************************************/
-void Framebuffer::Bind(GLenum aTarget) { glBindFramebuffer(aTarget, mID); }
+void Framebuffer::Bind(GLenum aTarget) const {
+  glBindFramebuffer(aTarget, mID);
+}
 
 /******************************************************************************/
-void Framebuffer::Unbind(GLenum aTarget) { glBindFramebuffer(aTarget, 0); }
+void Framebuffer::Unbind(GLenum aTarget) const {
+  glBindFramebuffer(aTarget, 0);
+}
 
 /******************************************************************************/
 void Framebuffer::AttachTexture(const Texture &aTexture, GLenum aTarget,
-                                GLenum aAttachmentType, GLenum aTextureType) {
+                                GLenum aAttachmentType,
+                                GLenum aTextureType) const {
   Bind(aTarget);
   glFramebufferTexture2D(GL_FRAMEBUFFER, aAttachmentType, aTextureType,
                          aTexture.GetID(), 0);
@@ -53,7 +58,8 @@ void Framebuffer::AttachTexture(const Texture &aTexture, GLenum aTarget,
 
 /******************************************************************************/
 void Framebuffer::AttachRenderbuffer(const Renderbuffer &aBuffer,
-                                     GLenum aTarget, GLenum aAttachmentType) {
+                                     GLenum aTarget,
+                                     GLenum aAttachmentType) const {
   Bind(aTarget);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, aAttachmentType, GL_RENDERBUFFER,
                             aBuffer.GetID());

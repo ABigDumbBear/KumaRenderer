@@ -17,16 +17,16 @@ public:
 
   void Generate();
   void Delete();
-  void Bind();
-  void Unbind();
+  void Bind() const;
+  void Unbind() const;
 
   void LoadFromFile(const std::string &aFile, GLint aLoadFormat = GL_RGBA);
   void LoadFromData(unsigned char *aData, GLsizei aWidth, GLsizei aHeight,
                     GLint aLoadFormat = GL_RGBA);
 
-  void SetParameter(GLenum aParam, GLint aValue);
-  void SetParameter(GLenum aParam, GLfloat aValue);
-  void GenerateMipmap();
+  void SetParameter(GLenum aParam, GLint aValue) const;
+  void SetParameter(GLenum aParam, GLfloat aValue) const;
+  void GenerateMipmap() const;
 
   GLsizei GetWidth() const { return mWidth; }
   GLsizei GetHeight() const { return mHeight; }

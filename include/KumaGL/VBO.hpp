@@ -15,11 +15,11 @@ public:
 
   void Generate();
   void Delete();
-  void Bind(GLenum aTarget);
-  void Unbind(GLenum aTarget);
+  void Bind(GLenum aTarget) const;
+  void Unbind(GLenum aTarget) const;
 
   void CopyData(GLenum aTarget, GLsizeiptr aSize, const void *aData,
-                GLenum aUsage);
+                GLenum aUsage) const;
 };
 } // namespace KumaGL
 

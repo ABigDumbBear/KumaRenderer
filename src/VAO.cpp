@@ -36,8 +36,44 @@ void VAO::Delete() {
 }
 
 /******************************************************************************/
-void VAO::Bind() { glBindVertexArray(mID); }
+void VAO::Bind() const { glBindVertexArray(mID); }
 
 /******************************************************************************/
-void VAO::Unbind() { glBindVertexArray(0); }
+void VAO::Unbind() const { glBindVertexArray(0); }
+
+/******************************************************************************/
+void VAO::ConfigureVertexAttribute(VBO &aBuffer, GLuint aIndex, GLint aSize,
+                                   GLenum aType, GLboolean aNormalized,
+                                   GLsizei aStride, const void *aOffset) const {
+  Bind();
+  aBuffer.Bind(GL_ARRAY_BUFFER);
+  glEnableVertexAttribArray(aIndex);
+  glVertexAttribPointer(aIndex, aSize, aType, aNormalized, aStride, aOffset);
+  aBuffer.Unbind(GL_ARRAY_BUFFER);
+  Unbind();
+}
+
+/******************************************************************************/
+void VAO::ConfigureVertexAttributeWithDivisor(VBO &aBuffer, GLuint aIndex,
+                                              GLint aSize, GLenum aType,
+                                              GLboolean aNormalized,
+                                              GLsizei aStride,
+                                              const void *aOffset,
+                                              GLuint aDivisor) const {
+  Bind();
+  aBuffer.Bind(GL_ARRAY_BUFFER);
+  glEnableVertexAttribArray(aIndex);
+  glVertexAttribPointer(aIndex, aSize, aType, aNormalized, aStride, aOffset);
+  glVertexAttribDivisor(aIndex, aDivisor);
+  aBuffer.Unbind(GL_ARRAY_BUFFER);
+  Unbind();
+}
+
+/******************************************************************************/
+void VAO::SetElementBuffer(VBO &aBuffer) const {
+  Bind();
+  aBuffer.Bind(GL_ELEMENT_ARRAY_BUFFER);
+  Unbind();
+  aBuffer.Unbind(GL_ELEMENT_ARRAY_BUFFER);
+}
 } // namespace KumaGL

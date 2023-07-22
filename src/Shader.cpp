@@ -38,10 +38,10 @@ void Shader::Delete() {
 }
 
 /******************************************************************************/
-void Shader::Bind() { glUseProgram(mID); }
+void Shader::Bind() const { glUseProgram(mID); }
 
 /******************************************************************************/
-void Shader::Unbind() { glUseProgram(0); }
+void Shader::Unbind() const { glUseProgram(0); }
 
 /******************************************************************************/
 void Shader::LoadFromFiles(const std::string &aVertexFile,
@@ -78,7 +78,7 @@ void Shader::LoadFromSource(const std::string &aVertexSource,
 }
 
 /******************************************************************************/
-void Shader::SetInt(const std::string &aName, int aValue) {
+void Shader::SetInt(const std::string &aName, int aValue) const {
   Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform1i(loc, aValue);
@@ -86,7 +86,7 @@ void Shader::SetInt(const std::string &aName, int aValue) {
 }
 
 /******************************************************************************/
-void Shader::SetFloat(const std::string &aName, float aValue) {
+void Shader::SetFloat(const std::string &aName, float aValue) const {
   Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform1f(loc, aValue);
@@ -94,7 +94,7 @@ void Shader::SetFloat(const std::string &aName, float aValue) {
 }
 
 /******************************************************************************/
-void Shader::SetVec3(const std::string &aName, const Vec3 &aValue) {
+void Shader::SetVec3(const std::string &aName, const Vec3 &aValue) const {
   Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniform3fv(loc, 1, &aValue.x);
@@ -102,7 +102,7 @@ void Shader::SetVec3(const std::string &aName, const Vec3 &aValue) {
 }
 
 /******************************************************************************/
-void Shader::SetMat4(const std::string &aName, const Mat4 &aValue) {
+void Shader::SetMat4(const std::string &aName, const Mat4 &aValue) const {
   Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
   glUniformMatrix4fv(loc, 1, GL_FALSE, &aValue(0, 0));
