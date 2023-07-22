@@ -71,6 +71,16 @@ void Texture::LoadFromData(unsigned char *aData, GLsizei aWidth,
 }
 
 /******************************************************************************/
+void Texture::AddSubData(GLint aLevel, GLint aXOffset, GLint aYOffset,
+                         GLsizei aWidth, GLsizei aHeight, GLenum aFormat,
+                         GLenum aType, const void *aData) {
+  Bind();
+  glTexSubImage2D(GL_TEXTURE_2D, aLevel, aXOffset, aYOffset, aWidth, aHeight,
+                  aFormat, aType, aData);
+  Unbind();
+}
+
+/******************************************************************************/
 void Texture::SetParameter(GLenum aParam, GLint aValue) const {
   Bind();
   glTexParameteri(GL_TEXTURE_2D, aParam, aValue);

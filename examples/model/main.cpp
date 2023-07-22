@@ -15,11 +15,13 @@ void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
 }
 
 /******************************************************************************/
-int main() {
+GLFWwindow *CreateWindow() {
+  GLFWwindow *window = nullptr;
+
   // Initialize GLFW.
   if (!glfwInit()) {
     std::cout << "Failed to initialize GLFW!" << std::endl;
-    return -1;
+    return window;
   }
 
   // Set the desired OpenGL version to 3.3.
@@ -38,25 +40,49 @@ int main() {
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
-  auto window = glfwCreateWindow(1280, 720, "model", nullptr, nullptr);
+  window = glfwCreateWindow(1280, 720, "framebuffers", nullptr, nullptr);
   if (window == nullptr) {
     std::cout << "Failed to create window!" << std::endl;
-    return -1;
+    return window;
   }
-  glfwMakeContextCurrent(window);
 
-  // Initialize GLAD.
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    std::cout << "Failed to initialize GLAD!" << std::endl;
-    return -1;
-  }
+  // Make the context current.
+  glfwMakeContextCurrent(window);
 
   // Set any GLFW callbacks.
   glfwSetFramebufferSizeCallback(window, &FramebufferSizeCallback);
 
-  // Set up preliminary OpenGL state.
-  glViewport(0, 0, 1280, 720);
+  return window;
+}
+
+/******************************************************************************/
+bool InitializeGL() {
+  bool success = false;
+
+  // Initialize GLAD.
+  success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+  if (!success) {
+    std::cout << "Failed to initialize GLAD!" << std::endl;
+    return success;
+  }
+
+  // Set up global OpenGL state.
   glEnable(GL_DEPTH_TEST);
+
+  return true;
+}
+
+/******************************************************************************/
+int main() {
+  auto window = CreateWindow();
+  if (window == nullptr) {
+    return -1;
+  }
+
+  auto success = InitializeGL();
+  if (!success) {
+    return -1;
+  }
 
   // Load the shader.
   KumaGL::Shader shader;

@@ -67,6 +67,9 @@ void Mesh::UpdateIndices() {
 
 /******************************************************************************/
 void Mesh::InitQuad() {
+  mVertices.clear();
+  mIndices.clear();
+
   MeshVertex vertex;
 
   vertex.mPosition = Vec3(-0.5, -0.5, 0);
@@ -99,6 +102,9 @@ void Mesh::InitQuad() {
 
 /******************************************************************************/
 void Mesh::InitCube() {
+  mVertices.clear();
+  mIndices.clear();
+
   MeshVertex vertex;
 
   // Front face

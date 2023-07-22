@@ -63,7 +63,7 @@ GLFWwindow *CreateWindow() {
 }
 
 /******************************************************************************/
-bool InitializeContext(GLFWwindow &aWindow) {
+bool InitializeGL() {
   bool success = false;
 
   // Initialize GLAD.
@@ -99,7 +99,7 @@ int main() {
     return -1;
   }
 
-  auto success = InitializeContext(*window);
+  auto success = InitializeGL();
   if (!success) {
     return -1;
   }
@@ -111,15 +111,10 @@ int main() {
   cubeTexture.LoadFromFile("resources/texture.png");
   screenTexture.LoadFromData(nullptr, 1280, 700);
 
-  glBindTexture(GL_TEXTURE_2D, cubeTexture.GetID());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glGenerateMipmap(GL_TEXTURE_2D);
-
-  glBindTexture(GL_TEXTURE_2D, screenTexture.GetID());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glGenerateMipmap(GL_TEXTURE_2D);
+  cubeTexture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  cubeTexture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  screenTexture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  screenTexture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   // Load shaders.
   KumaGL::Shader cubeShader;
@@ -140,7 +135,9 @@ int main() {
   // Create a framebuffer and a renderbuffer.
   KumaGL::Framebuffer fb;
   KumaGL::Renderbuffer rb;
+
   rb.SetStorageParameters(GL_DEPTH24_STENCIL8, 1280, 720);
+
   fb.AttachTexture(screenTexture);
   fb.AttachRenderbuffer(rb);
 
@@ -186,7 +183,7 @@ int main() {
 
     // Render the cubes.
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, cubeTexture.GetID());
+    cubeTexture.Bind();
     cubeShader.Bind();
     cubeMesh.DrawInstanced(numCubes);
 
@@ -196,7 +193,7 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the screen texture.
-    glBindTexture(GL_TEXTURE_2D, screenTexture.GetID());
+    screenTexture.Bind();
     screenShader.Bind();
     screenMesh.DrawInstanced(1);
   }

@@ -23,6 +23,9 @@ public:
   void LoadFromFile(const std::string &aFile, GLint aLoadFormat = GL_RGBA);
   void LoadFromData(unsigned char *aData, GLsizei aWidth, GLsizei aHeight,
                     GLint aLoadFormat = GL_RGBA);
+  void AddSubData(GLint aLevel, GLint aXOffset, GLint aYOffset, GLsizei aWidth,
+                  GLsizei aHeight, GLenum aFormat, GLenum aType,
+                  const void *aData);
 
   void SetParameter(GLenum aParam, GLint aValue) const;
   void SetParameter(GLenum aParam, GLfloat aValue) const;

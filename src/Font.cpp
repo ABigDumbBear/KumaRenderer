@@ -175,15 +175,15 @@ void Font::CreateTexture(int aSize) {
     }
 
     // Add the glyph data to the font atlas.
-    glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, 0, mFace->glyph->bitmap.width,
-                    mFace->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE,
-                    mFace->glyph->bitmap.buffer);
+    mTexture.AddSubData(0, xOffset, 0, mFace->glyph->bitmap.width,
+                        mFace->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE,
+                        mFace->glyph->bitmap.buffer);
 
     xOffset += mFace->glyph->bitmap.width;
   }
 
   // Generate a mipmap for the texture.
-  glGenerateMipmap(GL_TEXTURE_2D);
+  mTexture.GenerateMipmap();
 
   // After loading the texture data into memory, reset OpenGL's
   // unpack alignment to the default (4).
