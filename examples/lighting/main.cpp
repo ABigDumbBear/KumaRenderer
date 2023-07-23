@@ -97,6 +97,14 @@ int main() {
   diffuse.LoadFromFile("resources/textures/diffuse.png");
   specular.LoadFromFile("resources/textures/specular.png");
 
+  diffuse.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  diffuse.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  diffuse.GenerateMipmap();
+
+  specular.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  specular.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  specular.GenerateMipmap();
+
   diffuse.Bind(GL_TEXTURE0);
   specular.Bind(GL_TEXTURE1);
 
@@ -154,6 +162,7 @@ int main() {
                                   matrices.data(), GL_DYNAMIC_DRAW);
 
     // Draw the cubes.
+    shader.Bind();
     cube.DrawInstanced(cubes.size());
 
     glfwPollEvents();
