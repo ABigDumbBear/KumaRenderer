@@ -127,6 +127,10 @@ int main() {
     glfwPollEvents();
   }
 
+  shader.Delete();
+  model.Delete();
+  tex.Delete();
+
   glfwTerminate();
   return 0;
 }

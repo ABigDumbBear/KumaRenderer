@@ -160,6 +160,11 @@ int main() {
     glfwPollEvents();
   }
 
+  shader.Delete();
+  texture.Delete();
+  mesh.Delete();
+
   glfwTerminate();
+
   return 0;
 }

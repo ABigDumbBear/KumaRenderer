@@ -1,3 +1,4 @@
+#include <ctime>
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -41,7 +42,7 @@ GLFWwindow *CreateWindow() {
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
-  window = glfwCreateWindow(1280, 720, "framebuffers", nullptr, nullptr);
+  window = glfwCreateWindow(1280, 720, "lighting", nullptr, nullptr);
   if (window == nullptr) {
     std::cout << "Failed to create window!" << std::endl;
     return window;
@@ -96,17 +97,8 @@ int main() {
   diffuse.LoadFromFile("resources/textures/diffuse.png");
   specular.LoadFromFile("resources/textures/specular.png");
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, diffuse.GetID());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glGenerateMipmap(GL_TEXTURE_2D);
-
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, specular.GetID());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glGenerateMipmap(GL_TEXTURE_2D);
+  diffuse.Bind(GL_TEXTURE0);
+  specular.Bind(GL_TEXTURE1);
 
   // Set the shader uniforms.
   shader.SetMat4("viewMatrix",
@@ -167,6 +159,12 @@ int main() {
     glfwPollEvents();
   }
 
+  shader.Delete();
+  diffuse.Delete();
+  specular.Delete();
+  cube.Delete();
+
   glfwTerminate();
+
   return 0;
 }

@@ -12,13 +12,13 @@
 #include <KumaGL/Texture.hpp>
 #include <KumaGL/Transform.hpp>
 
-int w = 0;
-int h = 0;
+int windowWidth = 1280;
+int windowHeight = 720;
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
-  w = aWidth;
-  h = aHeight;
+  windowWidth = aWidth;
+  windowHeight = aHeight;
 }
 
 /******************************************************************************/
@@ -179,6 +179,7 @@ int main() {
 
     // Bind the scene framebuffer.
     fb.Bind();
+    glViewport(0, 0, screenTexture.GetWidth(), screenTexture.GetHeight());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the cubes.
@@ -189,7 +190,7 @@ int main() {
 
     // Bind default framebuffer.
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, w, h);
+    glViewport(0, 0, windowWidth, windowHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the screen texture.
@@ -198,6 +199,16 @@ int main() {
     screenMesh.DrawInstanced(1);
   }
 
+  cubeTexture.Delete();
+  screenTexture.Delete();
+  cubeMesh.Delete();
+  screenMesh.Delete();
+  cubeShader.Delete();
+  screenShader.Delete();
+  fb.Delete();
+  rb.Delete();
+
   glfwTerminate();
+
   return 0;
 }

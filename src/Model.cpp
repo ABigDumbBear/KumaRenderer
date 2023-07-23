@@ -17,6 +17,13 @@ void Model::LoadFromFile(const std::string &aFile) {
 }
 
 /******************************************************************************/
+void Model::Delete() {
+  for (auto &mesh : mMeshes) {
+    mesh.Delete();
+  }
+}
+
+/******************************************************************************/
 void Model::Draw(GLenum aMode) const {
   for (const auto &mesh : mMeshes) {
     mesh.Draw(aMode);

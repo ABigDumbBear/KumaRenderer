@@ -26,6 +26,10 @@ public:
   Mesh(const Mesh &aMesh) = delete;
   Mesh &operator=(const Mesh &aMesh) = delete;
 
+  void Generate();
+  void Configure();
+  void Delete();
+
   void Draw(GLenum aMode = GL_TRIANGLES) const;
   void DrawInstanced(int aNumInstances, GLenum aMode = GL_TRIANGLES) const;
 

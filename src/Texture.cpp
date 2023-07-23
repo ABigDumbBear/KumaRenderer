@@ -43,7 +43,10 @@ void Texture::Delete() {
 }
 
 /******************************************************************************/
-void Texture::Bind() const { glBindTexture(GL_TEXTURE_2D, mID); }
+void Texture::Bind(GLenum aTextureUnit) const {
+  glActiveTexture(aTextureUnit);
+  glBindTexture(GL_TEXTURE_2D, mID);
+}
 
 /******************************************************************************/
 void Texture::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
@@ -59,8 +62,8 @@ void Texture::LoadFromFile(const std::string &aFile, GLint aLoadFormat) {
 }
 
 /******************************************************************************/
-void Texture::LoadFromData(unsigned char *aData, GLsizei aWidth,
-                           GLsizei aHeight, GLint aLoadFormat) {
+void Texture::LoadFromData(const void *aData, GLsizei aWidth, GLsizei aHeight,
+                           GLint aLoadFormat) {
   mWidth = aWidth;
   mHeight = aHeight;
 
@@ -71,12 +74,11 @@ void Texture::LoadFromData(unsigned char *aData, GLsizei aWidth,
 }
 
 /******************************************************************************/
-void Texture::AddSubData(GLint aLevel, GLint aXOffset, GLint aYOffset,
-                         GLsizei aWidth, GLsizei aHeight, GLenum aFormat,
-                         GLenum aType, const void *aData) {
+void Texture::AddSubData(const void *aData, GLint aXOffset, GLint aYOffset,
+                         GLsizei aWidth, GLsizei aHeight, GLenum aFormat) {
   Bind();
-  glTexSubImage2D(GL_TEXTURE_2D, aLevel, aXOffset, aYOffset, aWidth, aHeight,
-                  aFormat, aType, aData);
+  glTexSubImage2D(GL_TEXTURE_2D, 0, aXOffset, aYOffset, aWidth, aHeight,
+                  aFormat, GL_UNSIGNED_BYTE, aData);
   Unbind();
 }
 

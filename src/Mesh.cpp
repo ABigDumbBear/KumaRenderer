@@ -1,11 +1,22 @@
 #include "KumaGL/Mesh.hpp"
 
 #include <KumaGL/Mat4.hpp>
-#include <cstddef>
 
 namespace KumaGL {
 /******************************************************************************/
-Mesh::Mesh() {
+Mesh::Mesh() { Configure(); }
+
+/******************************************************************************/
+void Mesh::Generate() {
+  mVertexArray.Generate();
+  mVertexBuffer.Generate();
+  mInstanceBuffer.Generate();
+  mCustomBuffer.Generate();
+  mElementBuffer.Generate();
+}
+
+/******************************************************************************/
+void Mesh::Configure() {
   // Configure the vertex attributes.
   mVertexArray.ConfigureVertexAttribute(
       mVertexBuffer, 0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
@@ -35,6 +46,15 @@ Mesh::Mesh() {
 
   // Bind the element buffer.
   mVertexArray.SetElementBuffer(mElementBuffer);
+}
+
+/******************************************************************************/
+void Mesh::Delete() {
+  mVertexArray.Delete();
+  mVertexBuffer.Delete();
+  mInstanceBuffer.Delete();
+  mCustomBuffer.Delete();
+  mElementBuffer.Delete();
 }
 
 /******************************************************************************/

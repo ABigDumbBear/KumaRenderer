@@ -175,9 +175,9 @@ void Font::CreateTexture(int aSize) {
     }
 
     // Add the glyph data to the font atlas.
-    mTexture.AddSubData(0, xOffset, 0, mFace->glyph->bitmap.width,
-                        mFace->glyph->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE,
-                        mFace->glyph->bitmap.buffer);
+    mTexture.AddSubData(mFace->glyph->bitmap.buffer, xOffset, 0,
+                        mFace->glyph->bitmap.width, mFace->glyph->bitmap.rows,
+                        GL_RED);
 
     xOffset += mFace->glyph->bitmap.width;
   }
