@@ -20,12 +20,15 @@ public:
   void Bind(GLenum aTextureUnit = GL_TEXTURE0) const;
   void Unbind() const;
 
-  void LoadFromFile(const std::string &aFile, GLint aLoadFormat = GL_RGBA);
+  void LoadFromFile(const std::string &aFile, GLint aLoadFormat = GL_RGBA,
+                    GLenum aType = GL_UNSIGNED_BYTE);
   void LoadFromData(const void *aData, GLsizei aWidth, GLsizei aHeight,
-                    GLint aLoadFormat = GL_RGBA);
+                    GLint aLoadFormat = GL_RGBA,
+                    GLenum aType = GL_UNSIGNED_BYTE);
 
   void AddSubData(const void *aData, GLint aXOffset, GLint aYOffset,
-                  GLsizei aWidth, GLsizei aHeight, GLenum aFormat = GL_RGBA);
+                  GLsizei aWidth, GLsizei aHeight, GLenum aFormat = GL_RGBA,
+                  GLenum aType = GL_UNSIGNED_BYTE);
 
   void SetParameter(GLenum aParam, GLint aValue) const;
   void SetParameter(GLenum aParam, GLfloat aValue) const;

@@ -46,39 +46,42 @@ void Texture::Delete() {
 void Texture::Bind(GLenum aTextureUnit) const {
   glActiveTexture(aTextureUnit);
   glBindTexture(GL_TEXTURE_2D, mID);
+  glActiveTexture(GL_TEXTURE0);
 }
 
 /******************************************************************************/
 void Texture::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
 /******************************************************************************/
-void Texture::LoadFromFile(const std::string &aFile, GLint aLoadFormat) {
+void Texture::LoadFromFile(const std::string &aFile, GLint aLoadFormat,
+                           GLenum aType) {
   int channels;
   auto data = stbi_load(aFile.c_str(), &mWidth, &mHeight, &channels, 0);
 
-  LoadFromData(data, mWidth, mHeight, aLoadFormat);
+  LoadFromData(data, mWidth, mHeight, aLoadFormat, aType);
 
   stbi_image_free(data);
 }
 
 /******************************************************************************/
 void Texture::LoadFromData(const void *aData, GLsizei aWidth, GLsizei aHeight,
-                           GLint aLoadFormat) {
+                           GLint aLoadFormat, GLenum aType) {
   mWidth = aWidth;
   mHeight = aHeight;
 
   Bind();
   glTexImage2D(GL_TEXTURE_2D, 0, aLoadFormat, mWidth, mHeight, 0, aLoadFormat,
-               GL_UNSIGNED_BYTE, aData);
+               aType, aData);
   Unbind();
 }
 
 /******************************************************************************/
 void Texture::AddSubData(const void *aData, GLint aXOffset, GLint aYOffset,
-                         GLsizei aWidth, GLsizei aHeight, GLenum aFormat) {
+                         GLsizei aWidth, GLsizei aHeight, GLenum aFormat,
+                         GLenum aType) {
   Bind();
   glTexSubImage2D(GL_TEXTURE_2D, 0, aXOffset, aYOffset, aWidth, aHeight,
-                  aFormat, GL_UNSIGNED_BYTE, aData);
+                  aFormat, aType, aData);
   Unbind();
 }
 
