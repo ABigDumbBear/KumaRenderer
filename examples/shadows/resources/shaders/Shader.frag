@@ -3,6 +3,7 @@
 in vec3 fragPos;
 in vec3 normal;
 in vec2 texCoords;
+in vec4 fragPosLightSpace;
 
 out vec4 fragColor;
 
@@ -15,6 +16,22 @@ uniform vec3 lightPos;
 
 uniform vec3 viewPos;
 
+uniform sampler2D depthMap;
+
+/******************************************************************************/
+float CalculateShadow(vec4 aFragPos) {
+  // Convert the fragment position to the range [0,1] so it can be compared with
+  // the depth map.
+  vec3 coord = fragPosLightSpace.xyz / fragPosLightSpace.w;
+  coord = (coord * 0.5) + 0.5;
+
+  float closestDepth = texture(depthMap, coord.xy).r;
+  float currentDepth = coord.z;
+
+  return currentDepth > closestDepth ? 1.0 : 0.0;
+}
+
+/******************************************************************************/
 void main() {
   // Calculate the lighting values of the fragment using the supplied textures.
   vec3 diffVal = texture(diffuseTexture, texCoords).xyz;
@@ -33,6 +50,9 @@ void main() {
   float s = pow(max(dot(viewDir, lightDirReflect), 0.0), shininess);
   vec3 specular = lightColor * specVal * s;
 
+  // Calculate the shadow component.
+  float shadow = CalculateShadow(fragPosLightSpace);
+
   // Combine each component.
-  fragColor = vec4(diffuse + specular, 1.0);
+  fragColor = vec4((diffuse + specular) * (1.2 - shadow), 1.0);
 }
