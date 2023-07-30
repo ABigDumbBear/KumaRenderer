@@ -21,6 +21,7 @@ int windowHeight = 720;
 struct RenderInfo {
   KumaGL::Shader mCubeShader;
   KumaGL::Shader mDepthShader;
+  KumaGL::Shader mDebugShader;
 
   KumaGL::Texture mCubeDiffuse;
   KumaGL::Texture mCubeSpecular;
@@ -28,6 +29,7 @@ struct RenderInfo {
 
   KumaGL::Mesh mCubeMesh;
   KumaGL::Mesh mQuadMesh;
+  KumaGL::Mesh mDebugMesh;
 
   KumaGL::Framebuffer mShadowBuffer;
 
@@ -47,6 +49,10 @@ struct RenderInfo {
 
     mDepthShader.LoadFromFiles("resources/shaders/DepthShader.vert",
                                "resources/shaders/DepthShader.frag");
+
+    mDebugShader.LoadFromFiles("resources/shaders/DebugShader.vert",
+                               "resources/shaders/DebugShader.frag");
+    mDebugShader.SetInt("shadowMap", 2);
 
     // Configure the textures.
     mCubeDiffuse.LoadFromFile("resources/textures/diffuse.png");
@@ -68,6 +74,7 @@ struct RenderInfo {
     // Configure the meshes.
     mCubeMesh.InitCube();
     mQuadMesh.InitQuad();
+    mDebugMesh.InitQuad();
 
     // Configure the framebuffer.
     mShadowBuffer.AttachTexture(mShadowMap, GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
@@ -235,15 +242,14 @@ int main() {
 
     // For the first render pass, generate a depth map by rendering the scene
     // from the light's perspective and storing it in a texture.
-    glClear(GL_DEPTH_BUFFER_BIT);
+    info.mShadowBuffer.Bind();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, info.mShadowMap.GetWidth(), info.mShadowMap.GetHeight());
 
     // Calculate the view and projection matrices for the light.
     auto lightView = KumaGL::View(scene.mLightTransform.GetForward(),
                                   scene.mLightTransform.GetRight(),
                                   scene.mLightTransform.GetWorldPosition());
-    // auto lightProj = KumaGL::Orthographic(
-    //     info.mShadowMap.GetWidth(), info.mShadowMap.GetHeight(), 0.1, 100);
     auto lightProj = KumaGL::Orthographic(10, 10, 0.1, 100);
 
     // Set the shader uniforms.
@@ -251,9 +257,16 @@ int main() {
     info.mDepthShader.SetMat4("projectionMatrix", lightProj);
 
     // Render to the shadow framebuffer.
-    info.mShadowBuffer.Bind();
+    info.mDepthShader.Bind();
     scene.Render(info);
     info.mShadowBuffer.Unbind();
+
+    /*
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, windowWidth, windowHeight);
+    info.mDebugShader.Bind();
+    info.mDebugMesh.DrawInstanced(1);
+    */
 
     // For the second render pass, draw the scene as per usual from the viewer's
     // perspective.
