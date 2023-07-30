@@ -9,23 +9,22 @@ out vec4 fragColor;
 
 uniform sampler2D diffuseTexture;
 uniform sampler2D specularTexture;
-uniform float shininess;
+uniform sampler2D shadowMapTexture;
 
 uniform vec3 lightColor;
 uniform vec3 lightPos;
-
 uniform vec3 viewPos;
 
-uniform sampler2D depthMap;
+uniform float shininess;
 
 /******************************************************************************/
 float CalculateShadow(vec4 aFragPos) {
   // Convert the fragment position to the range [0,1] so it can be compared with
-  // the depth map.
+  // the shadow map.
   vec3 coord = fragPosLightSpace.xyz / fragPosLightSpace.w;
   coord = (coord * 0.5) + 0.5;
 
-  float closestDepth = texture(depthMap, coord.xy).r;
+  float closestDepth = texture(shadowMapTexture, coord.xy).r;
   float currentDepth = coord.z;
 
   return currentDepth > closestDepth ? 1.0 : 0.0;

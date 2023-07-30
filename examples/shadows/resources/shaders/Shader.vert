@@ -25,7 +25,7 @@ void main() {
   fragPos = vec3(aMatrix * vec4(aPosition, 1.0));
 
   // Calculate the fragment position in light space.
-  fragPosLightSpace = lightSpaceMatrix * vec4(aPosition, 1.0);
+  fragPosLightSpace = lightSpaceMatrix * aMatrix * vec4(aPosition, 1.0);
 
   gl_Position = projectionMatrix * viewMatrix * vec4(fragPos, 1.0);
 }

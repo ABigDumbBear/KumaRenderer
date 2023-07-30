@@ -1,5 +1,4 @@
 #include "KumaGL/Mat4.hpp"
-#include <algorithm>
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -13,7 +12,6 @@
 #include <KumaGL/Shader.hpp>
 #include <KumaGL/Texture.hpp>
 #include <KumaGL/Transform.hpp>
-#include <regex>
 
 /******************************************************************************/
 int windowWidth = 1280;
@@ -26,7 +24,7 @@ struct RenderInfo {
 
   KumaGL::Texture mCubeDiffuse;
   KumaGL::Texture mCubeSpecular;
-  KumaGL::Texture mDepthMap;
+  KumaGL::Texture mShadowMap;
 
   KumaGL::Mesh mCubeMesh;
   KumaGL::Mesh mQuadMesh;
@@ -40,10 +38,12 @@ struct RenderInfo {
 
     mCubeShader.SetInt("diffuseTexture", 0);
     mCubeShader.SetInt("specularTexture", 1);
-    mCubeShader.SetInt("depthMap", 2);
-    mCubeShader.SetFloat("shininess", 256);
+    mCubeShader.SetInt("shadowMapTexture", 2);
+
     mCubeShader.SetVec3("lightColor", KumaGL::Vec3(1, 0.9, 0.7));
     mCubeShader.SetVec3("viewPos", KumaGL::Vec3(0, 0, 0));
+
+    mCubeShader.SetFloat("shininess", 256);
 
     mDepthShader.LoadFromFiles("resources/shaders/DepthShader.vert",
                                "resources/shaders/DepthShader.frag");
@@ -57,20 +57,20 @@ struct RenderInfo {
     mCubeSpecular.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     mCubeSpecular.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    mDepthMap.LoadFromData(nullptr, 1280, 720, GL_DEPTH_COMPONENT, GL_FLOAT);
-    mDepthMap.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    mDepthMap.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    mShadowMap.LoadFromData(nullptr, 1280, 720, GL_DEPTH_COMPONENT, GL_FLOAT);
+    mShadowMap.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    mShadowMap.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     mCubeDiffuse.Bind(GL_TEXTURE0);
     mCubeSpecular.Bind(GL_TEXTURE1);
-    mDepthMap.Bind(GL_TEXTURE2);
+    mShadowMap.Bind(GL_TEXTURE2);
 
     // Configure the meshes.
     mCubeMesh.InitCube();
     mQuadMesh.InitQuad();
 
     // Configure the framebuffer.
-    mShadowBuffer.AttachTexture(mDepthMap, GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+    mShadowBuffer.AttachTexture(mShadowMap, GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                                 GL_TEXTURE_2D);
     mShadowBuffer.Bind();
     glDrawBuffer(GL_NONE);
@@ -83,7 +83,7 @@ struct RenderInfo {
     mDepthShader.Delete();
     mCubeDiffuse.Delete();
     mCubeSpecular.Delete();
-    mDepthMap.Delete();
+    mShadowMap.Delete();
     mCubeMesh.Delete();
     mQuadMesh.Delete();
     mShadowBuffer.Delete();
@@ -100,7 +100,8 @@ struct Scene {
     mPlaneTransform.Scale(15, 15, 1);
     mPlaneTransform.Translate(KumaGL::Vec3(0, 0, -20));
 
-    mLightTransform.Translate(KumaGL::Vec3(0, 0, 10));
+    mLightTransform.Rotate(25, 0, 0);
+    mLightTransform.Translate(KumaGL::Vec3(0, -5, 10));
 
     mCubeTransforms[0].SetPosition(KumaGL::Vec3(0, 0, -10));
     mCubeTransforms[1].SetPosition(KumaGL::Vec3(0, 2, -10));
@@ -116,7 +117,7 @@ struct Scene {
     }
   }
 
-  void Render(const RenderInfo &aInfo) {
+  void PreRender(const RenderInfo &aInfo) {
     // Copy the cube matrices to the instance buffer.
     std::vector<KumaGL::Mat4> matrices;
     for (auto &t : mCubeTransforms) {
@@ -131,12 +132,10 @@ struct Scene {
     aInfo.mQuadMesh.mInstanceBuffer.CopyData(
         GL_ARRAY_BUFFER, sizeof(KumaGL::Mat4), &mPlaneTransform.GetMatrix(),
         GL_STATIC_DRAW);
+  }
 
-    // Draw the cubes.
-    aInfo.mCubeShader.Bind();
-    aInfo.mCubeMesh.DrawInstanced(matrices.size());
-
-    // Draw the plane.
+  void Render(const RenderInfo &aInfo) {
+    aInfo.mCubeMesh.DrawInstanced(mCubeTransforms.size());
     aInfo.mQuadMesh.DrawInstanced(1);
   }
 };
@@ -231,20 +230,25 @@ int main() {
     // Update the scene.
     scene.Update();
 
+    // Before rendering, copy scene data to the GPU.
+    scene.PreRender(info);
+
     // For the first render pass, generate a depth map by rendering the scene
     // from the light's perspective and storing it in a texture.
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, info.mDepthMap.GetWidth(), info.mDepthMap.GetHeight());
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, info.mShadowMap.GetWidth(), info.mShadowMap.GetHeight());
 
     // Calculate the view and projection matrices for the light.
-    auto lightView = KumaGL::View(scene.mLightTransform.GetForward() * -1,
+    auto lightView = KumaGL::View(scene.mLightTransform.GetForward(),
                                   scene.mLightTransform.GetRight(),
                                   scene.mLightTransform.GetWorldPosition());
+    // auto lightProj = KumaGL::Orthographic(
+    //     info.mShadowMap.GetWidth(), info.mShadowMap.GetHeight(), 0.1, 100);
     auto lightProj = KumaGL::Orthographic(10, 10, 0.1, 100);
 
     // Set the shader uniforms.
-    info.mCubeShader.SetMat4("viewMatrix", lightView);
-    info.mCubeShader.SetMat4("projectionMatrix", lightProj);
+    info.mDepthShader.SetMat4("viewMatrix", lightView);
+    info.mDepthShader.SetMat4("projectionMatrix", lightProj);
 
     // Render to the shadow framebuffer.
     info.mShadowBuffer.Bind();
@@ -268,7 +272,9 @@ int main() {
                              scene.mLightTransform.GetWorldPosition());
 
     // Render the scene.
+    info.mCubeShader.Bind();
     scene.Render(info);
+    info.mCubeShader.Unbind();
   }
 
   info.Delete();
