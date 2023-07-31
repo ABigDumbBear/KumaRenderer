@@ -1,4 +1,5 @@
 #include "KumaGL/Mat4.hpp"
+#include "KumaGL/Vec3.hpp"
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -107,8 +108,7 @@ struct Scene {
     mPlaneTransform.Scale(15, 15, 1);
     mPlaneTransform.Translate(KumaGL::Vec3(0, 0, -20));
 
-    mLightTransform.Rotate(25, 0, 0);
-    mLightTransform.Translate(KumaGL::Vec3(0, -5, 10));
+    mLightTransform.Translate(KumaGL::Vec3(0, 0, 10));
 
     mCubeTransforms[0].SetPosition(KumaGL::Vec3(0, 0, -10));
     mCubeTransforms[1].SetPosition(KumaGL::Vec3(0, 2, -10));
@@ -250,7 +250,7 @@ int main() {
     auto lightView = KumaGL::View(scene.mLightTransform.GetForward(),
                                   scene.mLightTransform.GetRight(),
                                   scene.mLightTransform.GetWorldPosition());
-    auto lightProj = KumaGL::Orthographic(10, 10, 0.1, 100);
+    auto lightProj = KumaGL::Orthographic(-10, 10, -10, 10, 0.1, 100);
 
     // Set the shader uniforms.
     info.mDepthShader.SetMat4("viewMatrix", lightView);

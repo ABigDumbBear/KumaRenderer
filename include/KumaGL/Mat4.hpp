@@ -191,6 +191,21 @@ inline Mat4 Orthographic(float aViewportWidth, float aViewportHeight,
   return Mat4(2.0 / right, 0.0, 0.0, -1.0, 0.0, 2.0 / top, 0.0, -1.0, 0.0, 0.0,
               1.0 / (far - near), -near / (far - near), 0.0, 0.0, 0.0, 1.0);
 }
+
+/******************************************************************************/
+inline Mat4 Orthographic(float aLeft, float aRight, float aBottom, float aTop,
+                         float aNear, float aFar) {
+  auto rl = 2.0 / (aRight - aLeft);
+  auto tb = 2.0 / (aTop - aBottom);
+  // auto fn = -2.0 / (aFar - aNear);
+  auto fn = 1.0 / (aFar - aNear);
+  auto rl2 = ((aRight + aLeft) / (aRight - aLeft)) * -1.0;
+  auto tb2 = ((aTop + aBottom) / (aTop - aBottom)) * -1.0;
+  // auto fn2 = ((aFar + aNear) / (aFar - aNear)) * -1.0;
+  auto fn2 = -aNear / (aFar - aNear);
+
+  return Mat4(rl, 0, 0, rl2, 0, tb, 0, tb2, 0, 0, fn, fn2, 0, 0, 0, 1);
+}
 } // namespace KumaGL
 
 #endif // !MAT4_HPP

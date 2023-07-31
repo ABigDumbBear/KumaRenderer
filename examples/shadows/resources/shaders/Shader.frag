@@ -17,6 +17,8 @@ uniform vec3 viewPos;
 
 uniform float shininess;
 
+float shadowBias = 0.005;
+
 /******************************************************************************/
 float CalculateShadow(vec4 aFragPos) {
   // Convert the fragment position to the range [0,1] so it can be compared with
@@ -27,7 +29,7 @@ float CalculateShadow(vec4 aFragPos) {
   float closestDepth = texture(shadowMapTexture, coord.xy).r;
   float currentDepth = coord.z;
 
-  return currentDepth > closestDepth ? 1.0 : 0.0;
+  return currentDepth - shadowBias > closestDepth ? 1.0 : 0.0;
 }
 
 /******************************************************************************/
