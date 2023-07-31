@@ -1,5 +1,3 @@
-#include "KumaGL/Mat4.hpp"
-#include "KumaGL/Vec3.hpp"
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -8,15 +6,19 @@
 #include <iostream>
 
 #include <KumaGL/Framebuffer.hpp>
+#include <KumaGL/Mat4.hpp>
 #include <KumaGL/Mesh.hpp>
 #include <KumaGL/Renderbuffer.hpp>
 #include <KumaGL/Shader.hpp>
 #include <KumaGL/Texture.hpp>
 #include <KumaGL/Transform.hpp>
+#include <KumaGL/Vec3.hpp>
 
 /******************************************************************************/
 int windowWidth = 1280;
 int windowHeight = 720;
+
+bool debugMode = false;
 
 /******************************************************************************/
 struct RenderInfo {
@@ -89,11 +91,16 @@ struct RenderInfo {
   void Delete() {
     mCubeShader.Delete();
     mDepthShader.Delete();
+    mDebugShader.Delete();
+
     mCubeDiffuse.Delete();
     mCubeSpecular.Delete();
     mShadowMap.Delete();
+
     mCubeMesh.Delete();
     mQuadMesh.Delete();
+    mDebugMesh.Delete();
+
     mShadowBuffer.Delete();
   }
 };
@@ -154,6 +161,16 @@ void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
 }
 
 /******************************************************************************/
+void KeyPressCallback(GLFWwindow *aWindow, int aKey, int aScancode, int aAction,
+                      int aMods) {
+  if (aAction == GLFW_PRESS) {
+    if (aKey == GLFW_KEY_D) {
+      debugMode = !debugMode;
+    }
+  }
+}
+
+/******************************************************************************/
 GLFWwindow *CreateWindow() {
   GLFWwindow *window = nullptr;
 
@@ -179,7 +196,8 @@ GLFWwindow *CreateWindow() {
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
-  window = glfwCreateWindow(1280, 720, "shadows", nullptr, nullptr);
+  window =
+      glfwCreateWindow(windowWidth, windowHeight, "shadows", nullptr, nullptr);
   if (window == nullptr) {
     std::cout << "Failed to create window!" << std::endl;
     return window;
@@ -190,6 +208,7 @@ GLFWwindow *CreateWindow() {
 
   // Set any GLFW callbacks.
   glfwSetFramebufferSizeCallback(window, &FramebufferSizeCallback);
+  glfwSetKeyCallback(window, &KeyPressCallback);
 
   return window;
 }
@@ -246,11 +265,17 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, info.mShadowMap.GetWidth(), info.mShadowMap.GetHeight());
 
+    // Calculate the direction from the light to the destination (in this case,
+    // the origin).
+    auto lightDir =
+        KumaGL::Vec3(0, 0, 0) - scene.mLightTransform.GetWorldPosition();
+    lightDir = KumaGL::Normalize(lightDir);
+
     // Calculate the view and projection matrices for the light.
-    auto lightView = KumaGL::View(scene.mLightTransform.GetForward(),
-                                  scene.mLightTransform.GetRight(),
+    auto lightView = KumaGL::View(lightDir, scene.mLightTransform.GetRight(),
                                   scene.mLightTransform.GetWorldPosition());
     auto lightProj = KumaGL::Orthographic(-10, 10, -10, 10, 0.1, 100);
+    // auto lightProj = KumaGL::Perspective(45, 1280, 720, 0.1, 100);
 
     // Set the shader uniforms.
     info.mDepthShader.SetMat4("viewMatrix", lightView);
@@ -261,33 +286,37 @@ int main() {
     scene.Render(info);
     info.mShadowBuffer.Unbind();
 
-    /*
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, windowWidth, windowHeight);
-    info.mDebugShader.Bind();
-    info.mDebugMesh.DrawInstanced(1);
-    */
+    if (debugMode) {
+      // Render the debug map to the screen.
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glViewport(0, 0, windowWidth, windowHeight);
 
-    // For the second render pass, draw the scene as per usual from the viewer's
-    // perspective.
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, windowWidth, windowHeight);
+      info.mDebugShader.Bind();
+      info.mDebugMesh.DrawInstanced(1);
+      info.mDebugShader.Unbind();
+    } else {
+      // For the second render pass, draw the scene as per usual from the
+      // viewer's perspective.
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glViewport(0, 0, windowWidth, windowHeight);
 
-    // Set the shader uniforms.
-    info.mCubeShader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
-                                                        KumaGL::Vec3(1, 0, 0),
-                                                        KumaGL::Vec3(0, 0, 0)));
-    info.mCubeShader.SetMat4("projectionMatrix",
-                             KumaGL::Perspective(45, 1280, 720, 0.1, 100));
-    info.mCubeShader.SetMat4("lightSpaceMatrix", lightProj * lightView);
+      // Set the shader uniforms.
+      info.mCubeShader.SetMat4("viewMatrix",
+                               KumaGL::View(KumaGL::Vec3(0, 0, 1),
+                                            KumaGL::Vec3(1, 0, 0),
+                                            KumaGL::Vec3(0, 0, 0)));
+      info.mCubeShader.SetMat4("projectionMatrix",
+                               KumaGL::Perspective(45, 1280, 720, 0.1, 100));
+      info.mCubeShader.SetMat4("lightSpaceMatrix", lightProj * lightView);
 
-    info.mCubeShader.SetVec3("lightPos",
-                             scene.mLightTransform.GetWorldPosition());
+      info.mCubeShader.SetVec3("lightPos",
+                               scene.mLightTransform.GetWorldPosition());
 
-    // Render the scene.
-    info.mCubeShader.Bind();
-    scene.Render(info);
-    info.mCubeShader.Unbind();
+      // Render the scene.
+      info.mCubeShader.Bind();
+      scene.Render(info);
+      info.mCubeShader.Unbind();
+    }
   }
 
   info.Delete();
