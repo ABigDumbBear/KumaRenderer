@@ -5,11 +5,97 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <vector>
 
+#include <KumaGL/Mat4.hpp>
 #include <KumaGL/Mesh.hpp>
 #include <KumaGL/Shader.hpp>
 #include <KumaGL/Texture.hpp>
 #include <KumaGL/Transform.hpp>
+
+/******************************************************************************/
+KumaGL::Transform CreateRandomTransform(std::random_device &aDevice) {
+  KumaGL::Transform transform;
+
+  std::mt19937 generator(aDevice());
+  std::uniform_real_distribution<> dist(-25, 25);
+
+  transform.Translate(
+      KumaGL::Vec3(dist(generator), dist(generator), dist(generator) - 50));
+
+  return transform;
+}
+
+/******************************************************************************/
+struct RenderInfo {
+  KumaGL::Mesh mCubeMesh;
+  KumaGL::Shader mCubeShader;
+  KumaGL::Texture mCubeTexture;
+
+  void Setup() {
+    // Configure the meshes.
+    mCubeMesh.InitCube();
+
+    // Configure the shaders.
+    mCubeShader.LoadFromFiles("resources/shaders/CubeShader.vert",
+                              "resources/shaders/CubeShader.frag");
+    mCubeShader.SetInt("tex", 0);
+
+    // Configure the textures.
+    mCubeTexture.LoadFromFile("resources/texture.png");
+    mCubeTexture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    mCubeTexture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    mCubeTexture.GenerateMipmap();
+    mCubeTexture.Bind(GL_TEXTURE0);
+  }
+
+  void Delete() {
+    mCubeMesh.Delete();
+    mCubeShader.Delete();
+    mCubeTexture.Delete();
+  }
+};
+
+/******************************************************************************/
+struct Scene {
+  std::vector<KumaGL::Transform> mCubeTransforms;
+
+  void Setup() {
+    mCubeTransforms.clear();
+
+    // Generate a number of random transforms.
+    std::random_device rd;
+    for (size_t i = 0; i < 10000; ++i) {
+      mCubeTransforms.emplace_back(CreateRandomTransform(rd));
+    }
+  }
+
+  void Update() {
+    // Rotate each transform.
+    for (auto &transform : mCubeTransforms) {
+      transform.Rotate(1, 1, 0);
+    }
+  }
+
+  void PreRender(RenderInfo &aInfo) {
+    // Add each transformation matrix to a vector.
+    std::vector<KumaGL::Mat4> matrices;
+    for (const auto &transform : mCubeTransforms) {
+      matrices.emplace_back(transform.GetMatrix());
+    }
+
+    // Copy the matrices into the cube instance buffer.
+    aInfo.mCubeMesh.mInstanceBuffer.CopyData(
+        GL_ARRAY_BUFFER, matrices.size() * sizeof(KumaGL::Mat4),
+        matrices.data(), GL_DYNAMIC_DRAW);
+  }
+
+  void Render(RenderInfo &aInfo, KumaGL::Shader &aShader) {
+    aShader.Bind();
+    aInfo.mCubeMesh.DrawInstanced(mCubeTransforms.size());
+    aShader.Unbind();
+  }
+};
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
@@ -42,7 +128,7 @@ GLFWwindow *CreateWindow() {
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
-  window = glfwCreateWindow(1280, 720, "framebuffers", nullptr, nullptr);
+  window = glfwCreateWindow(1280, 720, "cubes", nullptr, nullptr);
   if (window == nullptr) {
     std::cout << "Failed to create window!" << std::endl;
     return window;
@@ -75,19 +161,6 @@ bool InitializeGL() {
 }
 
 /******************************************************************************/
-KumaGL::Transform CreateRandomTransform(std::random_device &aDevice) {
-  KumaGL::Transform transform;
-
-  std::mt19937 generator(aDevice());
-  std::uniform_real_distribution<> dist(-25, 25);
-
-  transform.Translate(
-      KumaGL::Vec3(dist(generator), dist(generator), dist(generator) - 50));
-
-  return transform;
-}
-
-/******************************************************************************/
 int main() {
   auto window = CreateWindow();
   if (window == nullptr) {
@@ -99,70 +172,32 @@ int main() {
     return -1;
   }
 
-  // Load the shader.
-  KumaGL::Shader shader;
-  shader.LoadFromFiles("resources/shaders/CubeShader.vert",
-                       "resources/shaders/CubeShader.frag");
+  RenderInfo info;
+  info.Setup();
 
-  // Load the texture.
-  KumaGL::Texture texture;
-  texture.LoadFromFile("resources/texture.png");
-
-  // Set texture filtering options to linear; we don't want it to be blurry.
-  texture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  texture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  texture.GenerateMipmap();
-
-  // Create a cube mesh.
-  KumaGL::Mesh mesh;
-  mesh.InitCube();
-
-  // Generate a number of random transforms.
-  std::random_device rd;
-  std::vector<KumaGL::Transform> transforms;
-  for (int i = 0; i < 10000; ++i) {
-    transforms.emplace_back(CreateRandomTransform(rd));
-  }
+  Scene scene;
+  scene.Setup();
 
   // Set the shader uniforms.
-  shader.SetMat4("viewMatrix",
-                 KumaGL::View(KumaGL::Vec3(0, 0, 1), KumaGL::Vec3(1, 0, 0),
-                              KumaGL::Vec3(0, 0, 0)));
-  shader.SetMat4("projectionMatrix",
-                 KumaGL::Perspective(45, 1280, 720, 0.1, 100));
+  info.mCubeShader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
+                                                      KumaGL::Vec3(1, 0, 0),
+                                                      KumaGL::Vec3(0, 0, 0)));
+  info.mCubeShader.SetMat4("projectionMatrix",
+                           KumaGL::Perspective(45, 1280, 720, 0.1, 100));
 
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {
+    glfwPollEvents();
     glfwSwapBuffers(window);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Rotate each transform.
-    for (auto &transform : transforms) {
-      transform.Rotate(1, 1, 0);
-    }
-
-    // Add each transformation matrix to a vector.
-    std::vector<KumaGL::Mat4> matrices;
-    for (const auto &transform : transforms) {
-      matrices.emplace_back(transform.GetMatrix());
-    }
-
-    // Copy the matrices into the cube instance buffer.
-    mesh.mInstanceBuffer.CopyData(GL_ARRAY_BUFFER,
-                                  matrices.size() * sizeof(KumaGL::Mat4),
-                                  matrices.data(), GL_DYNAMIC_DRAW);
-
-    // Draw the cube a number of times.
-    shader.Bind();
-    texture.Bind();
-    mesh.DrawInstanced(10000);
-
-    glfwPollEvents();
+    scene.Update();
+    scene.PreRender(info);
+    scene.Render(info, info.mCubeShader);
   }
 
-  shader.Delete();
-  texture.Delete();
-  mesh.Delete();
+  info.Delete();
 
   glfwTerminate();
 
