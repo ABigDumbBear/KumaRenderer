@@ -1,3 +1,4 @@
+#include "KumaGL/Vec3.hpp"
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -8,6 +9,55 @@
 #include <KumaGL/Shader.hpp>
 #include <KumaGL/Texture.hpp>
 #include <KumaGL/Transform.hpp>
+
+/******************************************************************************/
+struct RenderInfo {
+  KumaGL::Model mShipModel;
+  KumaGL::Shader mShader;
+  KumaGL::Texture mTexture;
+
+  void Setup() {
+    // Configure the model.
+    mShipModel.LoadFromFile("resources/model/Spitfire.obj");
+
+    // Configure the shader.
+    mShader.LoadFromFiles("resources/shaders/Model.vert",
+                          "resources/shaders/Model.frag");
+    mShader.SetInt("tex", 0);
+
+    // Configure the texture.
+    mTexture.LoadFromFile("resources/model/Spitfire_Red.png", GL_RGB);
+    mTexture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    mTexture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    mTexture.GenerateMipmap();
+    mTexture.Bind(GL_TEXTURE0);
+  }
+
+  void Delete() {
+    mShipModel.Delete();
+    mShader.Delete();
+    mTexture.Delete();
+  }
+};
+
+/******************************************************************************/
+struct Scene {
+  KumaGL::Transform mShipTransform;
+
+  void Setup() { mShipTransform.Translate(KumaGL::Vec3(0, 0, -10)); }
+
+  void Update() { mShipTransform.Rotate(0, 1, 0); }
+
+  void PreRender(RenderInfo &aInfo) {
+    aInfo.mShader.SetMat4("modelMatrix", mShipTransform.GetMatrix());
+  }
+
+  void Render(RenderInfo &aInfo, KumaGL::Shader &aShader) {
+    aShader.Bind();
+    aInfo.mShipModel.Draw();
+    aShader.Unbind();
+  }
+};
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
@@ -40,7 +90,7 @@ GLFWwindow *CreateWindow() {
   glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
   // Create a new window.
-  window = glfwCreateWindow(1280, 720, "framebuffers", nullptr, nullptr);
+  window = glfwCreateWindow(1280, 720, "model", nullptr, nullptr);
   if (window == nullptr) {
     std::cout << "Failed to create window!" << std::endl;
     return window;
@@ -84,52 +134,32 @@ int main() {
     return -1;
   }
 
-  // Load the shader.
-  KumaGL::Shader shader;
-  shader.LoadFromFiles("resources/shaders/Model.vert",
-                       "resources/shaders/Model.frag");
+  RenderInfo info;
+  info.Setup();
 
-  // Load the model.
-  KumaGL::Model model;
-  model.LoadFromFile("resources/model/Spitfire.obj");
-
-  // Load the textures.
-  KumaGL::Texture tex;
-  tex.LoadFromFile("resources/model/Spitfire_Red.png", GL_RGB);
-  tex.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  tex.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  tex.GenerateMipmap();
-  tex.Bind();
-  glActiveTexture(GL_TEXTURE0);
+  Scene scene;
+  scene.Setup();
 
   // Set shader uniforms.
-  KumaGL::Transform modelTransform;
-  modelTransform.SetPosition(KumaGL::Vec3(0, 0, -10));
-  shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
-  shader.SetMat4("viewMatrix",
-                 KumaGL::View(KumaGL::Vec3(0, 0, 1), KumaGL::Vec3(1, 0, 0),
-                              KumaGL::Vec3(0, 0, 0)));
-  shader.SetMat4("projectionMatrix",
-                 KumaGL::Perspective(45, 1280, 720, 0.1, 100));
-  shader.SetInt("texSampler", 0);
+  info.mShader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
+                                                  KumaGL::Vec3(1, 0, 0),
+                                                  KumaGL::Vec3(0, 0, 0)));
+  info.mShader.SetMat4("projectionMatrix",
+                       KumaGL::Perspective(45, 1280, 720, 0.1, 100));
 
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
+    glfwPollEvents();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    modelTransform.Rotate(0, 1, 0);
-    shader.SetMat4("modelMatrix", modelTransform.GetMatrix());
-
-    shader.Bind();
-    model.Draw();
-
-    glfwPollEvents();
+    scene.Update();
+    scene.PreRender(info);
+    scene.Render(info, info.mShader);
   }
 
-  shader.Delete();
-  model.Delete();
-  tex.Delete();
+  info.Delete();
 
   glfwTerminate();
   return 0;

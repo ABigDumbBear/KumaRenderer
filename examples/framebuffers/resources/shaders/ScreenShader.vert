@@ -9,5 +9,5 @@ void main()
 {
   texCoords = aTexCoords;
 
-  gl_Position = vec4(aPosition.x, aPosition.y, 0, 1);
+  gl_Position = vec4(aPosition.x * 2, aPosition.y * 2, 0, 1);
 }

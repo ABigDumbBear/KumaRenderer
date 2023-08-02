@@ -11,6 +11,99 @@
 #include <KumaGL/Transform.hpp>
 
 /******************************************************************************/
+struct RenderInfo {
+  KumaGL::Mesh mCubeMesh;
+
+  KumaGL::Shader mCubeShader;
+
+  KumaGL::Texture mCubeDiffuse;
+  KumaGL::Texture mCubeSpecular;
+
+  void Setup() {
+    // Configure the meshes.
+    mCubeMesh.InitCube();
+
+    // Configure the shaders.
+    mCubeShader.LoadFromFiles("resources/shaders/Shader.vert",
+                              "resources/shaders/Shader.frag");
+
+    mCubeShader.SetInt("diffuseTexture", 0);
+    mCubeShader.SetInt("specularTexture", 1);
+    mCubeShader.SetFloat("shininess", 256);
+
+    mCubeShader.SetVec3("lightColor", KumaGL::Vec3(1, 0.9, 0.7));
+
+    mCubeShader.SetVec3("viewPos", KumaGL::Vec3(0, 0, 0));
+
+    // Configure the textures.
+    mCubeDiffuse.LoadFromFile("resources/textures/diffuse.png");
+    mCubeDiffuse.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    mCubeDiffuse.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    mCubeDiffuse.GenerateMipmap();
+
+    mCubeSpecular.LoadFromFile("resources/textures/specular.png");
+    mCubeSpecular.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    mCubeSpecular.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    mCubeSpecular.GenerateMipmap();
+
+    mCubeDiffuse.Bind(GL_TEXTURE0);
+    mCubeSpecular.Bind(GL_TEXTURE1);
+  }
+
+  void Delete() {
+    mCubeMesh.Delete();
+    mCubeShader.Delete();
+    mCubeDiffuse.Delete();
+    mCubeSpecular.Delete();
+  }
+};
+
+/******************************************************************************/
+struct Scene {
+  KumaGL::Transform mLightTransform;
+  std::array<KumaGL::Transform, 5> mCubeTransforms;
+
+  void Setup() {
+    mLightTransform.SetPosition(KumaGL::Vec3(0, 0, 10));
+
+    mCubeTransforms[0].SetPosition(KumaGL::Vec3(0, 0, -10));
+    mCubeTransforms[1].SetPosition(KumaGL::Vec3(0, 2, -10));
+    mCubeTransforms[2].SetPosition(KumaGL::Vec3(2, 0, -10));
+    mCubeTransforms[3].SetPosition(KumaGL::Vec3(0, -2, -10));
+    mCubeTransforms[4].SetPosition(KumaGL::Vec3(-2, 0, -10));
+  }
+
+  void Update() {
+    // Rotate each transform.
+    for (auto &transform : mCubeTransforms) {
+      transform.Rotate(1, 1, 0);
+    }
+  }
+
+  void PreRender(RenderInfo &aInfo) {
+    // Add each transformation matrix to a vector.
+    std::vector<KumaGL::Mat4> matrices;
+    for (const auto &transform : mCubeTransforms) {
+      matrices.emplace_back(transform.GetMatrix());
+    }
+
+    // Copy the matrices into the cube instance buffer.
+    aInfo.mCubeMesh.mInstanceBuffer.CopyData(
+        GL_ARRAY_BUFFER, matrices.size() * sizeof(KumaGL::Mat4),
+        matrices.data(), GL_DYNAMIC_DRAW);
+
+    // Set the light position in the cube shader.
+    aInfo.mCubeShader.SetVec3("lightPos", mLightTransform.GetWorldPosition());
+  }
+
+  void Render(RenderInfo &aInfo, KumaGL::Shader &aShader) {
+    aShader.Bind();
+    aInfo.mCubeMesh.DrawInstanced(mCubeTransforms.size());
+    aShader.Unbind();
+  }
+};
+
+/******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
   glViewport(0, 0, aWidth, aHeight);
 }
@@ -85,94 +178,35 @@ int main() {
     return -1;
   }
 
-  // Load the shader.
-  KumaGL::Shader shader;
-  shader.LoadFromFiles("resources/shaders/Shader.vert",
-                       "resources/shaders/Shader.frag");
+  RenderInfo info;
+  info.Setup();
 
-  // Load the textures.
-  KumaGL::Texture diffuse;
-  KumaGL::Texture specular;
-  diffuse.LoadFromFile("resources/textures/diffuse.png");
-  specular.LoadFromFile("resources/textures/specular.png");
-
-  diffuse.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  diffuse.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  diffuse.GenerateMipmap();
-
-  specular.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  specular.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  specular.GenerateMipmap();
-
-  diffuse.Bind(GL_TEXTURE0);
-  specular.Bind(GL_TEXTURE1);
+  Scene scene;
+  scene.Setup();
 
   // Set the shader uniforms.
-  shader.SetMat4("viewMatrix",
-                 KumaGL::View(KumaGL::Vec3(0, 0, 1), KumaGL::Vec3(1, 0, 0),
-                              KumaGL::Vec3(0, 0, 0)));
-  shader.SetMat4("projectionMatrix",
-                 KumaGL::Perspective(45, 1280, 720, 0.1, 100));
-
-  shader.SetInt("diffuseTexture", 0);
-  shader.SetInt("specularTexture", 1);
-  shader.SetFloat("shininess", 256);
-
-  shader.SetVec3("lightColor", KumaGL::Vec3(1, 0.9, 0.7));
-
-  shader.SetVec3("viewPos", KumaGL::Vec3(0, 0, 0));
-
-  // Create a cube mesh.
-  KumaGL::Mesh cube;
-  cube.InitCube();
-
-  // Create a transform for the light, as well as several cubes.
-  KumaGL::Transform light;
-  std::array<KumaGL::Transform, 5> cubes;
-
-  light.SetPosition(KumaGL::Vec3(0, 0, 10));
-  cubes[0].SetPosition(KumaGL::Vec3(0, 0, -10));
-  cubes[1].SetPosition(KumaGL::Vec3(0, 2, -10));
-  cubes[2].SetPosition(KumaGL::Vec3(2, 0, -10));
-  cubes[3].SetPosition(KumaGL::Vec3(0, -2, -10));
-  cubes[4].SetPosition(KumaGL::Vec3(-2, 0, -10));
-
-  // Set the light position in the shader.
-  shader.SetVec3("lightPos", light.GetWorldPosition());
+  info.mCubeShader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
+                                                      KumaGL::Vec3(1, 0, 0),
+                                                      KumaGL::Vec3(0, 0, 0)));
+  info.mCubeShader.SetMat4("projectionMatrix",
+                           KumaGL::Perspective(45, 1280, 720, 0.1, 100));
 
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
+    glfwPollEvents();
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Rotate each cube object.
-    for (auto &t : cubes) {
-      t.Rotate(1, 1, 0);
-    }
-
-    // Copy the cube matrices to the instance buffer.
-    std::vector<KumaGL::Mat4> matrices;
-    for (auto &t : cubes) {
-      matrices.emplace_back(t.GetMatrix());
-    }
-
-    cube.mInstanceBuffer.CopyData(GL_ARRAY_BUFFER,
-                                  matrices.size() * sizeof(KumaGL::Mat4),
-                                  matrices.data(), GL_DYNAMIC_DRAW);
+    scene.Update();
+    scene.PreRender(info);
 
     // Draw the cubes.
-    shader.Bind();
-    cube.DrawInstanced(cubes.size());
-
-    glfwPollEvents();
+    scene.Render(info, info.mCubeShader);
   }
 
-  shader.Delete();
-  diffuse.Delete();
-  specular.Delete();
-  cube.Delete();
+  info.Delete();
 
   glfwTerminate();
-
   return 0;
 }

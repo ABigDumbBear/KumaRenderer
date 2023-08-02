@@ -12,8 +12,127 @@
 #include <KumaGL/Texture.hpp>
 #include <KumaGL/Transform.hpp>
 
+/******************************************************************************/
 int windowWidth = 1280;
 int windowHeight = 720;
+
+/******************************************************************************/
+KumaGL::Transform CreateRandomTransform(std::random_device &aDevice) {
+  KumaGL::Transform transform;
+
+  std::mt19937 generator(aDevice());
+  std::uniform_real_distribution<> dist(-25, 25);
+
+  transform.Translate(
+      KumaGL::Vec3(dist(generator), dist(generator), dist(generator) - 50));
+
+  return transform;
+}
+
+/******************************************************************************/
+struct RenderInfo {
+  KumaGL::Mesh mCubeMesh;
+  KumaGL::Mesh mScreenMesh;
+
+  KumaGL::Shader mCubeShader;
+  KumaGL::Shader mScreenShader;
+
+  KumaGL::Texture mCubeTexture;
+  KumaGL::Texture mScreenTexture;
+
+  KumaGL::Framebuffer mFramebuffer;
+  KumaGL::Renderbuffer mRenderbuffer;
+
+  void Setup() {
+    // Configure the meshes.
+    mCubeMesh.InitCube();
+    mScreenMesh.InitQuad();
+
+    // Configure the shaders.
+    mCubeShader.LoadFromFiles("resources/shaders/CubeShader.vert",
+                              "resources/shaders/CubeShader.frag");
+    mCubeShader.SetInt("tex", 0);
+
+    mScreenShader.LoadFromFiles("resources/shaders/ScreenShader.vert",
+                                "resources/shaders/ScreenShader.frag");
+    mScreenShader.SetInt("tex", 1);
+
+    // Configure the textures.
+    mCubeTexture.LoadFromFile("resources/texture.png");
+    mCubeTexture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    mCubeTexture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    mCubeTexture.GenerateMipmap();
+
+    mScreenTexture.LoadFromData(nullptr, 1280, 720);
+    mScreenTexture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    mScreenTexture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    mCubeTexture.Bind(GL_TEXTURE0);
+    mScreenTexture.Bind(GL_TEXTURE1);
+
+    // Configure the renderbuffer.
+    mRenderbuffer.SetStorageParameters(GL_DEPTH24_STENCIL8, 1280, 720);
+
+    // Configure the framebuffer.
+    mFramebuffer.AttachTexture(mScreenTexture);
+    mFramebuffer.AttachRenderbuffer(mRenderbuffer);
+  }
+
+  void Delete() {
+    mCubeMesh.Delete();
+    mScreenMesh.Delete();
+
+    mCubeShader.Delete();
+    mScreenShader.Delete();
+
+    mCubeTexture.Delete();
+    mScreenTexture.Delete();
+
+    mFramebuffer.Delete();
+    mRenderbuffer.Delete();
+  }
+};
+
+/******************************************************************************/
+struct Scene {
+  std::vector<KumaGL::Transform> mCubeTransforms;
+
+  void Setup() {
+    mCubeTransforms.clear();
+
+    // Generate a number of random transforms.
+    std::random_device rd;
+    for (size_t i = 0; i < 10000; ++i) {
+      mCubeTransforms.emplace_back(CreateRandomTransform(rd));
+    }
+  }
+
+  void Update() {
+    // Rotate each transform.
+    for (auto &transform : mCubeTransforms) {
+      transform.Rotate(1, 1, 0);
+    }
+  }
+
+  void PreRender(RenderInfo &aInfo) {
+    // Add each transformation matrix to a vector.
+    std::vector<KumaGL::Mat4> matrices;
+    for (const auto &transform : mCubeTransforms) {
+      matrices.emplace_back(transform.GetMatrix());
+    }
+
+    // Copy the matrices into the cube instance buffer.
+    aInfo.mCubeMesh.mInstanceBuffer.CopyData(
+        GL_ARRAY_BUFFER, matrices.size() * sizeof(KumaGL::Mat4),
+        matrices.data(), GL_DYNAMIC_DRAW);
+  }
+
+  void Render(RenderInfo &aInfo, KumaGL::Shader &aShader) {
+    aShader.Bind();
+    aInfo.mCubeMesh.DrawInstanced(mCubeTransforms.size());
+    aShader.Unbind();
+  }
+};
 
 /******************************************************************************/
 void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
@@ -80,19 +199,6 @@ bool InitializeGL() {
 }
 
 /******************************************************************************/
-KumaGL::Transform CreateRandomTransform(std::random_device &aDevice) {
-  KumaGL::Transform transform;
-
-  std::mt19937 generator(aDevice());
-  std::uniform_real_distribution<> dist(-25, 25);
-
-  transform.Translate(
-      KumaGL::Vec3(dist(generator), dist(generator), dist(generator) - 50));
-
-  return transform;
-}
-
-/******************************************************************************/
 int main() {
   auto window = CreateWindow();
   if (window == nullptr) {
@@ -104,111 +210,52 @@ int main() {
     return -1;
   }
 
-  // Load textures.
-  KumaGL::Texture cubeTexture;
-  KumaGL::Texture screenTexture;
+  RenderInfo info;
+  info.Setup();
 
-  cubeTexture.LoadFromFile("resources/texture.png");
-  screenTexture.LoadFromData(nullptr, 1280, 700);
-
-  cubeTexture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  cubeTexture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  screenTexture.SetParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  screenTexture.SetParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-  // Load shaders.
-  KumaGL::Shader cubeShader;
-  KumaGL::Shader screenShader;
-
-  cubeShader.LoadFromFiles("resources/shaders/CubeShader.vert",
-                           "resources/shaders/CubeShader.frag");
-  screenShader.LoadFromFiles("resources/shaders/ScreenShader.vert",
-                             "resources/shaders/ScreenShader.frag");
-
-  // Create meshes.
-  KumaGL::Mesh cubeMesh;
-  KumaGL::Mesh screenMesh;
-
-  cubeMesh.InitCube();
-  screenMesh.InitQuad();
-
-  // Create a framebuffer and a renderbuffer.
-  KumaGL::Framebuffer fb;
-  KumaGL::Renderbuffer rb;
-
-  rb.SetStorageParameters(GL_DEPTH24_STENCIL8, 1280, 720);
-
-  fb.AttachTexture(screenTexture);
-  fb.AttachRenderbuffer(rb);
-
-  // Generate a number of random transforms.
-  std::random_device rd;
-  std::vector<KumaGL::Transform> transforms;
-  size_t numCubes = 10000;
-  for (size_t i = 0; i < numCubes; ++i) {
-    transforms.emplace_back(CreateRandomTransform(rd));
-  }
+  Scene scene;
+  scene.Setup();
 
   // Set the shader uniforms.
-  cubeShader.SetMat4("viewMatrix",
-                     KumaGL::View(KumaGL::Vec3(0, 0, 1), KumaGL::Vec3(1, 0, 0),
-                                  KumaGL::Vec3(0, 0, 0)));
-  cubeShader.SetMat4("projectionMatrix",
-                     KumaGL::Perspective(45, 1280, 720, 0.1, 100));
+  info.mCubeShader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
+                                                      KumaGL::Vec3(1, 0, 0),
+                                                      KumaGL::Vec3(0, 0, 0)));
+  info.mCubeShader.SetMat4("projectionMatrix",
+                           KumaGL::Perspective(45, 1280, 720, 0.1, 100));
 
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
     glfwPollEvents();
 
-    // Rotate each transform.
-    for (auto &transform : transforms) {
-      transform.Rotate(1, 1, 0);
-    }
+    scene.Update();
+    scene.PreRender(info);
 
-    // Add each transformation matrix to a vector.
-    std::vector<KumaGL::Mat4> matrices;
-    for (const auto &transform : transforms) {
-      matrices.emplace_back(transform.GetMatrix());
-    }
+    // For the first render pass, bind the framebuffer and render the scene to a
+    // texture.
+    info.mFramebuffer.Bind();
 
-    // Copy the matrices into the cube instance buffer.
-    cubeMesh.mInstanceBuffer.CopyData(GL_ARRAY_BUFFER,
-                                      matrices.size() * sizeof(KumaGL::Mat4),
-                                      matrices.data(), GL_DYNAMIC_DRAW);
-
-    // Bind the scene framebuffer.
-    fb.Bind();
-    glViewport(0, 0, screenTexture.GetWidth(), screenTexture.GetHeight());
+    glViewport(0, 0, info.mScreenTexture.GetWidth(),
+               info.mScreenTexture.GetHeight());
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Render the cubes.
-    glActiveTexture(GL_TEXTURE0);
-    cubeTexture.Bind();
-    cubeShader.Bind();
-    cubeMesh.DrawInstanced(numCubes);
+    scene.Render(info, info.mCubeShader);
 
-    // Bind default framebuffer.
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    info.mFramebuffer.Unbind();
+
+    // For the second render pass, draw the texture on a quad that spans the
+    // window.
     glViewport(0, 0, windowWidth, windowHeight);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Render the screen texture.
-    screenTexture.Bind();
-    screenShader.Bind();
-    screenMesh.DrawInstanced(1);
+    info.mScreenShader.Bind();
+    info.mScreenMesh.DrawInstanced(1);
+    info.mScreenShader.Unbind();
   }
 
-  cubeTexture.Delete();
-  screenTexture.Delete();
-  cubeMesh.Delete();
-  screenMesh.Delete();
-  cubeShader.Delete();
-  screenShader.Delete();
-  fb.Delete();
-  rb.Delete();
+  info.Delete();
 
   glfwTerminate();
-
   return 0;
 }
