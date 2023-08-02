@@ -181,18 +181,6 @@ inline Mat4 Perspective(float aFOV, float aViewportWidth, float aViewportHeight,
 }
 
 /******************************************************************************/
-inline Mat4 Orthographic(float aViewportWidth, float aViewportHeight,
-                         float aNearPlane, float aFarPlane) {
-  auto right = aViewportWidth;
-  auto top = aViewportHeight;
-  auto far = aFarPlane;
-  auto near = aNearPlane;
-
-  return Mat4(2.0 / right, 0.0, 0.0, -1.0, 0.0, 2.0 / top, 0.0, -1.0, 0.0, 0.0,
-              1.0 / (far - near), -near / (far - near), 0.0, 0.0, 0.0, 1.0);
-}
-
-/******************************************************************************/
 inline Mat4 Orthographic(float aLeft, float aRight, float aBottom, float aTop,
                          float aNear, float aFar) {
   auto rl = 2.0 / (aRight - aLeft);

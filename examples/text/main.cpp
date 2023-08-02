@@ -105,7 +105,8 @@ int main() {
 
   // Set the shader uniforms.
   shader.SetMat4("modelMatrix", meshTransform.GetMatrix());
-  shader.SetMat4("projectionMatrix", KumaGL::Orthographic(1280, 720, 0, 100));
+  shader.SetMat4("projectionMatrix",
+                 KumaGL::Orthographic(0, 1280, 0, 720, 0, 100));
 
   glClearColor(0.2, 0.2, 0.2, 1.0);
 
