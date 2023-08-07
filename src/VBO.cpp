@@ -50,8 +50,8 @@ void VBO::CopyData(GLenum aTarget, GLsizeiptr aSize, const void *aData,
 }
 
 /******************************************************************************/
-void VBO::CopyData(GLenum aTarget, GLintptr aOffset, GLsizeiptr aSize,
-                   const void *aData) const {
+void VBO::CopySubData(GLenum aTarget, GLintptr aOffset, GLsizeiptr aSize,
+                      const void *aData) const {
   Bind(aTarget);
   glBufferSubData(aTarget, aOffset, aSize, aData);
   Unbind(aTarget);

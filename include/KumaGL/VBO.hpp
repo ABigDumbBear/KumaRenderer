@@ -20,8 +20,8 @@ public:
 
   void CopyData(GLenum aTarget, GLsizeiptr aSize, const void *aData,
                 GLenum aUsage) const;
-  void CopyData(GLenum aTarget, GLintptr aOffset, GLsizeiptr aSize,
-                const void *aData) const;
+  void CopySubData(GLenum aTarget, GLintptr aOffset, GLsizeiptr aSize,
+                   const void *aData) const;
 };
 } // namespace KumaGL
 
