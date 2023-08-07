@@ -48,4 +48,12 @@ void VBO::CopyData(GLenum aTarget, GLsizeiptr aSize, const void *aData,
   glBufferData(aTarget, aSize, aData, aUsage);
   Unbind(aTarget);
 }
+
+/******************************************************************************/
+void VBO::CopyData(GLenum aTarget, GLintptr aOffset, GLsizeiptr aSize,
+                   const void *aData) const {
+  Bind(aTarget);
+  glBufferSubData(aTarget, aOffset, aSize, aData);
+  Unbind(aTarget);
+}
 } // namespace KumaGL
