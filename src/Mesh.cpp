@@ -73,16 +73,16 @@ void Mesh::DrawInstanced(int aNumInstances, GLenum aMode) const {
 }
 
 /******************************************************************************/
-void Mesh::UpdateVertices() {
+void Mesh::UpdateVertices(GLenum aUsage) {
   mVertexBuffer.CopyData(GL_ARRAY_BUFFER, mVertices.size() * sizeof(MeshVertex),
-                         mVertices.data(), GL_STATIC_DRAW);
+                         mVertices.data(), aUsage);
 }
 
 /******************************************************************************/
-void Mesh::UpdateIndices() {
+void Mesh::UpdateIndices(GLenum aUsage) {
   mElementBuffer.CopyData(GL_ELEMENT_ARRAY_BUFFER,
                           mIndices.size() * sizeof(unsigned int),
-                          mIndices.data(), GL_STATIC_DRAW);
+                          mIndices.data(), aUsage);
 }
 
 /******************************************************************************/

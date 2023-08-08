@@ -33,8 +33,8 @@ public:
   void Draw(GLenum aMode = GL_TRIANGLES) const;
   void DrawInstanced(int aNumInstances, GLenum aMode = GL_TRIANGLES) const;
 
-  void UpdateVertices();
-  void UpdateIndices();
+  void UpdateVertices(GLenum aUsage = GL_STATIC_DRAW);
+  void UpdateIndices(GLenum aUsage = GL_STATIC_DRAW);
 
   void InitQuad();
   void InitCube();
