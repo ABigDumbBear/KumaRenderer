@@ -5,17 +5,12 @@ project(KumaGL VERSION 0.0.1)
 # this file for syntax highlighting.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(assimp REQUIRED)
-find_package(Freetype REQUIRED)
-
 # Gather all the required source files.
 list(APPEND SOURCE_FILES
   src/3rd_party/glad/glad.c
-  src/Font.cpp
   src/Framebuffer.cpp
   src/GLObject.cpp
   src/Mesh.cpp
-  src/Model.cpp
   src/Renderbuffer.cpp
   src/Shader.cpp
   src/Texture.cpp
@@ -28,12 +23,6 @@ add_library(KumaGL SHARED ${SOURCE_FILES})
 target_include_directories(KumaGL PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/>
-  ${ASSIMP_INCLUDE_DIRS}
-  ${FREETYPE_INCLUDE_DIRS}
-)
-target_link_libraries(KumaGL PUBLIC
-  ${ASSIMP_LIBRARIES}
-  ${FREETYPE_LIBRARIES}
 )
 
 # Install the library and the include directory.
