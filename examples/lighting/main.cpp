@@ -1,3 +1,4 @@
+#include "KumaGL/Vec3.hpp"
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -8,7 +9,6 @@
 #include <KumaGL/Mesh.hpp>
 #include <KumaGL/Shader.hpp>
 #include <KumaGL/Texture.hpp>
-#include <KumaGL/Transform.hpp>
 
 /******************************************************************************/
 struct RenderInfo {
@@ -60,31 +60,29 @@ struct RenderInfo {
 
 /******************************************************************************/
 struct Scene {
-  KumaGL::Transform mLightTransform;
-  std::array<KumaGL::Transform, 5> mCubeTransforms;
+  KumaGL::Vec3 mLightPosition;
+  std::array<KumaGL::Vec3, 5> mCubePositions;
 
   void Setup() {
-    mLightTransform.SetPosition(KumaGL::Vec3(0, 0, 10));
+    mLightPosition.z = 10;
 
-    mCubeTransforms[0].SetPosition(KumaGL::Vec3(0, 0, -10));
-    mCubeTransforms[1].SetPosition(KumaGL::Vec3(0, 2, -10));
-    mCubeTransforms[2].SetPosition(KumaGL::Vec3(2, 0, -10));
-    mCubeTransforms[3].SetPosition(KumaGL::Vec3(0, -2, -10));
-    mCubeTransforms[4].SetPosition(KumaGL::Vec3(-2, 0, -10));
+    mCubePositions[0] = KumaGL::Vec3(0, 0, -10);
+    mCubePositions[1] = KumaGL::Vec3(2, 0, -10);
+    mCubePositions[2] = KumaGL::Vec3(-2, 0, -10);
+    mCubePositions[3] = KumaGL::Vec3(0, 2, -10);
+    mCubePositions[4] = KumaGL::Vec3(0, -2, -10);
   }
 
   void Update() {
     // Rotate each transform.
-    for (auto &transform : mCubeTransforms) {
-      transform.Rotate(1, 1, 0);
+    for (auto &transform : mCubePositions) {
     }
   }
 
   void PreRender(RenderInfo &aInfo) {
     // Add each transformation matrix to a vector.
     std::vector<KumaGL::Mat4> matrices;
-    for (const auto &transform : mCubeTransforms) {
-      matrices.emplace_back(transform.GetMatrix());
+    for (const auto &transform : mCubePositions) {
     }
 
     // Copy the matrices into the cube instance buffer.
@@ -93,12 +91,12 @@ struct Scene {
         matrices.data(), GL_DYNAMIC_DRAW);
 
     // Set the light position in the cube shader.
-    aInfo.mCubeShader.SetVec3("lightPos", mLightTransform.GetWorldPosition());
+    aInfo.mCubeShader.SetVec3("lightPos", mLightPosition);
   }
 
   void Render(RenderInfo &aInfo, KumaGL::Shader &aShader) {
     aShader.Bind();
-    aInfo.mCubeMesh.DrawInstanced(mCubeTransforms.size());
+    aInfo.mCubeMesh.DrawInstanced(mCubePositions.size());
     aShader.Unbind();
   }
 };

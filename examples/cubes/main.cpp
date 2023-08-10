@@ -11,19 +11,20 @@
 #include <KumaGL/Mesh.hpp>
 #include <KumaGL/Shader.hpp>
 #include <KumaGL/Texture.hpp>
-#include <KumaGL/Transform.hpp>
 
 /******************************************************************************/
-KumaGL::Transform CreateRandomTransform(std::random_device &aDevice) {
-  KumaGL::Transform transform;
+struct Transform {};
 
+/******************************************************************************/
+KumaGL::Mat4 CreateRandomTransform(std::random_device &aDevice) {
   std::mt19937 generator(aDevice());
   std::uniform_real_distribution<> dist(-25, 25);
 
-  transform.Translate(
-      KumaGL::Vec3(dist(generator), dist(generator), dist(generator) - 50));
+  auto x = dist(generator);
+  auto y = dist(generator);
+  auto z = dist(generator) - 50;
 
-  return transform;
+  return KumaGL::Translate(KumaGL::Vec3(x, y, z));
 }
 
 /******************************************************************************/
@@ -58,7 +59,7 @@ struct RenderInfo {
 
 /******************************************************************************/
 struct Scene {
-  std::vector<KumaGL::Transform> mCubeTransforms;
+  std::vector<KumaGL::Mat4> mCubeTransforms;
 
   void Setup() {
     mCubeTransforms.clear();
@@ -73,7 +74,6 @@ struct Scene {
   void Update() {
     // Rotate each transform.
     for (auto &transform : mCubeTransforms) {
-      transform.Rotate(1, 1, 0);
     }
   }
 
@@ -81,7 +81,7 @@ struct Scene {
     // Add each transformation matrix to a vector.
     std::vector<KumaGL::Mat4> matrices;
     for (const auto &transform : mCubeTransforms) {
-      matrices.emplace_back(transform.GetMatrix());
+      matrices.emplace_back(transform);
     }
 
     // Copy the matrices into the cube instance buffer.
