@@ -17,15 +17,32 @@ int windowWidth = 1280;
 int windowHeight = 720;
 
 /******************************************************************************/
-KumaGL::Mat4 CreateRandomTransform(std::random_device &aDevice) {
+struct Transform {
+  KumaGL::Vec3 mPosition;
+  KumaGL::Vec3 mRotation;
+
+  KumaGL::Mat4 GetMatrix() const {
+    auto t = KumaGL::Translate(mPosition);
+    auto rx = KumaGL::Rotate(KumaGL::Vec3(1, 0, 0), mRotation.x);
+    auto ry = KumaGL::Rotate(KumaGL::Vec3(0, 1, 0), mRotation.y);
+    auto rz = KumaGL::Rotate(KumaGL::Vec3(0, 0, 1), mRotation.z);
+
+    return t * rz * ry * rx;
+  }
+};
+
+/******************************************************************************/
+Transform CreateRandomTransform(std::random_device &aDevice) {
+  Transform t;
+
   std::mt19937 generator(aDevice());
   std::uniform_real_distribution<> dist(-25, 25);
 
-  auto x = dist(generator);
-  auto y = dist(generator);
-  auto z = dist(generator) - 50;
+  t.mPosition.x = dist(generator);
+  t.mPosition.y = dist(generator);
+  t.mPosition.z = dist(generator) - 50;
 
-  return KumaGL::Translate(KumaGL::Vec3(x, y, z));
+  return t;
 }
 
 /******************************************************************************/
@@ -94,7 +111,7 @@ struct RenderInfo {
 
 /******************************************************************************/
 struct Scene {
-  std::vector<KumaGL::Mat4> mCubeTransforms;
+  std::vector<Transform> mCubeTransforms;
 
   void Setup() {
     mCubeTransforms.clear();
@@ -109,6 +126,8 @@ struct Scene {
   void Update() {
     // Rotate each transform.
     for (auto &transform : mCubeTransforms) {
+      transform.mRotation.x += 1;
+      transform.mRotation.y += 1;
     }
   }
 
@@ -116,7 +135,7 @@ struct Scene {
     // Add each transformation matrix to a vector.
     std::vector<KumaGL::Mat4> matrices;
     for (const auto &transform : mCubeTransforms) {
-      matrices.emplace_back(transform);
+      matrices.emplace_back(transform.GetMatrix());
     }
 
     // Copy the matrices into the cube instance buffer.
