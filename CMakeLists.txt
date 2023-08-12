@@ -10,12 +10,14 @@ list(APPEND SOURCE_FILES
   src/3rd_party/glad/glad.c
   src/Framebuffer.cpp
   src/GLObject.cpp
+  src/Mat4.cpp
   src/Mesh.cpp
   src/Renderbuffer.cpp
   src/Shader.cpp
   src/Texture.cpp
   src/VAO.cpp
   src/VBO.cpp
+  src/Vec3.cpp
 )
 
 # Create the library.

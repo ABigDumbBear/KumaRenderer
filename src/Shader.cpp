@@ -105,7 +105,7 @@ void Shader::SetVec3(const std::string &aName, const Vec3 &aValue) const {
 void Shader::SetMat4(const std::string &aName, const Mat4 &aValue) const {
   Bind();
   int loc = glGetUniformLocation(mID, aName.c_str());
-  glUniformMatrix4fv(loc, 1, GL_FALSE, &aValue(0, 0));
+  glUniformMatrix4fv(loc, 1, GL_FALSE, aValue.GetData());
   Unbind();
 }
 

@@ -163,8 +163,8 @@ struct Scene {
 
     // Copy the quad matrix into the quad instance buffer.
     aInfo.mQuadMesh.mInstanceBuffer.CopyData(
-        GL_ARRAY_BUFFER, sizeof(KumaGL::Mat4), mPlaneTransform.GetMatrix().data,
-        GL_DYNAMIC_DRAW);
+        GL_ARRAY_BUFFER, sizeof(KumaGL::Mat4),
+        mPlaneTransform.GetMatrix().GetData(), GL_DYNAMIC_DRAW);
 
     // Set the light position in the cube shader.
     aInfo.mCubeShader.SetVec3("lightPos", mLightTransform.mPosition);

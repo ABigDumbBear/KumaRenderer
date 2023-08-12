@@ -37,22 +37,22 @@ inline void TestMat4Multiplication() {
          29.0, 30.0, 31.0, 32.0);
   Mat4 c = a * b;
 
-  assert(c(0, 0) == 250.0);
-  assert(c(1, 0) == 260.0);
-  assert(c(2, 0) == 270.0);
-  assert(c(3, 0) == 280.0);
-  assert(c(0, 1) == 618.0);
-  assert(c(1, 1) == 644.0);
-  assert(c(2, 1) == 670.0);
-  assert(c(3, 1) == 696.0);
-  assert(c(0, 2) == 986.0);
-  assert(c(1, 2) == 1028.0);
-  assert(c(2, 2) == 1070.0);
-  assert(c(3, 2) == 1112.0);
-  assert(c(0, 3) == 1354.0);
-  assert(c(1, 3) == 1412.0);
-  assert(c(2, 3) == 1470.0);
-  assert(c(3, 3) == 1528.0);
+  assert(c[0][0] == 250.0);
+  assert(c[1][0] == 260.0);
+  assert(c[2][0] == 270.0);
+  assert(c[3][0] == 280.0);
+  assert(c[0][1] == 618.0);
+  assert(c[1][1] == 644.0);
+  assert(c[2][1] == 670.0);
+  assert(c[3][1] == 696.0);
+  assert(c[0][2] == 986.0);
+  assert(c[1][2] == 1028.0);
+  assert(c[2][2] == 1070.0);
+  assert(c[3][2] == 1112.0);
+  assert(c[0][3] == 1354.0);
+  assert(c[1][3] == 1412.0);
+  assert(c[2][3] == 1470.0);
+  assert(c[3][3] == 1528.0);
 }
 
 inline void TestMat4MultiplicationWithVec3() {
