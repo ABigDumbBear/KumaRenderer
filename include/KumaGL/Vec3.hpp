@@ -7,6 +7,18 @@
 namespace KumaGL {
 class Vec3 {
 public:
+  Vec3();
+  Vec3(Vec3 &&) = default;
+  Vec3(const Vec3 &) = default;
+  Vec3 &operator=(Vec3 &&) = default;
+  Vec3 &operator=(const Vec3 &) = default;
+  ~Vec3();
+
+private:
+};
+
+class Vec3 {
+public:
   Vec3() : x(0.0), y(0.0), z(0.0) {}
   Vec3(float a, float b, float c) : x(a), y(b), z(c){};
 
