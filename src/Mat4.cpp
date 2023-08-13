@@ -133,16 +133,16 @@ void Mat4::LookAt(const KumaGL::Vec3 &aPos, const KumaGL::Vec3 &aTarget,
   // Calculate the direction vector from the camera position to the target (the
   // z axis of the new coordinate system).
   auto zAxis = aPos - aTarget;
-  zAxis = Normalize(zAxis);
+  zAxis.Normalize();
 
   // Calculate the vector perpendicular to the up and direction vectors (the x
   // axis of the new coordinate system).
   auto xAxis = Cross(Normalize(aUp), zAxis);
-  xAxis = Normalize(xAxis);
+  xAxis.Normalize();
 
   // Calculate the camera's new up vector (the y coordinate of the new
   // coordinate system).
-  auto yAxis = Cross(zAxis, xAxis);
+  auto yAxis = aUp; // Cross(xAxis, zAxis);
 
   // Create a translation matrix for the new coordinate system.
   Mat4 translationMatrix;

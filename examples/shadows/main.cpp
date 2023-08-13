@@ -26,13 +26,11 @@ struct Transform {
   KumaGL::Vec3 mScale{1, 1, 1};
 
   KumaGL::Mat4 GetMatrix() const {
-    auto t = KumaGL::Translate(mPosition);
-    auto rx = KumaGL::Rotate(KumaGL::Vec3(1, 0, 0), mRotation.x);
-    auto ry = KumaGL::Rotate(KumaGL::Vec3(0, 1, 0), mRotation.y);
-    auto rz = KumaGL::Rotate(KumaGL::Vec3(0, 0, 1), mRotation.z);
-    auto s = KumaGL::Scale(mScale);
-
-    return s * t * rz * ry * rx;
+    KumaGL::Mat4 mat;
+    mat.Translate(mPosition);
+    mat.Rotate(mRotation);
+    mat.Scale(mScale);
+    return mat;
   }
 };
 
@@ -132,7 +130,7 @@ struct Scene {
     mPlaneTransform.mScale.x = 10;
     mPlaneTransform.mScale.y = 10;
 
-    mLightTransform.mPosition.z = 10;
+    mLightTransform.mPosition.z = 0;
 
     mCubeTransforms[0].mPosition = KumaGL::Vec3(0, 0, -10);
     mCubeTransforms[1].mPosition = KumaGL::Vec3(2, 0, -10);
@@ -287,16 +285,13 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, info.mShadowMap.GetWidth(), info.mShadowMap.GetHeight());
 
-    // Calculate the direction from the light to the destination (in this case,
-    // the origin).
-    auto lightDir = KumaGL::Vec3(0, 0, 0) - scene.mLightTransform.mPosition;
-    lightDir = KumaGL::Normalize(lightDir);
-
     // Calculate the view and projection matrices for the light.
-    auto lightView = KumaGL::View(lightDir, KumaGL::Vec3(1, 0, 0),
-                                  scene.mLightTransform.mPosition);
-    auto lightProj = KumaGL::Orthographic(-10, 10, -10, 10, 0.1, 100);
-    // auto lightProj = KumaGL::Perspective(45, 1280, 720, 0.1, 100);
+    KumaGL::Mat4 lightView;
+    lightView.LookAt(scene.mLightTransform.mPosition, KumaGL::Vec3(0, 0, -1),
+                     KumaGL::Vec3(0, 1, 0));
+
+    KumaGL::Mat4 lightProj;
+    lightProj.Orthographic(-10, 10, -10, 10, 0.1, 100);
 
     // Set the shader uniforms.
     info.mDepthShader.SetMat4("viewMatrix", lightView);
@@ -322,14 +317,16 @@ int main() {
       glViewport(0, 0, windowWidth, windowHeight);
 
       // Set the shader uniforms.
-      info.mCubeShader.SetMat4("viewMatrix",
-                               KumaGL::View(KumaGL::Vec3(0, 0, 1),
-                                            KumaGL::Vec3(1, 0, 0),
-                                            KumaGL::Vec3(0, 0, 0)));
-      info.mCubeShader.SetMat4("projectionMatrix",
-                               KumaGL::Perspective(45, 1280, 720, 0.1, 100));
-      info.mCubeShader.SetMat4("lightSpaceMatrix", lightProj * lightView);
+      KumaGL::Mat4 view;
+      view.LookAt(KumaGL::Vec3(0, 0, 0), KumaGL::Vec3(0, 0, -1),
+                  KumaGL::Vec3(0, 1, 0));
+      info.mCubeShader.SetMat4("viewMatrix", view);
 
+      KumaGL::Mat4 proj;
+      proj.Perspective(45, 1280, 720, 0.1, 100);
+      info.mCubeShader.SetMat4("projectionMatrix", proj);
+
+      info.mCubeShader.SetMat4("lightSpaceMatrix", lightView * lightProj);
       info.mCubeShader.SetVec3("lightPos", scene.mLightTransform.mPosition);
 
       // Render the scene.

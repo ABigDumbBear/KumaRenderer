@@ -16,12 +16,10 @@ struct Transform {
   KumaGL::Vec3 mRotation;
 
   KumaGL::Mat4 GetMatrix() const {
-    auto t = KumaGL::Translate(mPosition);
-    auto rx = KumaGL::Rotate(KumaGL::Vec3(1, 0, 0), mRotation.x);
-    auto ry = KumaGL::Rotate(KumaGL::Vec3(0, 1, 0), mRotation.y);
-    auto rz = KumaGL::Rotate(KumaGL::Vec3(0, 0, 1), mRotation.z);
-
-    return t * rz * ry * rx;
+    KumaGL::Mat4 mat;
+    mat.Translate(mPosition);
+    mat.Rotate(mRotation);
+    return mat;
   }
 };
 
@@ -92,7 +90,7 @@ struct Scene {
     // Rotate each transform.
     for (auto &transform : mCubeTransforms) {
       transform.mRotation.x += 1;
-      transform.mRotation.y += 1;
+      // transform.mRotation.y += 1;
     }
   }
 
@@ -201,11 +199,14 @@ int main() {
   scene.Setup();
 
   // Set the shader uniforms.
-  info.mCubeShader.SetMat4("viewMatrix", KumaGL::View(KumaGL::Vec3(0, 0, 1),
-                                                      KumaGL::Vec3(1, 0, 0),
-                                                      KumaGL::Vec3(0, 0, 0)));
-  info.mCubeShader.SetMat4("projectionMatrix",
-                           KumaGL::Perspective(45, 1280, 720, 0.1, 100));
+  KumaGL::Mat4 view;
+  view.LookAt(KumaGL::Vec3(0, 0, 0), KumaGL::Vec3(0, 0, -1),
+              KumaGL::Vec3(0, 1, 0));
+  info.mCubeShader.SetMat4("viewMatrix", view);
+
+  KumaGL::Mat4 proj;
+  proj.Perspective(45, 1280, 720, 0.1, 100);
+  info.mCubeShader.SetMat4("projectionMatrix", proj);
 
   // Run until instructed to close.
   while (!glfwWindowShouldClose(window)) {
