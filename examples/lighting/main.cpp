@@ -90,7 +90,7 @@ struct Scene {
     // Rotate each transform.
     for (auto &transform : mCubeTransforms) {
       transform.mRotation.x += 1;
-      // transform.mRotation.y += 1;
+      transform.mRotation.y += 1;
     }
   }
 

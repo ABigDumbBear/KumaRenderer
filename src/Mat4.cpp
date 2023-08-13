@@ -142,7 +142,7 @@ void Mat4::LookAt(const KumaGL::Vec3 &aPos, const KumaGL::Vec3 &aTarget,
 
   // Calculate the camera's new up vector (the y coordinate of the new
   // coordinate system).
-  auto yAxis = aUp; // Cross(xAxis, zAxis);
+  auto yAxis = Cross(zAxis, xAxis);
 
   // Create a translation matrix for the new coordinate system.
   Mat4 translationMatrix;
@@ -198,10 +198,10 @@ void Mat4::Orthographic(float aLeft, float aRight, float aBottom, float aTop,
                         float aNear, float aFar) {
   auto rl = 2.0 / (aRight - aLeft);
   auto tb = 2.0 / (aTop - aBottom);
-  auto fn = 1.0 / (aFar - aNear);
-  auto rl2 = ((aRight + aLeft) / (aRight - aLeft)) * -1.0;
-  auto tb2 = ((aTop + aBottom) / (aTop - aBottom)) * -1.0;
-  auto fn2 = -aNear / (aFar - aNear);
+  auto fn = -2.0 / (aFar - aNear);
+  auto rl2 = (aRight + aLeft) / (aRight - aLeft) * -1.0;
+  auto tb2 = (aTop + aBottom) / (aTop - aBottom) * -1.0;
+  auto fn2 = (aFar + aNear) / (aFar - aNear) * -1.0;
 
   mData[0][0] = rl;
   mData[1][0] = 0;

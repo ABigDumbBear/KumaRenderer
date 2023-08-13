@@ -126,16 +126,17 @@ struct Scene {
   std::array<Transform, 5> mCubeTransforms;
 
   void Setup() {
+    mPlaneTransform.mPosition.y = 3;
     mPlaneTransform.mPosition.z = -20;
     mPlaneTransform.mScale.x = 10;
     mPlaneTransform.mScale.y = 10;
 
-    mLightTransform.mPosition.z = 0;
+    mLightTransform.mPosition.z = 10;
 
     mCubeTransforms[0].mPosition = KumaGL::Vec3(0, 0, -10);
-    mCubeTransforms[1].mPosition = KumaGL::Vec3(2, 0, -10);
+    mCubeTransforms[1].mPosition = KumaGL::Vec3(4, 0, -10);
     mCubeTransforms[2].mPosition = KumaGL::Vec3(-2, 0, -10);
-    mCubeTransforms[3].mPosition = KumaGL::Vec3(0, 2, -10);
+    mCubeTransforms[3].mPosition = KumaGL::Vec3(0, 1, -10);
     mCubeTransforms[4].mPosition = KumaGL::Vec3(0, -2, -10);
   }
 
@@ -287,7 +288,7 @@ int main() {
 
     // Calculate the view and projection matrices for the light.
     KumaGL::Mat4 lightView;
-    lightView.LookAt(scene.mLightTransform.mPosition, KumaGL::Vec3(0, 0, -1),
+    lightView.LookAt(scene.mLightTransform.mPosition, KumaGL::Vec3(0, 0, -10),
                      KumaGL::Vec3(0, 1, 0));
 
     KumaGL::Mat4 lightProj;
@@ -326,7 +327,7 @@ int main() {
       proj.Perspective(45, 1280, 720, 0.1, 100);
       info.mCubeShader.SetMat4("projectionMatrix", proj);
 
-      info.mCubeShader.SetMat4("lightSpaceMatrix", lightView * lightProj);
+      info.mCubeShader.SetMat4("lightSpaceMatrix", lightProj * lightView);
       info.mCubeShader.SetVec3("lightPos", scene.mLightTransform.mPosition);
 
       // Render the scene.
