@@ -5,12 +5,6 @@ namespace KumaGL {
 Vec3::Vec3(float a, float b, float c) : x(a), y(b), z(c) {}
 
 /******************************************************************************/
-std::ostream &Vec3::operator<<(std::ostream &os) const {
-  os << x << " " << y << " " << z;
-  return os;
-}
-
-/******************************************************************************/
 void Vec3::operator+=(const Vec3 &rhs) {
   x += rhs.x;
   y += rhs.y;
@@ -40,11 +34,22 @@ Vec3 Vec3::Cross(const Vec3 &aVec) const {
 }
 
 /******************************************************************************/
+Vec3 Vec3::Direction(const Vec3 &aVec) const {
+  return KumaGL::Direction((*this), aVec);
+}
+
+/******************************************************************************/
 float Vec3::Dot(const Vec3 &aVec) const { return KumaGL::Dot((*this), aVec); }
 
 /******************************************************************************/
 float Vec3::Distance(const Vec3 &aVec) const {
   return KumaGL::Distance((*this), aVec);
+}
+
+/******************************************************************************/
+std::ostream &operator<<(std::ostream &os, const Vec3 &aVec) {
+  os << aVec.x << " " << aVec.y << " " << aVec.z;
+  return os;
 }
 
 /******************************************************************************/
@@ -87,6 +92,14 @@ Vec3 Cross(const Vec3 &aVectorA, const Vec3 &aVectorB) {
   auto yx = aVectorA.y * aVectorB.x;
 
   return Vec3(yz - zy, zx - xz, xy - yx);
+}
+
+/******************************************************************************/
+Vec3 Direction(const Vec3 &aVectorA, const Vec3 &aVectorB) {
+  Vec3 dir = aVectorB - aVectorA;
+  dir.Normalize();
+
+  return dir;
 }
 
 /******************************************************************************/

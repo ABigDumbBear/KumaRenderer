@@ -38,18 +38,6 @@ Mat4::Mat4(float n00, float n10, float n20, float n30, float n01, float n11,
 }
 
 /******************************************************************************/
-std::ostream &Mat4::operator<<(std::ostream &os) const {
-  for (int r = 0; r < 4; ++r) {
-    for (int c = 0; c < 4; ++c) {
-      os << mData[c][r] << " ";
-    }
-    os << "\n";
-  }
-
-  return os;
-}
-
-/******************************************************************************/
 void Mat4::operator*=(const Mat4 &rhs) { (*this) = (*this) * rhs; }
 
 /******************************************************************************/
@@ -130,10 +118,12 @@ void Mat4::Rotate(const KumaGL::Vec3 &aVec) { Rotate(aVec.x, aVec.y, aVec.z); }
 void Mat4::LookAt(const KumaGL::Vec3 &aPos, const KumaGL::Vec3 &aTarget,
                   const KumaGL::Vec3 &aUp) {
   // Create a new coordinate system using the camera's position and orientation.
-  // Calculate the direction vector from the camera position to the target (the
-  // z axis of the new coordinate system).
-  auto zAxis = aPos - aTarget;
-  zAxis.Normalize();
+  // First, calculate the direction vector from the target to the camera's
+  // position (the z axis of the new coordinate system). Note that taking the
+  // direction from the target to the camera (instead of from the camera to the
+  // target) means that the z-axis will be positive behind the camera and
+  // negative in front of it.
+  auto zAxis = aTarget.Direction(aPos);
 
   // Calculate the vector perpendicular to the up and direction vectors (the x
   // axis of the new coordinate system).
@@ -143,6 +133,7 @@ void Mat4::LookAt(const KumaGL::Vec3 &aPos, const KumaGL::Vec3 &aTarget,
   // Calculate the camera's new up vector (the y coordinate of the new
   // coordinate system).
   auto yAxis = Cross(zAxis, xAxis);
+  yAxis.Normalize();
 
   // Create a translation matrix for the new coordinate system.
   Mat4 translationMatrix;
@@ -219,6 +210,18 @@ void Mat4::Orthographic(float aLeft, float aRight, float aBottom, float aTop,
   mData[1][3] = 0;
   mData[2][3] = 0;
   mData[3][3] = 1;
+}
+
+/******************************************************************************/
+std::ostream &operator<<(std::ostream &os, const Mat4 &aMat) {
+  for (int r = 0; r < 4; ++r) {
+    for (int c = 0; c < 4; ++c) {
+      os << aMat[c][r] << " ";
+    }
+    os << "\n";
+  }
+
+  return os;
 }
 
 /******************************************************************************/

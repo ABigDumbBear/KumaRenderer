@@ -20,11 +20,11 @@ public:
   Mat4 &operator=(const Mat4 &) = default;
   ~Mat4() = default;
 
-  std::ostream &operator<<(std::ostream &os) const;
   float *operator[](size_t index) { return mData[index]; }
   const float *operator[](size_t index) const { return mData[index]; }
-
   void operator*=(const Mat4 &rhs);
+
+  const float *GetData() const { return mData[0]; }
 
   void Identity();
 
@@ -43,12 +43,10 @@ public:
   void Orthographic(float aLeft, float aRight, float aBottom, float aTop,
                     float aNear, float aFar);
 
-  const float *GetData() const { return mData[0]; }
-
-private:
   float mData[4][4];
 };
 
+std::ostream &operator<<(std::ostream &os, const Mat4 &aMat);
 Mat4 operator*(const Mat4 &lhs, const Mat4 &rhs);
 Vec3 operator*(const Mat4 &m, const Vec3 &v);
 } // namespace KumaGL
