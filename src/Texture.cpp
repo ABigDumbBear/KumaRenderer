@@ -55,6 +55,8 @@ void Texture::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 /******************************************************************************/
 void Texture::LoadFromFile(const std::string &aFile, GLint aLoadFormat,
                            GLenum aType) {
+  stbi_set_flip_vertically_on_load(true);
+
   int channels;
   auto data = stbi_load(aFile.c_str(), &mWidth, &mHeight, &channels, 0);
 
