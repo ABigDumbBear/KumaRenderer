@@ -134,9 +134,9 @@ struct Scene {
     mLightTransform.mPosition.z = 10;
 
     mCubeTransforms[0].mPosition = KumaGL::Vec3(0, 0, -10);
-    mCubeTransforms[1].mPosition = KumaGL::Vec3(4, 0, -10);
+    mCubeTransforms[1].mPosition = KumaGL::Vec3(2, 0, -10);
     mCubeTransforms[2].mPosition = KumaGL::Vec3(-2, 0, -10);
-    mCubeTransforms[3].mPosition = KumaGL::Vec3(0, 1, -10);
+    mCubeTransforms[3].mPosition = KumaGL::Vec3(0, 2, -10);
     mCubeTransforms[4].mPosition = KumaGL::Vec3(0, -2, -10);
   }
 
