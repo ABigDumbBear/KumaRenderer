@@ -19,7 +19,7 @@ jobs:
         run: ./vcpkg/bootstrap-vcpkg.sh
 
       - name: install glfw3 dependencies
-        run: sudo apt install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config
+        run: sudo apt-get update && sudo apt-get install libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config
 
       - name: run cmake
         run: cmake -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
