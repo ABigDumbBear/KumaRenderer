@@ -5,6 +5,8 @@ project(KumaGL VERSION 0.0.1)
 # this file for syntax highlighting.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 # Gather all the required source files.
 list(APPEND SOURCE_FILES
   src/3rd_party/glad/glad.c
