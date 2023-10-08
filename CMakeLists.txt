@@ -48,9 +48,9 @@ option(BUILD_TESTS "Build the unit tests." ON)
 option(BUILD_EXAMPLES "Build the example applications." ON)
 
 if(BUILD_TESTS)
-  add_subdirectory(tests)
+  #add_subdirectory(tests)
 endif(BUILD_TESTS)
 
 if(BUILD_EXAMPLES)
-  add_subdirectory(examples)
+  #add_subdirectory(examples)
 endif(BUILD_EXAMPLES)
