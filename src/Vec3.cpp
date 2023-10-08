@@ -1,5 +1,7 @@
 #include "KumaGL/Vec3.hpp"
 
+#include <cmath>
+
 namespace KumaGL {
 /******************************************************************************/
 Vec3::Vec3(float a, float b, float c) : x(a), y(b), z(c) {}

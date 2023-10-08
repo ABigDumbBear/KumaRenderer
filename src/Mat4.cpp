@@ -1,5 +1,8 @@
 #include "KumaGL/Mat4.hpp"
 
+#include <cmath>
+
+#include "KumaGL/MathUtil.hpp"
 #include "KumaGL/Vec3.hpp"
 
 namespace KumaGL {
@@ -82,8 +85,8 @@ void Mat4::Translate(const KumaGL::Vec3 &aVec) {
 
 /******************************************************************************/
 void Mat4::Rotate(const KumaGL::Vec3 &aAxis, float aDegrees) {
-  float c = std::cos(aDegrees * (M_PI / 180.0));
-  float s = std::sin(aDegrees * (M_PI / 180.0));
+  float c = std::cos(aDegrees * (PI / 180.0));
+  float s = std::sin(aDegrees * (PI / 180.0));
   float d = 1.0 - c;
 
   float vx = aAxis.x;
@@ -160,7 +163,7 @@ void Mat4::LookAt(const KumaGL::Vec3 &aPos, const KumaGL::Vec3 &aTarget,
 /******************************************************************************/
 void Mat4::Perspective(float aFOV, float aViewportWidth, float aViewportHeight,
                        float aNearPlane, float aFarPlane) {
-  auto rad = aFOV * (M_PI / 180.0);
+  auto rad = aFOV * (PI / 180.0);
   auto f = 1.0 / std::tan(rad * 0.5);
   auto aspect = aViewportWidth / aViewportHeight;
   auto far = aFarPlane;

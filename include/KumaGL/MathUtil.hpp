@@ -4,6 +4,8 @@
 #include "Vec3.hpp"
 
 namespace KumaGL {
+const float PI = 3.141592;
+
 /******************************************************************************/
 inline float Lerp(float aStart, float aTarget, float aPercent) {
   return (aStart + (aTarget - aStart) * aPercent);
