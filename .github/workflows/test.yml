@@ -26,3 +26,8 @@ jobs:
 
       - name: build project
         run: cmake --build ./build --config Release
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: ./build
