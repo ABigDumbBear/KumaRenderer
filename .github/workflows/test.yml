@@ -37,10 +37,10 @@ jobs:
       - name: run cmake
         run: cmake -B ./build -S . -DCMAKE_TOOLCHAIN_FILE="./vcpkg/scripts/buildsystems/vcpkg.cmake"
 
+      - name: build project
+        run: cmake --build ./build --config Release
+
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
           path: ./build
-
-      - name: build project
-        run: cmake --build ./build --config Release
