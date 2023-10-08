@@ -5,8 +5,6 @@ project(KumaGL VERSION 0.0.1)
 # this file for syntax highlighting.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 # Gather all the required source files.
 list(APPEND SOURCE_FILES
   src/3rd_party/glad/glad.c
@@ -23,7 +21,7 @@ list(APPEND SOURCE_FILES
 )
 
 # Create the library.
-add_library(KumaGL SHARED ${SOURCE_FILES})
+add_library(KumaGL STATIC ${SOURCE_FILES})
 target_include_directories(KumaGL PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/deps>
