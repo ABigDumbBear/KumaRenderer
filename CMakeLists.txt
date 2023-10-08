@@ -21,7 +21,7 @@ list(APPEND SOURCE_FILES
 )
 
 # Create the library.
-add_library(KumaGL STATIC ${SOURCE_FILES})
+add_library(KumaGL SHARED ${SOURCE_FILES})
 target_include_directories(KumaGL PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/deps>
@@ -32,6 +32,7 @@ target_include_directories(KumaGL PUBLIC
 install(TARGETS KumaGL
   EXPORT KumaGLTargets
   LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
 )
 install(DIRECTORY include/
   DESTINATION include
