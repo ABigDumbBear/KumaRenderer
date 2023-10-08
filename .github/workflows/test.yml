@@ -39,7 +39,7 @@ jobs:
         run: .\vcpkg\bootstrap-vcpkg.bat
 
       - name: run cmake
-        run: cmake -B ./build -S . -DCMAKE_TOOLCHAIN_FILE="./vcpkg/scripts/buildsystems/vcpkg.cmake"
+        #run: cmake -B ./build -S . -DCMAKE_TOOLCHAIN_FILE="./vcpkg/scripts/buildsystems/vcpkg.cmake"
 
       - name: build project
         run: cmake --build ./build --config Release
