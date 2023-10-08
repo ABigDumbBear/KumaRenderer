@@ -24,6 +24,7 @@ list(APPEND SOURCE_FILES
 add_library(KumaGL SHARED ${SOURCE_FILES})
 target_include_directories(KumaGL PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/deps>
   $<INSTALL_INTERFACE:include/>
 )
 
