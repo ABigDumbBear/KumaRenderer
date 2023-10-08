@@ -4,6 +4,7 @@ project(KumaGL VERSION 0.0.1)
 # Exports compile commands as a .json file; some text editors use
 # this file for syntax highlighting.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # Gather all the required source files.
 list(APPEND SOURCE_FILES
