@@ -41,6 +41,7 @@ jobs:
         run: cmake --build ./build --config Release
 
       - name: upload artifact
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           path: ./build
