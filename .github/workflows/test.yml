@@ -21,7 +21,7 @@ jobs:
         run: cmake -B build -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
 
       - name: build project
-        run: cmake --build ./build --config Release
+        run: cmake --build ./build --target install --config Release
 
   test2:
     runs-on: windows-latest
@@ -38,7 +38,7 @@ jobs:
         run: cmake -B ./build -S . -DCMAKE_TOOLCHAIN_FILE="./vcpkg/scripts/buildsystems/vcpkg.cmake"
 
       - name: build project
-        run: cmake --build ./build --config Release
+        run: cmake --build ./build --target install --config Release
 
       - name: upload artifact
         if: always()
