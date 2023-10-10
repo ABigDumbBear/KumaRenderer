@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-project(KumaGL VERSION 0.0.1)
+project(KumaGL
+  VERSION 0.0.1
+  LANGUAGES CXX
+)
 
 # Exports compile commands as a .json file; some text editors use
 # this file for syntax highlighting.
@@ -7,7 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # Gather all the required source files.
-list(APPEND SOURCE_FILES
+list(APPEND KUMAGL_SOURCES
   src/glad/glad.c
   src/Framebuffer.cpp
   src/GLObject.cpp
@@ -22,9 +25,8 @@ list(APPEND SOURCE_FILES
 )
 
 # Create the library.
-add_library(KumaGL STATIC ${SOURCE_FILES})
+add_library(KumaGL ${KUMAGL_SOURCES})
 target_include_directories(KumaGL PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/KumaGL>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external>
   $<INSTALL_INTERFACE:include/>
@@ -35,9 +37,7 @@ install(TARGETS KumaGL
   EXPORT KumaGLTargets
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
-)
-install(DIRECTORY include/
-  DESTINATION include
+  INCLUDES DESTINATION include
 )
 
 install(EXPORT KumaGLTargets

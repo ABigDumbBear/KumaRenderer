@@ -1,7 +1,7 @@
-#include "KumaGL/Framebuffer.hpp"
+#include "Framebuffer.hpp"
 
-#include "KumaGL/GLObject.hpp"
-#include "KumaGL/Renderbuffer.hpp"
+#include "GLObject.hpp"
+#include "Renderbuffer.hpp"
 
 namespace KumaGL {
 /******************************************************************************/

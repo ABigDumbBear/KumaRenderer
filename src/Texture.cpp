@@ -1,5 +1,5 @@
-#include "KumaGL/Texture.hpp"
-#include "KumaGL/GLObject.hpp"
+#include "Texture.hpp"
+#include "GLObject.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>

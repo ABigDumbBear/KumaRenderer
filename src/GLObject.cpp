@@ -1,4 +1,4 @@
-#include "KumaGL/GLObject.hpp"
+#include "GLObject.hpp"
 
 namespace KumaGL {
 /******************************************************************************/

@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 
-#include "KumaGL/GLObject.hpp"
+#include "GLObject.hpp"
 
 namespace KumaGL {
 class Renderbuffer : public GLObject {

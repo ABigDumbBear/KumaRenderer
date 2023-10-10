@@ -5,7 +5,7 @@
 
 #include <glad/glad.h>
 
-#include "KumaGL/GLObject.hpp"
+#include "GLObject.hpp"
 #include "Mat4.hpp"
 #include "Vec3.hpp"
 

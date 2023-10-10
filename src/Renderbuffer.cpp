@@ -1,5 +1,5 @@
-#include "KumaGL/Renderbuffer.hpp"
-#include "KumaGL/GLObject.hpp"
+#include "Renderbuffer.hpp"
+#include "GLObject.hpp"
 
 #include <algorithm>
 

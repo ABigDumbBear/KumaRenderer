@@ -1,6 +1,6 @@
-#include "KumaGL/Mesh.hpp"
+#include "Mesh.hpp"
 
-#include <KumaGL/Mat4.hpp>
+#include <Mat4.hpp>
 
 namespace KumaGL {
 /******************************************************************************/

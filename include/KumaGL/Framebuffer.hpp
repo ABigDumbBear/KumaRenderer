@@ -3,9 +3,9 @@
 
 #include <glad/glad.h>
 
-#include "KumaGL/GLObject.hpp"
-#include "KumaGL/Renderbuffer.hpp"
-#include "KumaGL/Texture.hpp"
+#include "GLObject.hpp"
+#include "Renderbuffer.hpp"
+#include "Texture.hpp"
 
 namespace KumaGL {
 class Framebuffer : public GLObject {

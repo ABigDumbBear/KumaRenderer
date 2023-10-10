@@ -1,5 +1,5 @@
-#include "KumaGL/Shader.hpp"
-#include "KumaGL/GLObject.hpp"
+#include "Shader.hpp"
+#include "GLObject.hpp"
 
 #include <fstream>
 #include <iostream>
