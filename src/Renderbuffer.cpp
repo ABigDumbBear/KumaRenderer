@@ -1,7 +1,8 @@
 #include "Renderbuffer.hpp"
-#include "GLObject.hpp"
 
 #include <algorithm>
+
+#include "GLObject.hpp"
 
 namespace KumaGL {
 /******************************************************************************/
