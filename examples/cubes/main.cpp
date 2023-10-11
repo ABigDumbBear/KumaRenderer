@@ -1,4 +1,4 @@
-#include <KumaGL/glad/gl.h>
+#include <KumaGL/KumaGL.hpp>
 
 #include <GLFW/glfw3.h>
 

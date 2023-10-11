@@ -11,6 +11,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # Gather all the required source files.
 list(APPEND KUMAGL_SOURCES
+  src/glad/gl.c
   src/Framebuffer.cpp
   src/GLObject.cpp
   src/Mat4.cpp
@@ -27,6 +28,7 @@ list(APPEND KUMAGL_SOURCES
 add_library(KumaGL ${KUMAGL_SOURCES})
 target_include_directories(KumaGL PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/KumaGL>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external>
   $<INSTALL_INTERFACE:include/>
 )

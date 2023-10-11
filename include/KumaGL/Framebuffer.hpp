@@ -1,7 +1,7 @@
 #ifndef FRAMEBUFFER_HPP
 #define FRAMEBUFFER_HPP
 
-#include "glad/gl.h"
+#include "KumaGL.hpp"
 
 #include "GLObject.hpp"
 #include "Renderbuffer.hpp"

@@ -1,7 +1,7 @@
 #ifndef GLOBJECT_HPP
 #define GLOBJECT_HPP
 
-#include "glad/gl.h"
+#include "KumaGL.hpp"
 
 namespace KumaGL {
 class GLObject {

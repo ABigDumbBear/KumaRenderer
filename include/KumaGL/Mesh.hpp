@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "glad/gl.h"
+#include "KumaGL.hpp"
 
 #include "VAO.hpp"
 #include "VBO.hpp"
