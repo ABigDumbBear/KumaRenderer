@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(KumaGL
   VERSION 0.0.1
-  LANGUAGES CXX
+  LANGUAGES C CXX
 )
 
 # Exports compile commands as a .json file; some text editors use
