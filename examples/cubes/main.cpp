@@ -118,6 +118,12 @@ void FramebufferSizeCallback(GLFWwindow *aWindow, int aWidth, int aHeight) {
 }
 
 /******************************************************************************/
+void ErrorCallback(int aCode, const char *aDescription) {
+  std::cout << "GLFW error code: " << aCode << std::endl;
+  std::cout << "Description: " << aDescription << std::endl;
+}
+
+/******************************************************************************/
 GLFWwindow *CreateWindow() {
   GLFWwindow *window = nullptr;
 
@@ -154,6 +160,7 @@ GLFWwindow *CreateWindow() {
 
   // Set any GLFW callbacks.
   glfwSetFramebufferSizeCallback(window, &FramebufferSizeCallback);
+  glfwSetErrorCallback(&ErrorCallback);
 
   return window;
 }
