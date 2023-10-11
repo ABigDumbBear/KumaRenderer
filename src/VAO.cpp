@@ -1,5 +1,5 @@
-#include "VAO.hpp"
-#include "GLObject.hpp"
+#include "KumaGL/VAO.hpp"
+#include "KumaGL/GLObject.hpp"
 
 #include <algorithm>
 

@@ -1,5 +1,5 @@
-#include "VBO.hpp"
-#include "GLObject.hpp"
+#include "KumaGL/VBO.hpp"
+#include "KumaGL/GLObject.hpp"
 
 #include <algorithm>
 

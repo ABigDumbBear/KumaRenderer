@@ -1,4 +1,4 @@
-#include "Vec3.hpp"
+#include "KumaGL/Vec3.hpp"
 
 #include <cmath>
 

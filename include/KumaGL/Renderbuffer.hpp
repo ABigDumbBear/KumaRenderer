@@ -1,7 +1,7 @@
 #ifndef RENDERBUFFER_HPP
 #define RENDERBUFFER_HPP
 
-#include <glad/glad.h>
+#include "glad/gl.h"
 
 #include "GLObject.hpp"
 

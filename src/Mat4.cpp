@@ -1,9 +1,9 @@
-#include "Mat4.hpp"
+#include "KumaGL/Mat4.hpp"
 
 #include <cmath>
 
-#include "MathUtil.hpp"
-#include "Vec3.hpp"
+#include "KumaGL/MathUtil.hpp"
+#include "KumaGL/Vec3.hpp"
 
 namespace KumaGL {
 /******************************************************************************/

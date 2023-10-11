@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include <glad/glad.h>
+#include "glad/gl.h"
 
 #include "GLObject.hpp"
 #include "Mat4.hpp"

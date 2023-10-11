@@ -26,7 +26,7 @@ list(APPEND KUMAGL_SOURCES
 # Create the library.
 add_library(KumaGL ${KUMAGL_SOURCES})
 target_include_directories(KumaGL PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/KumaGL>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external>
   $<INSTALL_INTERFACE:include/>
 )

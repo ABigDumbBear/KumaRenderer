@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+#include <KumaGL/glad/gl.h>
 
 #include <GLFW/glfw3.h>
 
@@ -198,13 +198,11 @@ GLFWwindow *CreateWindow() {
 
 /******************************************************************************/
 bool InitializeGL() {
-  bool success = false;
-
   // Initialize GLAD.
-  success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-  if (!success) {
+  int version = gladLoadGL(glfwGetProcAddress);
+  if (version == 0) {
     std::cout << "Failed to initialize GLAD!" << std::endl;
-    return success;
+    return false;
   }
 
   // Set up global OpenGL state.

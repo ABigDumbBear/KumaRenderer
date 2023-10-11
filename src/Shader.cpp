@@ -1,10 +1,10 @@
-#include "Shader.hpp"
+#include "KumaGL/Shader.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-#include "GLObject.hpp"
+#include "KumaGL/GLObject.hpp"
 
 namespace KumaGL {
 /******************************************************************************/
