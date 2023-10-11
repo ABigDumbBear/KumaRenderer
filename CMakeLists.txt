@@ -11,7 +11,6 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 # Gather all the required source files.
 list(APPEND KUMAGL_SOURCES
-  src/glad/glad.c
   src/Framebuffer.cpp
   src/GLObject.cpp
   src/Mat4.cpp
