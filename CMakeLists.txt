@@ -7,45 +7,12 @@ project(KumaGL
 # Exports compile commands as a .json file; some text editors use
 # this file for syntax highlighting.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Only used by Windows; exports all public classes/functions
+# automatically so manual __declspec calls aren't needed.
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-# Gather all the required source files.
-list(APPEND KUMAGL_SOURCES
-  src/glad/gl.c
-  src/Framebuffer.cpp
-  src/GLObject.cpp
-  src/Mat4.cpp
-  src/Mesh.cpp
-  src/Renderbuffer.cpp
-  src/Shader.cpp
-  src/Texture.cpp
-  src/VAO.cpp
-  src/VBO.cpp
-  src/Vec3.cpp
-)
-
-# Create the library.
-add_library(KumaGL ${KUMAGL_SOURCES})
-target_include_directories(KumaGL PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/KumaGL>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external>
-  $<INSTALL_INTERFACE:include/>
-)
-
-# Install the library and the include directory.
-install(TARGETS KumaGL
-  EXPORT KumaGLTargets
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  INCLUDES DESTINATION include
-)
-
-install(EXPORT KumaGLTargets
-  FILE KumaGLConfig.cmake
-  NAMESPACE KumaGL::
-  DESTINATION lib/cmake/KumaGL
-)
+add_subdirectory(src)
 
 # Add extra build options.
 option(BUILD_TESTS "Build the unit tests." ON)
