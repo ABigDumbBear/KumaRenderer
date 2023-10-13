@@ -1,5 +1,3 @@
-find_package(glfw3 REQUIRED)
-
 add_executable(framebuffers main.cpp)
 target_link_libraries(framebuffers PUBLIC
   glfw

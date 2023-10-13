@@ -1,5 +1,3 @@
-find_package(glfw3 REQUIRED)
-
 add_executable(lighting main.cpp)
 target_link_libraries(lighting PUBLIC
   glfw

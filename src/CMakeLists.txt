@@ -16,10 +16,11 @@ list(APPEND KUMAGL_SOURCES
 # Create the library.
 add_library(KumaGL ${KUMAGL_SOURCES})
 target_include_directories(KumaGL PUBLIC
+  ../include
   ../include/KumaGL
   ../external
 )
 
 # Install the library and the header files.
 install(TARGETS KumaGL DESTINATION lib)
-install(DIRECTORY ../include DESTINATION include)
+install(DIRECTORY ../include/KumaGL DESTINATION include)

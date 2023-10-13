@@ -1,5 +1,3 @@
-find_package(glfw3 REQUIRED)
-
 add_executable(shadows main.cpp)
 target_link_libraries(shadows PUBLIC
   glfw
