@@ -16,22 +16,10 @@ list(APPEND KUMAGL_SOURCES
 # Create the library.
 add_library(KumaGL ${KUMAGL_SOURCES})
 target_include_directories(KumaGL PUBLIC
-  $<BUILD_INTERFACE:../include>
-  $<BUILD_INTERFACE:../include/KumaGL>
-  $<BUILD_INTERFACE:../external>
-  $<INSTALL_INTERFACE:include/>
+  ../include/KumaGL
+  ../external
 )
 
-# Install the library and the include directory.
-install(TARGETS KumaGL
-  EXPORT KumaGLTargets
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  INCLUDES DESTINATION include
-)
-
-install(EXPORT KumaGLTargets
-  FILE KumaGLConfig.cmake
-  NAMESPACE KumaGL::
-  DESTINATION lib/cmake/KumaGL
-)
+# Install the library and the header files.
+install(TARGETS KumaGL DESTINATION lib)
+install(DIRECTORY ../include DESTINATION include)

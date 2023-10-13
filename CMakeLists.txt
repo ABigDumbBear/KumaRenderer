@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 project(KumaGL
   VERSION 0.0.1
   LANGUAGES C CXX
@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # automatically so manual __declspec calls aren't needed.
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+# Add subdirectories.
 add_subdirectory(src)
 
 # Add extra build options.
