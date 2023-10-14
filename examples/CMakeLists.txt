@@ -9,12 +9,11 @@ FetchContent_Declare(
   GIT_TAG 3.3.8
 )
 
-# Only build the GLFW library, not any of the extras.
-set(GLFW_BUILD_EXAMPLES OFF)
-set(GLFW_BUILD_TESTS OFF)
-set(GLFW_BUILD_DOCS OFF)
-
-FetchContent_MakeAvailable(glfw3)
+FetchContent_GetProperties(glfw3)
+if(NOT glfw3_POPULATED)
+  FetchContent_Populate(glfw3)
+  add_subdirectory(${glfw3_SOURCE_DIR} ${glfw3_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
 
 add_subdirectory(cubes)
 add_subdirectory(framebuffers)
