@@ -8,18 +8,12 @@ The goals of KumaGL are:
 Unlike some larger and more ambitious graphics libraries, KumaGL does not intend to wrap every last bit of OpenGL functionality. Rather, it provides a handful of utility classes to help any rendering-focused projects get off the ground.
 
 ## Features
-* Simple 3D math implementation
-* Automatic creation and deletion of vertex buffers
+* Automatic creation and deletion of OpenGL objects
+* Convenient 3D math classes
 * Simple instanced rendering
-* Framebuffers and renderbuffers
-* GLSL shader loading
+* GLSL shader support
 * Texture loading/mapping
-
-## Planned Features
-* Skeletal animation
-
-## External dependencies
-KumaGL requires no external libraries; however, to build the included example projects, you will need to install GLFW.
+* Framebuffers and renderbuffers
 
 ## Building
 To build KumaGL along with the example projects and unit tests, the standard CMake procedure can be followed:
@@ -36,6 +30,6 @@ Alternatively, if you just want to build the library:
 cd KumaGL
 mkdir build
 cd build
-cmake -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF ..
+cmake .. -DBUILD_EXAMPLES=OFF -DBUILD_TESTS=OFF
 make install
 ```
