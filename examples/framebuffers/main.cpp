@@ -198,10 +198,8 @@ GLFWwindow *CreateWindow() {
 
 /******************************************************************************/
 bool InitializeGL() {
-  // Initialize GLAD.
-  int version = gladLoadGL(glfwGetProcAddress);
-  if (version == 0) {
-    std::cout << "Failed to initialize GLAD!" << std::endl;
+  if (!KumaGL::InitKumaGL(glfwGetProcAddress)) {
+    std::cout << "Failed to initialize KumaGL!" << std::endl;
     return false;
   }
 
